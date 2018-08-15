@@ -1,0 +1,84 @@
+{% extends '@GDSSPlatform/Sujets_Basic_View/addSujet.html.twig' %}
+{% block title %}Contraites et critères{% endblock %}
+{% block curentSujet %}active{% endblock %}
+
+
+{% block active0 %}disabled{% endblock %}
+{% block active1 %}active{% endblock %}
+
+{% block contenu %}
+    {#
+        <script type="text/javascript">
+        alert("Ils sont optionnels cliquer sur terminer pour les ignorer");
+        </script>
+
+    #}
+
+        <br/>
+        <br/>
+        <div class="form-inline" style="margin-left: 45px">
+
+            <div class="card border-secondary mb-2" style="width: 49%;">
+                <div class="card-header">Critères</div>
+                <div class="card-body">
+                    <div>
+                        {% for list in criterelist %}
+                            <h6 style="margin-left: 10px;">
+                                <img style="width: 24px" src="{{ asset('bundles/gdssplatform/icons/ic_my_location_24px.svg') }}"> {{ list.description }}
+                            </h6>
+                        {% endfor %}
+                        <br/>
+                    </div>
+                    <div>
+                        {{ form_start(formCritere, {'attr': {'class': 'form-horizontal'}}) }}
+                            <div class="form-group">
+                                {# Génération du label. #}
+                                {{ form_label(formCritere.description, "Description", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                                {# Affichage des erreurs pour ce champ précis. #}
+                                {{ form_errors(formCritere.description) }}
+                                <div class="col-sm-10">
+                                    {{ form_widget(formCritere.description)}}
+                                </div>
+                            </div>
+                            {{ form_widget(formCritere.Ajouter) }}
+                        {{ form_end(formCritere) }}
+                    </div>
+                </div>
+            </div>
+            <div style="width: 5px"></div>
+            <div class="card border-secondary mb-2" style="width: 49%;">
+                <div class="card-header">Contaraintes</div>
+                <div class="card-body">
+                    <div>
+                        {% for list1 in contraintelist %}
+                            <h6 style="margin-left: 10px">
+                                <img style="width: 24px" src="{{ asset('bundles/gdssplatform/icons/ic_my_location_24px.svg') }}"> {{ list1.description }}
+                            </h6>
+                        {% endfor %}
+                        <br/>
+                    </div>
+                    <div>
+                        {{ form_start(formContrainte, {'attr': {'class': 'form-horizontal'}}) }}
+                            <div class="form-group">
+                                {# Génération du label. #}
+                                {{ form_label(formContrainte.description, "Description", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                                {# Affichage des erreurs pour ce champ précis. #}
+                                {{ form_errors(formContrainte.description) }}
+                                <div class="col-sm-10">
+                                    {{ form_widget(formContrainte.description)}}
+                                </div>
+                            </div>
+                            {{ form_widget(formContrainte.Ajouter) }}
+                        {{ form_end(formContrainte) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <a href="{{ path('gdss_platform_process', {'id':id}) }}">
+            <button type="submit" class="btn linkstyle" style="color: white">
+                Suivant
+            </button>
+        </a>
+{% endblock %}
+

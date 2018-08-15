@@ -1,0 +1,132 @@
+<?php
+
+namespace GDSS\PhasesBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * BrainstormingComment
+ *
+ * @ORM\Table(name="brainstorming_comment")
+ * @ORM\Entity(repositoryClass="GDSS\PhasesBundle\Repository\BrainstormingCommentRepository")
+ */
+class BrainstormingComment
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comment", type="text")
+     */
+    private $comment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GDSS\PlatformBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\BrainstormingContribution")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $contribution;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pseudo", type="string", length=255)
+     */
+    private $pseudo;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set comment
+     *
+     * @param string $comment
+     *
+     * @return BrainstormingComment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \GDSS\PlatformBundle\Entity\User $user
+     *
+     * @return BrainstormingComment
+     */
+    public function setUser(\GDSS\PlatformBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \GDSS\PlatformBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set contribution
+     *
+     * @param \GDSS\PhasesBundle\Entity\BrainstormingContribution $contribution
+     *
+     * @return BrainstormingComment
+     */
+    public function setContribution(\GDSS\PhasesBundle\Entity\BrainstormingContribution $contribution)
+    {
+        $this->contribution = $contribution;
+
+        return $this;
+    }
+
+    /**
+     * Get contribution
+     *
+     * @return \GDSS\PhasesBundle\Entity\BrainstormingContribution
+     */
+    public function getContribution()
+    {
+        return $this->contribution;
+    }
+}

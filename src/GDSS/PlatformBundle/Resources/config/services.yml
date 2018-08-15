@@ -1,0 +1,19 @@
+services:
+#    gdss_platform.example:
+#        class: GDSS\PlatformBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+    platform.progress:
+        class: GDSS\PlatformBundle\Services\Progress
+
+    platform.checkaccess:
+        class: GDSS\PlatformBundle\Services\CheckAccess
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    platform.sujectdata:
+        class: GDSS\PlatformBundle\Services\GetSujetdata
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    platform.sendmsg:
+        class: GDSS\PlatformBundle\Services\SendMessage
+        arguments: ["@doctrine.orm.entity_manager", "@fos_message.composer", "@fos_message.sender"]

@@ -1,0 +1,3 @@
+/*************POUR LA MISE EN PRODUCTION*****************/
+1.  Modifier le lien ce trouvant dans la view "C:\xampp\htdocs\Projet_GDSS\src\GDSS\PhasesBundle\Resources\views\phases_view\comprehension_collective.html.twig"
+    Ligne 33 - Lien pour appelé le controller scriptCCPAction - Routage

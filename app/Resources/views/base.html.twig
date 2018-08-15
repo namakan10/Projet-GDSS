@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
+        <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/login-register.css') }}" type="text/css">
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
+<body>
+{% block hedears %}
+{% endblock %}
+{% block body %}
+{% endblock %}
+{% block footers %}
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+{% endblock %}
+
+</body>
+</html>

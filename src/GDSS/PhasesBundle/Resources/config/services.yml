@@ -1,0 +1,4 @@
+services:
+#    gdss_phases.example:
+#        class: GDSS\PhasesBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

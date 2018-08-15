@@ -1,0 +1,87 @@
+{% extends '@GDSSPlatform/layoutGDSS.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/comment.css') }}" type="text/css">
+{% endblock %}
+
+
+{% block title %}FreeBrainstorming Comment{% endblock %}
+{% block curentSujet %}active{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="comments-container" style="margin : auto">
+            {% for contrib in contribution %}
+                {% if contrib.user != users %}
+                <ul id="comments-list" class="comments-list">
+                    <li>
+                        <div class="comment-main-level">
+                            <!-- Contenedor del Comentario -->
+                            <div class="comment-box">
+                                <div class="comment-head">
+                                    <h6 class="comment-name by-author">{{ contrib.Pseudo }}</h6>
+                                </div>
+                                <div class="comment-content">
+                                    {{ contrib.contribution }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divcomment{{ contrib.id }}">
+                            {% if comment %}
+                                {% for cmt in comment %}
+                                    {% if cmt.contribution == contrib %}
+                                        <ul class="comments-list reply-list">
+                                            <li>
+                                                <!-- Contenedor del Comentario -->
+                                                <div class="comment-box">
+                                                    <div class="comment-head">
+                                                        <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                    </div>
+                                                    <div class="comment-content">
+                                                        {{ cmt.comment }}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <!-- Fin boucle secondaire -->
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!------------------------------------>
+                        <ul class="comments-list reply-list">
+                            <li>
+                                <!-- Contenedor del Comentario -->
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <label for = "comment"><strong>Commentez</strong></label>
+                                    </div>
+                                        <textarea class="form-control" name="comment" id = "comment"></textarea>
+                                        <br/><button id="poster{{ contrib.id }}" type="submit" class="btn btn-primary mb-2" name="validate">Poster</button>
+
+
+                                        <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+                                        <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+                                        <script>
+                                            $("document").ready(function () {
+                                                $('#poster{{ contrib.id }}').click(function () {
+                                                    $(".divcomment{{ contrib.id }}").load('http://www.myproject.com:8080/app_dev.php/platform/sujet_vue/sujet/Freebrainstorming/Comment/add/' +{{ contrib.id }})
+                                                })
+                                            });
+                                        </script>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

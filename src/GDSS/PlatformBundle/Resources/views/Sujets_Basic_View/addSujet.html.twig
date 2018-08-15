@@ -1,0 +1,138 @@
+{% extends '@GDSSPlatform/layoutGDSS.html.twig' %}
+{% block title %}Ajout de sujet{% endblock %}
+{% block curentSujet %}active{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/add_sujet.css') }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <form class="form cf">
+            <div class="wizard">
+                <div class="wizard-inner">
+                    <div class="connecting-line"></div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" aria-controls="step1" role="tab" title="Definition du problème de decision" class="nav-link {% block active0 %}active{% endblock %}">
+                                <span class="round-tab">
+                                    <img src = "{{ asset('bundles/gdssplatform/icons/Defined_icons.svg') }}"/>
+                                    Sujet
+                                </span>
+                            </a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" aria-controls="step2" role="tab" title="Definition des contraintes et critères" class="nav-link {% block active1 %}disabled{% endblock %}">
+                                <span class="round-tab">
+                                    <img src = "{{ asset('bundles/gdssplatform/icons/Options_icons.svg') }}"/>
+                                    Options
+                                </span>
+                            </a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" aria-controls="step3" role="tab" title="Definition du processus" class="nav-link {% block active2 %}disabled{% endblock %}">
+                                <span class="round-tab">
+                                    <img src = "{{ asset('bundles/gdssplatform/icons/Process_icons.svg') }}"/>
+                                    Processus
+                                </span>
+                            </a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" aria-controls="step4" role="tab" title="Definition des phases" class="nav-link {% block active3 %}disabled{% endblock %}">
+                                <span class="round-tab">
+                                    <img src = "{{ asset('bundles/gdssplatform/icons/Phases_icons.svg') }}"/>
+                                    Phases
+                                </span>
+                            </a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a data-toggle="tab" aria-controls="step5" role="tab" title="Success" class="nav-link {% block active4 %}disabled{% endblock %}">
+                                <span class="round-tab">
+                                    <img src = "{{ asset('bundles/gdssplatform/icons/check-circle-Ok.svg') }}"/>
+                                    Terminer
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+
+        {% block contenu %}
+            {% if erreur is defined %}
+            <script type="text/javascript">
+                alert("{{ erreur }}");
+            </script>
+            {% endif %}
+            <div style="width: 800px; margin: auto">
+                <br/><br/>
+                {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                <div class="form-group">
+                    {# Génération du label. #}
+                    {{ form_label(form.Titre, "Titre", {'label_attr': {'class': 'control-label'}}) }}
+                    {# Affichage des erreurs pour ce champ précis. #}
+                    {{ form_errors(form.Titre) }}
+                    <div class="">
+                        {{ form_widget(form.Titre) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {# Génération du label. #}
+                    {{ form_label(form.But, "But", {'label_attr': {'class': 'control-label'}}) }}
+                    {# Affichage des erreurs pour ce champ précis. #}
+                    {{ form_errors(form.But) }}
+                    <div class="">
+                        {{ form_widget(form.But) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {# Génération du label. #}
+                    {{ form_label(form.Domaine, "Domaine", {'label_attr': {'class': 'control-label'}}) }}
+                    {# Affichage des erreurs pour ce champ précis. #}
+                    {{ form_errors(form.Domaine) }}
+                    <div class="">
+                        {{ form_widget(form.Domaine) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {# Génération du label. #}
+                    {{ form_label(form.DateDebut, "Date de début", {'label_attr': {'class': 'control-label'}}) }}
+                    {# Affichage des erreurs pour ce champ précis. #}
+                    {{ form_errors(form.DateDebut) }}
+                    <div class="">
+                        {{ form_widget(form.DateDebut) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {# Génération du label. #}
+                    {{ form_label(form.DateFin, "Date de fin", {'label_attr': {'class': 'control-label'}}) }}
+                    {# Affichage des erreurs pour ce champ précis. #}
+                    {{ form_errors(form.DateFin) }}
+                    <div class="">
+                        {{ form_widget(form.DateFin) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {# Génération du label. #}
+                    {{ form_label(form.Contexte, "Contexte", {'label_attr': {'class': 'control-label'}}) }}
+                    {# Affichage des erreurs pour ce champ précis. #}
+                    {{ form_errors(form.Contexte) }}
+                    <div class="">
+                        {{ form_widget(form.Contexte) }}
+                    </div>
+                </div>
+
+                <br/>
+                {{ form_widget(form.Suivant, {'attr': {'class': 'btn linkstyle'}}) }}
+                {{ form_end(form) }}
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}

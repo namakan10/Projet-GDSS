@@ -1,0 +1,50 @@
+.progress-bar1 div {
+    position: absolute;
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+}
+
+.progress-bar1 div span {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background: #44484b;
+    font-size: 24px;
+    color: #fff;
+    line-height: 150px;
+    text-align: center;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+}
+
+.progress-bar1 .background { background-color: white; }
+
+.progress-bar1 .rotate {
+    clip: rect(0 100px 200px 0);
+    background-color: white;
+}
+
+.progress-bar1 .left {
+    clip: rect(0 100px 200px 0);
+    opacity: 1;
+    background-color: white;
+
+}
+
+.progress-bar1 .right {
+    clip: rect(0 100px 200px 0);
+    transform: rotate(180deg);
+    opacity: 0;
+    background-color: white;
+}
+
+@keyframes
+toggle {  0% {
+    opacity: 0;
+}
+    100% {
+        opacity: 1;
+    }
+}

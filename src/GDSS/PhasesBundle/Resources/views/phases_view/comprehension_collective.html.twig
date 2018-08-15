@@ -1,0 +1,77 @@
+{% extends '@GDSSPlatform/layoutGDSS.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/comment.css') }}" type="text/css">
+{% endblock %}
+
+{% block title %}Compréhension Collective{% endblock %}
+
+{% block curentSujet %}active{% endblock %}
+{% block body %}
+    <div class="container">
+        {% if finish %}
+            <div id = "test" class="divscript" style="border: 2px groove; border-radius: 10px; height: 450px; background-color: white; overflow: scroll;">
+                {{ render(controller('GDSSPhasesBundle:View:scriptCCP', {'id' : id} )) }}
+            </div>
+            <br/>
+            <div style="margin-left: 95%">
+                <a href="{{ path('gdss_platform_sujet_vue', {'id':id}) }}"><button type="button" class="btn btn-outline-primary" id="stop">Retour</button></a>
+            </div>
+        {% else %}
+            <div id = "test" class="divscript" style="border: 2px groove; border-radius: 10px; height: 340px; background-color: white; overflow: scroll;">
+                {{ render(controller('GDSSPhasesBundle:View:scriptCCP', {'id' : id} )) }}
+            </div>
+            <br/>
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+            <div class="form-group">
+                {{ form_label(form.Proposition, "Message", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                {{ form_errors(form.Proposition) }}
+                {{ form_widget(form.Proposition) }}
+            </div>
+            <div class="form-inline">
+                <div class="col-sm-11">
+                    {{ form_widget(form.Envoyer, {'attr': {'class': 'btn btn-primary'}}) }}
+                </div>
+                <div>
+                    <a href="{{ path('gdss_platform_sujet_vue', {'id':id}) }}"><button type="button" class="btn btn-outline-primary" id="stop">Retour</button></a>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        {% endif %}
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+
+    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+    <script>
+        {% if finish %}
+        {% else %}
+        element_b = document.getElementById('test');
+        element_b.scrollTop = element_b.scrollHeight;
+        var inf = element_b.scrollTop;
+        var sup = element_b.scrollHeight;
+        $("document").ready(function () {
+            var id = {{ id }}
+            var y = setInterval(function(){
+                element_a = document.getElementById('test');
+                if(element_b.scrollTop = element_a.scrollHeight){
+
+                }
+                else{
+                    element_a.scrollTop = element_a.scrollHeight;
+                }
+                $(".divscript").load('http://www.myproject.com:8080/app_dev.php/platform/sujet_vue/sujet/' +id)
+            }, 2000);
+
+            $('#stop').click(function () {
+                clearInterval(y);
+            })
+        });
+        {% endif %}
+    </script>
+{% endblock %}

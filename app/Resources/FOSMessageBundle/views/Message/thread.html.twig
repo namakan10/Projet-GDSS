@@ -1,0 +1,21 @@
+{% extends 'FOSMessageBundle::layout.html.twig' %}
+
+{% block fos_message_content %}
+
+<h2>{{ thread.subject }}</h2>
+
+{% for message in thread.messages %}
+    <div class="messenger_thread_message">
+        <div class="messenger_thread_message_info">
+            {% trans with {'%sender%': message.sender|e, '%date%': message.createdAt|date('d/m/y')} from 'FOSMessageBundle' %}message_info{% endtrans %}
+        </div>
+        <br/>
+        <div class="messenger_thread_message_body" id="message_{{ message.id }}">
+            {{ message.body }}
+        </div>
+        <br/>
+        <a href="{{ path('gdss_accept_invite', {'thread' : message.body}) }}"><button class="btn btn-outline-primary">Participer</button></a>
+    </div>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends '@GDSSPlatform/layoutGDSS.html.twig' %}
+
+{% block title %}{{ subjectView.titre }}{% endblock %}
+{% block curentSujet %}active{% endblock %}
+{% block body %}
+    <div class="container">
+        <h2>{{ subjectView.titre }}</h2><hr/>
+
+        <h3>But</h3>
+        <div class="card">
+            <div class="card-body">
+                {{ subjectView.but }}
+            </div>
+        </div>
+
+        <h3>Domaine</h3>
+        <div class="card">
+            <div class="card-body">
+                {{ subjectView.domaine }}
+            </div>
+        </div>
+
+        <h3>Contexte</h3>
+        <div class="card">
+            <div class="card-body">
+                {{ subjectView.contexte }}
+            </div>
+        </div>
+
+        <h3>Critères</h3>
+        <div class="card">
+            <div class="card-body">
+                <ol>
+                    {% for critere in critereslist %}
+                        <li>{{ critere.description }}</li>
+                    {% else %}
+                        Pas de crtières !
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+
+        <h3>Contraintes</h3>
+        <div class="card">
+            <div class="card-body">
+                <ol>
+                    {% for contrainte in contraintelist %}
+                        <li>{{ contrainte.description }}</li>
+                    {% else %}
+                        Pas de contraintes !
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-lg">
+            <a href="{{ path('gdss_platform_sujet_vue', {'id' : id}) }}"><button class="btn btn-outline-success my-2 my-sm-0" type="submit">Retour</button></a>
+        </nav>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,155 @@
+<?php
+
+namespace GDSS\PlatformBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Critere
+ *
+ * @ORM\Table(name="Options")
+ * @ORM\Entity(repositoryClass="GDSS\PlatformBundle\Repository\OptionsRepository")
+ */
+class Options
+{
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GDSS\PlatformBundle\Entity\ProblemeDeDecision")
+     * @ORM\JoinColumn(nullable=false)
+     */
+
+    private $problemededecision;
+
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="critere", type="text")
+     */
+    private $criteres;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contrainte", type="text")
+     */
+    private $contraintes;
+
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Options
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+
+    /**
+     * Set problemededecision
+     *
+     * @param \GDSS\PlatformBundle\Entity\ProblemeDeDecision $problemededecision
+     *
+     * @return Options
+     */
+    public function setProblemededecision(\GDSS\PlatformBundle\Entity\ProblemeDeDecision $problemededecision)
+    {
+        $this->problemededecision = $problemededecision;
+
+        return $this;
+    }
+
+    /**
+     * Get problemededecision
+     *
+     * @return \GDSS\PlatformBundle\Entity\ProblemeDeDecision
+     */
+    public function getProblemededecision()
+    {
+        return $this->problemededecision;
+    }
+
+    /**
+     * Set critere
+     *
+     * @param string $critere
+     *
+     * @return Options
+     */
+    public function setCritere($critere)
+    {
+        $this->critere = $critere;
+
+        return $this;
+    }
+
+    /**
+     * Get critere
+     *
+     * @return string
+     */
+    public function getCritere()
+    {
+        return $this->critere;
+    }
+
+    /**
+     * Set contrainte
+     *
+     * @param string $contrainte
+     *
+     * @return Options
+     */
+    public function setContrainte($contrainte)
+    {
+        $this->contrainte = $contrainte;
+
+        return $this;
+    }
+
+    /**
+     * Get contrainte
+     *
+     * @return string
+     */
+    public function getContrainte()
+    {
+        return $this->contrainte;
+    }
+}

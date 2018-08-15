@@ -1,0 +1,54 @@
+{% extends '@GDSSPlatform/layoutGDSS.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/comment.css') }}" type="text/css">
+{% endblock %}
+
+{% block title %}FreeBrainstorming Contribution{% endblock %}
+{% block curentSujet %}active{% endblock %}
+
+{% block body %}
+        <div class="container">
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+            <div class="form-group">
+                {{ form_label(form.Proposition, "Proposition", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                {{ form_errors(form.Proposition) }}
+                {{ form_widget(form.Proposition) }}
+            </div>
+            <div class="form-inline">
+                <div class="col-sm-11">
+                    {{ form_widget(form.Envoyer, {'attr': {'class': 'btn linkstyle'}}) }}
+                </div>
+                <div>
+                    <a href="{{ path('generation', {'id':id}) }}"><button type="button" class="btn btn-outline-primary" id="stop">Retour</button></a>
+                </div>
+            </div>
+            {{ form_end(form) }}
+
+            <div style="">
+                {% if proposition %}
+                    {% for propo in proposition %}
+                        <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                            <li>
+                                <div class="comment-main-level">
+                                    <div class="comment-box">
+                                        <div class="comment-head">
+                                            <h6 class="comment-name by-author">Proposition {{ propo.numero }}</h6>
+                                        </div>
+                                        <div class="comment-content">
+                                            <p>{{ propo.contribution }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+
+        </div>
+{% endblock %}

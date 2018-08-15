@@ -1,0 +1,34 @@
+phase_comprehension_vue:
+    path: /platform/sujet_vue/sujet/phase1/{id}
+    defaults:
+      _controller: GDSSPhasesBundle:View:comprehension
+
+phase_edit:
+    path: /platform/sujet_vue/edit_phase/{id}
+    defaults:
+      _controller: GDSSPhasesBundle:GloabalControl:modifPhase
+
+generation:
+    path: /platform/sujet_vue/sujet/Freebrainstorming/{id}
+    defaults:
+      _controller: GDSSPhasesBundle:GenerationThinklet:generation
+
+freebrainstorming_contribution:
+    path: /platform/sujet_vue/sujet/Freebrainstorming/Contribuer/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingContribution
+
+freebrainstorming_comment:
+    path: /platform/sujet_vue/sujet/Freebrainstorming/Comment/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingComment
+
+freebrainstorming_add_comment:
+    path: /platform/sujet_vue/sujet/Freebrainstorming/Comment/add/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingAddComment
+
+scipts_comp:
+    path : /platform/sujet_vue/sujet/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:View:scriptCCP

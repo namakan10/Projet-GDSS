@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ asset('bundles/gdssphases/comment.css') }}" type="text/css">
+
+
+{% if comment %}
+    {% for cmt in comment %}
+        {% if cmt.contribution == contrib.id %}
+            <ul class="comments-list reply-list">
+                <li>
+                    <!-- Contenedor del Comentario -->
+                    <div class="comment-box">
+                        <div class="comment-head">
+                            <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                        </div>
+                        <div class="comment-content">
+                            {{ cmt.comment }}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <!-- Fin boucle secondaire -->
+        {% endif %}
+    {% endfor %}
+{% endif %}

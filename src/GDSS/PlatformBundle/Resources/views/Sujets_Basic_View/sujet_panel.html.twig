@@ -1,0 +1,106 @@
+{% extends '@GDSSPlatform/layoutGDSS.html.twig' %}
+
+{% block title %}Sujets{% endblock %}
+{% block curentSujet %}active{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 style="text-decoration-style: double"><img src="{{ asset('bundles/gdssplatform/icons/Bulleted List_50px.png') }}" style="height: 37px"/>  PROBLEME DE DECISION</h1>
+        <br/>
+        <nav class="nav">
+            <a href="{{ path('gdss_platform_add_sujets') }}"><button style="background-color: darkorange; color: white" class="btn" type="submit">CREER UN NOUVEAU SUJET</button></a>
+        </nav>
+
+        <br/>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active show" data-toggle="tab" href="#sujet">MES SUJETS</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#decideurs">MES PARTICIPATIONS</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade show active" id="sujet">
+                <br/>
+                <div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="">
+                                <th>Titre</th>
+                                <th>Statut</th>
+                                <th>Date de début</th>
+                                <th>Date de fin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subject in subjectlist %}
+                                <tr>
+                                    <td>{{ subject.titre }}</td>
+                                    <td>
+                                        {% if subject.dateFin < now1 %}
+                                            <span class="badge badge-info">Terminer</span>
+                                        {% elseif subject.dateDebut < now1  %}
+                                            <span class="badge badge-success">En cours</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Attente</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ subject.dateDebut|date('d/m/y H:i') }}</td>
+                                    <td>{{ subject.dateFin|date('d/m/y H:i') }}</td>
+                                    <td><a href="{{ path('gdss_platform_sujet_vue', {'id' : subject.id}) }}"
+                                           class="badge badge-info"> Voir
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="decideurs">
+                <br/>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Statut</th>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
+                            <th>Créateur</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for list in decideurslist %}
+                        <tr>
+                            <td>{{ list.titre }}</td>
+                            <td>
+                                {% if list.dateFin < now1 %}
+                                    <span class="badge badge-info">Terminer</span>
+                                {% elseif list.dateDebut < now1  %}
+                                    <span class="badge badge-success">En cours</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Attente</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ list.dateDebut|date('d/m/y H:i') }}</td>
+                            <td>{{ list.dateFin|date('d/m/y H:i') }}</td>
+                            <td>{{ list.user }}</td>
+                            <td><a href="{{ path('gdss_platform_sujet_vue', {'id' : list.id}) }}"
+                                   class="badge badge-info"> Voir
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

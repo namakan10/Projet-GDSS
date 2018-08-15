@@ -1,0 +1,64 @@
+gdss_platform_homepage:
+    path:     /
+    defaults:
+        _controller: fos_user.security.controller:loginAction
+
+gdss_platform_sujets:
+    path:     platform/sujets
+    defaults:
+        _controller: GDSSPlatformBundle:View:sujet_panel
+
+gdss_platform_add_sujets:
+    path:     platform/defined/sujets/published
+    defaults:
+        _controller:  GDSSPlatformBundle:add:addSujet
+
+gdss_platform_contrainte:
+    path:     platform/sujets/pluished/options/{id}
+    defaults:
+         _controller: GDSSPlatformBundle:add:addContraiteCritere
+
+gdss_platform_process:
+    path:     platform/sujets/pluished/processus/{id}
+    defaults:
+         _controller: GDSSPlatformBundle:add:addprocessus
+
+gdss_platform_sujet_vue:
+    path:     platform/sujets_panel/sujet/{id}
+    defaults:
+        _controller: GDSSPlatformBundle:View:sujet_vue
+
+gdss_platform_sujet_details:
+    path:     platform/sujets_panel/sujet/details/{id}
+    defaults:
+        _controller: GDSSPlatformBundle:View:sujetdetails
+
+gdss_platform_processus_details:
+    path:     platform/sujets_panel/sujet/processus_details/{id}
+    defaults:
+        _controller: GDSSPlatformBundle:View:processusdetails
+
+gdss_platform_add_phase:
+    path:     platform/defined/phase/{id}
+    defaults:
+        _controller:  GDSSPlatformBundle:add:addphases
+
+gdss_platform_inbox:
+    path:     platform/inbox
+    defaults:
+       _controller: FOSMessageBundle:Message:inbox
+
+gdss_platform_repertoire:
+    path:     platform/contact
+    defaults:
+       _controller: GDSSPlatformBundle:View:repertoire
+
+gdss_platform_send_invitation:
+    path:     platform/sujet_panel/sujet/invitation/{id}
+    defaults:
+      _controller: GDSSPlatformBundle:Request:sendInvitation
+
+gdss_accept_invite:
+    path:     platform/inbox/accept/{thread}
+    defaults:
+       _controller: GDSSPlatformBundle:Request:invValid

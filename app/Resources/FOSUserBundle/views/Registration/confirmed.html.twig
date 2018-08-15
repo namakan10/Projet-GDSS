@@ -1,0 +1,14 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }} Cliquer sur le lien pour vous connecter
+        <a href="{{ path('fos_user_security_login') }}">
+            <button type="submit" class="btn btn-light" style="color: blue">
+                Login
+            </button>
+        </a>
+    </p>
+
+{% endblock fos_user_content %}

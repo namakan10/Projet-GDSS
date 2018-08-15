@@ -1,0 +1,18 @@
+{% if chat %}
+    {% for ct in chat %}
+        <ul id="comments-list" class="comments-list" {% if ct.user == user %}style="margin-left: 275px"{% else %}style="margin-left: 10px"{% endif %}>
+            <li>
+                <div class="comment-main-level">
+                    <div class="comment-box">
+                        <div class="comment-head">
+                            <h6 class="comment-name by-author">{{ ct.pseudo }}</h6>
+                        </div>
+                        <div class="comment-content">
+                            <p>{{ ct.idea }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    {% endfor %}
+{% endif %}
