@@ -35,6 +35,16 @@ class GenerationContribution
     private $user;
 
     /**
+     * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\Reaction", mappedBy="contrib", cascade={"remove"})
+     */
+    private $reac;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\GenerationComment", mappedBy="contribution", cascade={"remove"})
+     */
+    private $comment;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GDSS\PlatformBundle\Entity\Phases")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -48,11 +58,49 @@ class GenerationContribution
     private $pseudo;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=255)
+     */
+    private $status;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="liked", type="integer")
+     */
+    private $liked = 0;
+
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dislike", type="integer")
+     */
+    private $dislike = 0;
+
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="interesting", type="integer")
+     */
+    private $interesting = 0;
+
+
+    /**
      * @var int
      *
      * @ORM\Column(name="numero", type="integer")
      */
     private $numero;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name = "categorie", type="string", length=255)
+     */
+    private $categorie = 'void';
 
     /**
      * Get id
@@ -183,5 +231,200 @@ class GenerationContribution
     public function getNumero()
     {
         return $this->numero;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return GenerationContribution
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set liked
+     *
+     * @param integer $liked
+     *
+     * @return GenerationContribution
+     */
+    public function setLiked($liked)
+    {
+        $this->liked = $liked;
+
+        return $this;
+    }
+
+    /**
+     * Get liked
+     *
+     * @return integer
+     */
+    public function getLiked()
+    {
+        return $this->liked;
+    }
+
+    /**
+     * Set dislike
+     *
+     * @param integer $dislike
+     *
+     * @return GenerationContribution
+     */
+    public function setDislike($dislike)
+    {
+        $this->dislike = $dislike;
+
+        return $this;
+    }
+
+    /**
+     * Get dislike
+     *
+     * @return integer
+     */
+    public function getDislike()
+    {
+        return $this->dislike;
+    }
+
+    /**
+     * Set interesting
+     *
+     * @param integer $interesting
+     *
+     * @return GenerationContribution
+     */
+    public function setInteresting($interesting)
+    {
+        $this->interesting = $interesting;
+
+        return $this;
+    }
+
+    /**
+     * Get interesting
+     *
+     * @return integer
+     */
+    public function getInteresting()
+    {
+        return $this->interesting;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->reac = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add reac
+     *
+     * @param \GDSS\PhasesBundle\Entity\Reaction $reac
+     *
+     * @return GenerationContribution
+     */
+    public function addReac(\GDSS\PhasesBundle\Entity\Reaction $reac)
+    {
+        $this->reac[] = $reac;
+
+        return $this;
+    }
+
+    /**
+     * Remove reac
+     *
+     * @param \GDSS\PhasesBundle\Entity\Reaction $reac
+     */
+    public function removeReac(\GDSS\PhasesBundle\Entity\Reaction $reac)
+    {
+        $this->reac->removeElement($reac);
+    }
+
+    /**
+     * Get reac
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReac()
+    {
+        return $this->reac;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \GDSS\PhasesBundle\Entity\GenerationComment $comment
+     *
+     * @return GenerationContribution
+     */
+    public function addComment(\GDSS\PhasesBundle\Entity\GenerationComment $comment)
+    {
+        $this->comment[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \GDSS\PhasesBundle\Entity\GenerationComment $comment
+     */
+    public function removeComment(\GDSS\PhasesBundle\Entity\GenerationComment $comment)
+    {
+        $this->comment->removeElement($comment);
+    }
+
+    /**
+     * Get comment
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Set categorie
+     *
+     * @param string $categorie
+     *
+     * @return GenerationContribution
+     */
+    public function setCategorie($categorie)
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    /**
+     * Get categorie
+     *
+     * @return string
+     */
+    public function getCategorie()
+    {
+        return $this->categorie;
     }
 }

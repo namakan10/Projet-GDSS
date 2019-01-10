@@ -96,16 +96,6 @@ class Sujet
     private $dateFin;
 
 
-
-    //Constructeur
-
-    public function __construct()
-    {
-        $this->dateDebut= new \DateTime();
-        $this->dateFin= new \DateTime();
-    }
-
-
     /**
      * Get id
      *

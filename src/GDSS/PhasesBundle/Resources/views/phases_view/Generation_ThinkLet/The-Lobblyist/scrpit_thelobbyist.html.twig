@@ -1,0 +1,110 @@
+{% if chat %}
+    {% for ct in chat %}
+        {% if ct.user == user %}
+            <div class="outgoing_msg">
+                <div class="sent_msg">
+                    <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
+                    <ul class="timeline">
+                        <li>
+                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#like{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}">
+
+                            </a>
+                            <div class="collapse" id="like{{ ct.id }}">
+                                <div class="card card-body">
+                                    <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'Like'); return false">
+                                        <div class="form-group">
+                                            <label for="argument{{ ct.id }}">Argument</label>
+                                            <textarea class="form-control" id="argument{{ ct.id }}" rows="2" required></textarea>
+                                            <br/>
+                                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                                        </div>
+                                    </form>
+                                    {% for reply in contribreply %}
+                                        {% if reply.contribution == ct %}
+                                            <div class="incoming_msg">
+                                                <div class="received_msg">
+                                                    <div class="received_withd_msg">
+                                                        <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+
+            </div>
+
+
+        {% else %}
+            <div class="incoming_msg">
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <p><span>{{ ct.pseudo }}</span><br/>{{ ct.contribution }}</p>
+                        <ul class="timeline">
+                            <li>
+                                <a class="fas fa-plus-circle" data-toggle="collapse" href="#like{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}">
+
+                                </a>
+                                <div class="collapse" id="like{{ ct.id }}">
+                                    <div class="card card-body">
+                                        <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'Like'); return false">
+                                            <div class="form-group">
+                                                <label for="argument{{ ct.id }}">Argument</label>
+                                                <textarea class="form-control" id="argument{{ ct.id }}" rows="2" required></textarea>
+                                                <br/>
+                                                <button type="submit" class="btn btn-primary">Ajouter</button>
+                                            </div>
+                                        </form>
+                                        {% for reply in contribreply %}
+                                            {% if reply.contribution == ct %}
+                                                <div class="incoming_msg">
+                                                    <div class="received_msg">
+                                                        <div class="received_withd_msg">
+                                                            <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+        {% endif %}
+
+    {% endfor %}
+{% endif %}
+
+<script>
+    function addreact(ctid, reac) {
+        $.ajax({
+            url:"http://www.projetgdss.com/app_dev.php/reaction/"+ctid,
+            type:"POST",
+            data: {reac : reac},
+            dataType: 'JSON',
+        })
+    }
+
+    function addcomment(ctid, argument, reaction) {
+
+        $.ajax({
+            url:"http://www.projetgdss.com/app_dev.php/commentreply/"+ctid,
+            type:"POST",
+            data: {reply : argument, reaction: reaction},
+            dataType: 'JSON',
+        })
+    }
+
+</script>

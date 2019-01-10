@@ -14,16 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 class ViewController extends Controller
 {
     public function comprehensionAction($id, Request $request){
+
         $user = $this->getUser();
         $repository = $this->getDoctrine()->getManager();
-        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+        $data = $this->container->get('platform.sujectdata')->sujetdata($id);
 
-        $process = $sujet->getProcessus();
-
-        $phase = $repository->getRepository('GDSSPlatformBundle:Phases')->findOneBy(array(
-            'processus' => $process,
-            'nom' => 'Phase de Comprehension Collective du problème'
-        ));
+        $sujet = $data["subject"];
+        $phase = $data["phase"];
 
         $chat = $repository->getRepository('GDSSPhasesBundle:CompIdea')->findBy(array(
             'phases' => $phase,
@@ -52,6 +49,14 @@ class ViewController extends Controller
             $finish = true;
         }
 
+        /*
+         * Recuperatin du temps restants
+         */
+        $time = $this->container->get('timer')->getime($data["Comp"]);
+        $hours = $time["hours"];
+        $minutes = $time["minutes"];
+        $seconds = $time["seconds"];
+
         $data = array('nom' => 'description');
 
         $form = $this->createFormBuilder($data)
@@ -61,6 +66,12 @@ class ViewController extends Controller
         if($request->isMethod('POST')){
             $form->handleRequest($request);
             if($form->isValid()){
+                $now = new \DateTime();
+
+                $finish = false;
+                if($phase->getDateFin() < $now){
+                    $finish = true;
+                }
                 $Comp = new CompIdea();
                 $Comp->setUser($this->getUser());
                 $Comp->setIdea($form['Proposition']->getData());
@@ -79,7 +90,11 @@ class ViewController extends Controller
                     'id' => $id,
                     'form'=>$form->createView(),
                     'chat' => $chat,
-                    'pseudo' => $pseudo
+                    'pseudo' => $pseudo,
+                    'hours' => $hours,
+                    'minutes' => $minutes,
+                    'seconds' => $seconds,
+                    'finish' => $finish,
                 ));
             }
         }
@@ -90,34 +105,68 @@ class ViewController extends Controller
             'form' => $form->createView(),
             'chat' => $chat,
             'pseudo' => $pseudo,
-            'finish' => $finish
+            'finish' => $finish,
+            'hours' => $hours,
+            'minutes' => $minutes,
+            'seconds' => $seconds,
         ));
     }
 
+    public function addComprehensionChatAction($id, Request $request){
+
+        $repository = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $data = $this->container->get('platform.sujectdata')->sujetdata($id);
+        $sujet = $data["subject"];
+
+        $phase = $data["Comp"];
+
+        $decideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findOneBy(array(
+            'sujet' => $sujet,
+            'user' => $user
+        ));
+
+        if($decideurs == null AND $sujet->getUser() != $user ){
+            return $this->redirectToRoute('gdss_platform_sujets');
+        }
+
+        if($user == $sujet->getUser()){
+            $pseudo = 'Facilitateur';
+        }
+        else{
+            $pseudo = $decideurs->getPseudodecideurs();
+        }
+
+        if($request->isXmlHttpRequest()){
+            $prop = $_POST["proposition"];
+            $Comp = new CompIdea();
+            $Comp->setUser($this->getUser());
+            $Comp->setIdea($prop);
+            $Comp->setPhases($phase);
+            $Comp->setPseudo($pseudo);
+            $repository->persist($Comp);
+            $repository->flush();
+
+
+        }
+        die();
+    }
+
     public function scriptCCPAction($id){
-
-
         $user = $this->getUser();
         $repository = $this->getDoctrine()->getManager();
-        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
-
-        $process = $sujet->getProcessus();
-
-        $phase = $repository->getRepository('GDSSPlatformBundle:Phases')->findOneBy(array(
-            'processus' => $process,
-            'nom' => 'Phase de Comprehension Collective du problème'
-        ));
+        $data = $this->container->get('platform.sujectdata')->sujetdata($id);
+        $phase = $data["Comp"];
 
         $chat = $repository->getRepository('GDSSPhasesBundle:CompIdea')->findBy(array(
             'phases' => $phase,
         ));
 
-
         return $this->render('@GDSSPhases/phases_view/script_chat_CCP.html.twig', array(
             'user' => $user,
             'id' => $id,
             'chat' => $chat,
-
         ));
     }
 }

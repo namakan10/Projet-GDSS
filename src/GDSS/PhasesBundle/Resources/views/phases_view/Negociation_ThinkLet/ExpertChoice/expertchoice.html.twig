@@ -1,0 +1,148 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+
+{% block title %}ExpertChoice{% endblock %}
+
+{% block customstyle %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+            <h1 style="text-decoration-style: double; margin-left: -170px"><a href="{{ path('negociation', {'id' : id}) }}"><i class="fas fa-arrow-left"></i></a> ExpertChoice{% if expertdefinied in ['facilitateur', 'decideur'] %} - MODE EXPERT{% endif %}</h1>
+
+        {% if expertdefinied in ['facilitateur', 'decideur'] %}
+            <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une catégorie</a></p>
+        {% endif %}
+
+        <ul class="nav nav-tabs" style="margin-right: 190px">
+            {% if expertdefinied != false %}
+                <li class="nav-item">
+                    <a class="nav-link active show" data-toggle="tab" href="#subsubject">CATEGORIES</a>
+                </li>
+            {% else %}
+                {% if admin %}
+                    <li class="nav-item">
+                        <a class="nav-link active show" data-toggle="tab" href="#decideurs">DECIDEURS</a>
+                    </li>
+                {% else %}
+                    <p>Le facilitateur n'a pas choisi d'expert pour la catégorisation. Veuiilez patienter !</p>
+                {% endif %}
+            {% endif %}
+        </ul>
+        <div id="myTabContent" class="tab-content" style="margin-right: 190px; margin-top: -35px">
+            {% if expertdefinied != false %}
+                <div class="tab-pane fade show active" id="subsubject">
+                    <div>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr class="">
+                                <th>Titre</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% block categorielist %}
+                                {% for cat in categorielist %}
+                                    <tr>
+                                        <td>{{ cat.name }}</td>
+                                        <td><a href="{{ path('ExpertChoice_Categorizer', {'id' : cat.id}) }}"
+                                               class="badge badge-warning">{% if expertdefinied in ['facilitateur', 'decideur'] %}Categoriser{% else %}Voir{% endif %}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endblock %}
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+            {% if expertdefinied == false %}
+                {% if admin %}
+                    <div class="tab-pane fade show active" id="decideurs">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr class="">
+                                <th>Decideurs</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for decid in decideurslist %}
+                                <tr>
+                                    <td><i class="fas fa-user-alt"></i> {{ decid.pseudodecideurs }}</td>
+                                    <td><a href="#" onclick="definiedexpert({{ decid.id }}, {{ id }}); return false"> <span class="badge badge-warning">Définir Expert</span></a> </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+
+                        <br/>
+                        <br/>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div id="add_project" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header login-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">Créer une catégorie</h4>
+                    </div>
+                    {{ form_start(form) }}
+
+                    <div style="margin-top: 5px; font-size: large">
+                        {{ form_label(form.Nom) }}
+                    </div>
+
+                    <div style="margin-left: 5px; margin-right: 5px">
+                        {{ form_widget(form.Nom, {'attr': {'class': 'modal-body'}}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
+                        {{ form_widget(form.Creer, {'attr': {'class': 'add-project'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="offcanvas"]').click(function(){
+                $("#navigation").toggleClass("hidden-xs");
+            });
+        });
+    </script>
+
+    <script>
+        function definiedexpert(expertid, returnid) {
+            $.ajax({
+                url:"http://www.projetgdss.com/app_dev.php/platform/server1dbtablepos0tokene7dcfc1e"+expertid+"ea013ab27f46c5922b55f3d0tueomdpqneh47e226cc25gmapdefejhldzhdzlpfee74fefvaqwepmpafvwvnbkltp5320",
+                type:"POST",
+                data: {returnid : returnid},
+                dataType: 'JSON',
+            });
+
+            setTimeout(window.location.reload(), 5000);
+        }
+    </script>
+{% endblock %}

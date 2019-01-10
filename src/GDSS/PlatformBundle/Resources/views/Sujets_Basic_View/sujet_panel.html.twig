@@ -4,6 +4,7 @@
 {% block curentSujet %}active{% endblock %}
 
 {% block body %}
+
     <div class="container">
         <h1 style="text-decoration-style: double"><img src="{{ asset('bundles/gdssplatform/icons/Bulleted List_50px.png') }}" style="height: 37px"/>  PROBLEME DE DECISION</h1>
         <br/>
@@ -39,7 +40,7 @@
                                     <td>{{ subject.titre }}</td>
                                     <td>
                                         {% if subject.dateFin < now1 %}
-                                            <span class="badge badge-info">Terminer</span>
+                                            <span class="badge badge-danger">Terminer</span>
                                         {% elseif subject.dateDebut < now1  %}
                                             <span class="badge badge-success">En cours</span>
                                         {% else %}
@@ -81,7 +82,7 @@
                             <td>{{ list.titre }}</td>
                             <td>
                                 {% if list.dateFin < now1 %}
-                                    <span class="badge badge-info">Terminer</span>
+                                    <span class="badge badge-danger">Terminer</span>
                                 {% elseif list.dateDebut < now1  %}
                                     <span class="badge badge-success">En cours</span>
                                 {% else %}

@@ -22,125 +22,151 @@
         <div style="">
             <br/>
             <br/>
+            <br/>
             {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-                <h3>Comprehension collective du problème</h3>
-
-                {# Compréhension collective du problème. #}
-                <div class="form-group">
-                    {{ form_label(form.DateDebut1, "Date de début", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                    {{ form_errors(form.DateDebut1) }}
-                    <div class="col-sm-3">
-                        {{ form_widget(form.DateDebut1, { 'attr': {'data-field': 'datetime'} }) }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    {{ form_label(form.Duree1min, "Durée minimale", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                    {{ form_errors(form.Duree1min) }}
-                    <div class="row" style="margin-left: 0px">
-                        <div class="col-sm-1 col">
-                            {{ form_widget(form.Duree1min) }}
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Comprehension collective du problème</h4>
                         </div>
-                        <div class="col-sm-2 col">
-                            {{ form_widget(form.Periode1min) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.Duree1max, "Durée maximale", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                    {{ form_errors(form.Duree1max) }}
-                    <div class="row" style="margin-left: 0px">
-                        <div class="col-sm-1 col">
-                            {{ form_widget(form.Duree1max) }}
-                        </div>
-                        <div class="col-sm-2 col">
-                            {{ form_widget(form.Periode1max) }}
-                        </div>
-                    </div>
-                </div>
-
-                <br/>
-
-                {# Phase de Generation #}
-
-                <h3>Génération</h3>
-                <div class="form-group">
-                    {{ form_label(form.DateDebut2, "Date de début", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                    {{ form_errors(form.DateDebut2) }}
-                    <div class="col-sm-3">
-                        {{ form_widget(form.DateDebut2, { 'attr': {'data-field': 'datetime'} }) }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.Duree2min, "Durée minimale", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                    {{ form_errors(form.Duree2min) }}
-                    <div class="row" style="margin-left: 0px">
-                        <div class="col-sm-1 col">
-                            {{ form_widget(form.Duree2min) }}
-                        </div>
-                        <div class="col-sm-2 col">
-                            {{ form_widget(form.Periode2min) }}
+                        <div class="card-body">
+                            <div class="form-group">
+                                {{ form_label(form.DateDebut1, "Date de début", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.DateDebut1) }}
+                                <div class="col-sm-7">
+                                    {{ form_widget(form.DateDebut1, { 'attr': {'data-field': 'datetime'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.Duree1min, "Durée minimale", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.Duree1min) }}
+                                <div class="row" style="margin-left: 0px">
+                                    <div class="col-sm-3 col">
+                                        {{ form_widget(form.Duree1min) }}
+                                    </div>
+                                    <div class="col-sm-4 col">
+                                        {{ form_widget(form.Periode1min) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.Duree1max, "Durée maximale", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.Duree1max) }}
+                                <div class="row" style="margin-left: 0px">
+                                    <div class="col-sm-3 col">
+                                        {{ form_widget(form.Duree1max) }}
+                                    </div>
+                                    <div class="col-sm-4 col">
+                                        {{ form_widget(form.Periode1max) }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    {{ form_label(form.Duree2max, "Durée maximale", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                    {{ form_errors(form.Duree2max) }}
-                    <div class="row" style="margin-left: 0px">
-                        <div class="col-sm-1 col">
-                            {{ form_widget(form.Duree2max) }}
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Génération</h4>
                         </div>
-                        <div class="col-sm-2 col">
-                            {{ form_widget(form.Periode2max) }}
+                        <div class="card-body">
+                            <div class="form-group">
+                                {{ form_label(form.DateDebut2, "Date de début", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.DateDebut2) }}
+                                <div class="col-sm-7">
+                                    {{ form_widget(form.DateDebut2, { 'attr': {'data-field': 'datetime'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.Duree2min, "Durée minimale", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.Duree2min) }}
+                                <div class="row" style="margin-left: 0px">
+                                    <div class="col-sm-3 col">
+                                        {{ form_widget(form.Duree2min) }}
+                                    </div>
+                                    <div class="col-sm-4 col">
+                                        {{ form_widget(form.Periode2min) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.Duree2max, "Durée maximale", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.Duree2max) }}
+                                <div class="row" style="margin-left: 0px">
+                                    <div class="col-sm-3 col">
+                                        {{ form_widget(form.Duree2max) }}
+                                    </div>
+                                    <div class="col-sm-4 col">
+                                        {{ form_widget(form.Periode2max) }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-            <br/>
-
-            {# Phase de negociation #}
-            <h3>Négociation</h3>
-            <div class="form-group">
-                {{ form_label(form.DateDebut3, "Date de début", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.DateDebut3) }}
-                <div class="col-sm-3">
-                    {{ form_widget(form.DateDebut3, { 'attr': {'data-field': 'datetime'} }) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.Duree3min, "Durée minimale", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.Duree3min) }}
-                <div class="row" style="margin-left: 0px">
-                    <div class="col-sm-1 col">
-                        {{ form_widget(form.Duree3min) }}
-                    </div>
-                    <div class="col-sm-2 col">
-                        {{ form_widget(form.Periode3min) }}
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.Duree3max, "Durée maximale", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.Duree3max) }}
-                <div class="row" style="margin-left: 0px">
-                    <div class="col-sm-1 col">
-                        {{ form_widget(form.Duree3max) }}
-                    </div>
-                    <div class="col-sm-2 col">
-                        {{ form_widget(form.Periode3max) }}
                     </div>
                 </div>
             </div>
 
-            <br/>
+            <br/><br/>
 
-            <h3>Décision</h3>
-            <div class="form-group">
-                {{ form_label(form.DateDecision, "Date", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.DateDecision) }}
-                <div class="col-sm-3">
-                    {{ form_widget(form.DateDecision, { 'attr': {'data-field': 'datetime'} }) }}
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Négociation</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                {{ form_label(form.DateDebut3, "Date de début", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.DateDebut3) }}
+                                <div class="col-sm-7">
+                                    {{ form_widget(form.DateDebut3, { 'attr': {'data-field': 'datetime'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.Duree3min, "Durée minimale", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.Duree3min) }}
+                                <div class="row" style="margin-left: 0px">
+                                    <div class="col-sm-3 col">
+                                        {{ form_widget(form.Duree3min) }}
+                                    </div>
+                                    <div class="col-sm-4 col">
+                                        {{ form_widget(form.Periode3min) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.Duree3max, "Durée maximale", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.Duree3max) }}
+                                <div class="row" style="margin-left: 0px">
+                                    <div class="col-sm-3 col">
+                                        {{ form_widget(form.Duree3max) }}
+                                    </div>
+                                    <div class="col-sm-4 col">
+                                        {{ form_widget(form.Periode3max) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Prise de décision</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                {{ form_label(form.DateDecision, "Date", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                                {{ form_errors(form.DateDecision) }}
+                                <div class="col-sm-6">
+                                    {{ form_widget(form.DateDecision, { 'attr': {'data-field': 'datetime'} }) }}
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -149,6 +175,7 @@
                 <button type="button" class="btn btn-info" id="infobulle">Info</button>
                 <span id="affiche"></span>
             {{ form_end(form) }}
+            <br/><br/>
         </div>
     </div>
 

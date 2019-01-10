@@ -1,4 +1,0 @@
-services:
-#    gdss_generation_think_let.example:
-#        class: GDSS\GenerationThinkLetBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]

@@ -1,0 +1,139 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+{% block title %}PinTheTailOnTheDonkey - Categorizer{% endblock %}
+
+{% block content %}
+    <div style="margin-right: 25%; margin-left: 5%">
+        {% block subtitle %}
+            <h1 style="text-decoration-style: double; margin-left: -15%"><a href="{{ path('PinTheTailOntheDonkey', {'id' : backid}) }}"><i class="fas fa-arrow-left"></i></a> PTTOTDonkey - Categorizer ({{ categorie.name }})</h1>
+        {% endblock %}
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active show" data-toggle="tab" href="#categoriser">CONTRIBUTIONS CATEGORISEES</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#noncategoriser">CONTRIBUTION NON CATEGORISEES</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade show active" id="categoriser">
+                <br/>
+
+                <form method="post" href="#">
+                    <div class="form-group">
+                        {% for ctcat in contributioncat %}
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="customCheck{{ ctcat.id }}" name="{{ ctcat.id }}" value="{{ ctcat.id }}">
+                                <label class="custom-control-label" for="customCheck{{ ctcat.id }}">
+                                    <i class="outgoing_msg">
+                                        <i class="sent_msg" style="float: none">
+                                            <p><span>{{ ctcat.pseudo }}<br/></span> {{ ctcat.contribution }} </p>
+                                        </i>
+                                    </i>
+                                    {% set coll = false %}
+                                    {% for cmt in comment %}
+                                        {% if cmt.contribution == ctcat %}
+                                            {% set coll = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if coll == true %}
+                                        <a class="fas fa-plus-circle" data-toggle="collapse" href="#catego{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
+                                    {% endif %}
+
+                                    <div class="collapse" id="catego{{ ctcat.id }}">
+                                        {% for cmt in comment %}
+                                            {% if cmt.contribution == ctcat %}
+                                                <div class="incoming_msg" style="margin-left: 50px">
+                                                    <div class="received_msg">
+                                                        <div class="received_withd_msg">
+                                                            <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                    <br/><br/>
+                                </label>
+                            </div>
+                        {% endfor %}
+                        <div class="form-inline">
+                            <div class="col-sm-11">
+                                {% if contributioncat %}
+                                <input type="submit" value="Décatégoriser" class="btn btn-warning" name="Décatégoriser">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <br/><br/>
+            </div>
+            <div class="tab-pane fade" id="noncategoriser">
+                <br/>
+
+                <form method="post" href="#">
+                    <div class="form-group">
+                        {% for ct in contribution %}
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="customCheck{{ ct.id }}" name="{{ ct.id }}" value="{{ ct.id }}">
+                                <label class="custom-control-label" for="customCheck{{ ct.id }}">
+                                    <i class="outgoing_msg">
+                                        <i class="sent_msg" style="float: none">
+                                            <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
+                                        </i>
+                                    </i>
+
+                                    {% set coll = false %}
+                                    {% for cmt in comment %}
+                                        {% if cmt.contribution == ct %}
+                                            {% set coll = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if coll == true %}
+                                        <a class="fas fa-plus-circle" data-toggle="collapse" href="#noncatego{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                                    {% endif %}
+
+                                    <div class="collapse" id="noncatego{{ ct.id }}">
+                                        {% for cmt in comment %}
+                                            {% if cmt.contribution == ct %}
+                                                <i class="incoming_msg" style="margin-left: 50px">
+                                                    <i class="received_msg">
+                                                        <i class="received_withd_msg">
+                                                            <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
+                                                        </i>
+                                                    </i>
+                                                </i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                    <br/><br/>
+                                </label>
+                            </div>
+                        {% endfor %}
+                        <div class="form-inline">
+                            {% if contribution %}
+                                <div class="col-sm-11">
+                                    <input type="submit" value="Catégoriser" class="btn btn-warning" name="Catégoriser">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+
+                <br/><br/>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block customstyle %}
+    {% if error is defined %}
+        <script>
+            alert("{{ error }}");
+        </script>
+    {% endif %}
+{% endblock %}

@@ -24,6 +24,7 @@ class GetSujetdata
      * @return array
      */
     public function sujetdata($id){
+
         $subjectView = $this->em->getRepository('GDSSPlatformBundle:Sujet')->find($id);
 
         $contrainte = $this->em->getRepository('GDSSPlatformBundle:Contraintes')->findBy(array(
@@ -55,7 +56,7 @@ class GetSujetdata
             'processus' => $process
         ));
 
-        return array($subjectView, $process, $critere, $contrainte, $phase, $Comp, $Gene, $Nego);
+        return array("subject" => $subjectView, "process" => $process, "critere" => $critere, "contrainte" => $contrainte, "phase" => $phase, "Comp" => $Comp, "Gene" => $Gene, "Nego" => $Nego);
 
     }
 

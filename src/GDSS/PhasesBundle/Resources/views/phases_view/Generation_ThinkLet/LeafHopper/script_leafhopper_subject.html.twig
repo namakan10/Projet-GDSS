@@ -1,0 +1,20 @@
+{% if chat %}
+    {% for ct in chat %}
+        {% if ct.user == user %}
+            <div class="outgoing_msg">
+                <div class="sent_msg">
+                    <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contrib }} </p>
+                </div>
+            </div>
+        {% else %}
+            <div class="incoming_msg">
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <p><span>{{ ct.pseudo }}</span><br/>{{ ct.contrib }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    {% endfor %}
+{% endif %}

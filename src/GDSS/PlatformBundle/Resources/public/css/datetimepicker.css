@@ -113,7 +113,7 @@
 	
 	padding: 0.5em 0.5em 1em 1em;
 	
-	color: #FF3B30;
+	color: #2980B9;
 	font-size: 1.5em;
 	
 	cursor: pointer;
@@ -121,7 +121,7 @@
 
 .dtpicker-header .dtpicker-close:hover
 {
-	color: #FF3B30;
+	color: #2980B9;
 }
 
 .dtpicker-header .dtpicker-value
@@ -253,8 +253,8 @@
 	display: block;
 	padding: 0.6em 0;
 	width: 47%;
-	background: #FF3B30;
-	color: #FFFFFF;
+	background: #2980B9;
+	color: #2980B9;
 	text-align: center;
 	font-size: 1.3em;
 

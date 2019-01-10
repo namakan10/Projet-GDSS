@@ -131,6 +131,9 @@ class addController extends Controller
                     'sujet' => $sujet
                 ));
 
+                //Creation des deux formulaires
+                $formContraintes = $this->createForm(ContraintesType::class, $contrainte);
+                $formCriteres = $this->createForm(CriteresType::class, $critere);
 
                 return $this->render('@GDSSPlatform/Sujets_Basic_View/addContrainteCritere.html.twig', array(
                     'formCritere' => $formCriteres->createView(),
@@ -151,6 +154,9 @@ class addController extends Controller
                 $criterelist = $em->findBy(array(
                     'sujet' => $sujet,
                 ));
+
+                $formContraintes = $this->createForm(ContraintesType::class, $contrainte);
+                $formCriteres = $this->createForm(CriteresType::class, $critere);
 
 
                 return $this->render('@GDSSPlatform/Sujets_Basic_View/addContrainteCritere.html.twig', array(
@@ -173,6 +179,76 @@ class addController extends Controller
             'formContrainte'=>$formContraintes->createView(),
             'id'=>$id,
             'criterelist' => $criterelist,
+            'contraintelist' => $contraintelist,
+        ));
+
+    }
+
+    public function addcrtitereAction($id, Request $request){
+
+        $repository = $this->getDoctrine()->getManager();
+
+        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+
+        if($request->isXmlHttpRequest()){
+            $description = $_POST['description'];
+
+            $critere = new Criteres();
+            $critere->setDescription($description);
+            $critere->setSujet($sujet);
+
+            $repository->persist($critere);
+            $repository->flush();
+        }
+
+        die();
+    }
+
+    public function criterelistAction($id){
+        $repository = $this->getDoctrine()->getManager();
+
+        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+
+        $criterelist =$repository->getRepository('GDSSPlatformBundle:Criteres')->findBy(array(
+            'sujet' => $sujet,
+        ));
+
+        return $this->render('@GDSSPlatform/Sujets_Basic_View/critere_list.html.twig', array(
+            'criterelist' => $criterelist,
+        ));
+
+    }
+
+    public function addcontrainteAction($id, Request $request){
+
+        $repository = $this->getDoctrine()->getManager();
+
+        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+
+        if($request->isXmlHttpRequest()){
+            $description = $_POST['description'];
+
+            $contraite = new Contraintes();
+            $contraite->setDescription($description);
+            $contraite->setSujet($sujet);
+
+            $repository->persist($contraite);
+            $repository->flush();
+        }
+
+        die();
+    }
+
+    public function contraintelistAction($id){
+        $repository = $this->getDoctrine()->getManager();
+
+        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+
+        $contraintelist =$repository->getRepository('GDSSPlatformBundle:Contraintes')->findBy(array(
+            'sujet' => $sujet,
+        ));
+
+        return $this->render('@GDSSPlatform/Sujets_Basic_View/contrainte_list.html.twig', array(
             'contraintelist' => $contraintelist,
         ));
 
@@ -256,10 +332,11 @@ class addController extends Controller
         //Creation du formulaire
         $form = $this->createFormBuilder($defaultdata)
             ->add('DateDebut1', DateTimeType::class, array(
-                'date_format' => 'ddMMMMyyyy',
+                'format' => 'dd-MM-yyyy H:m',
                 //FOMATE LA DATE DIRECTEMENT EN TIMESTAMP POUR EFFECTUER DES OPERATIONS AVEC
                 'input' => 'timestamp',
                 'widget' => 'single_text',
+                'html5' => false,
             ))
             ->add('Duree1min', NumberType::class)
             ->add('Periode1min', ChoiceType::class, array(
@@ -278,9 +355,10 @@ class addController extends Controller
                 )
             ))
             ->add('DateDebut2', DateTimeType::class, array(
-                'date_format' => 'ddMMMMyyyy',
+                'format' => 'dd-MM-yyyy H:m',
                 'input' => 'timestamp',
                 'widget' => 'single_text',
+                'html5' => false,
             ))
             ->add('Duree2min', NumberType::class)
             ->add('Periode2min', ChoiceType::class, array(
@@ -299,9 +377,10 @@ class addController extends Controller
                 )
             ))
             ->add('DateDebut3', DateTimeType::class, array(
-                'date_format' => 'ddMMMMyyyy',
+                'format' => 'dd-MM-yyyy H:m',
                 'input' => 'timestamp',
                 'widget' => 'single_text',
+                'html5' => false,
             ))
             ->add('Duree3min', NumberType::class)
             ->add('Periode3min', ChoiceType::class, array(
@@ -320,8 +399,9 @@ class addController extends Controller
                 )
             ))
             ->add('DateDecision', DateTimeType::class, array(
-                'date_format' => 'ddMMMMyyyy',
+                'format' => 'dd-MM-yyyy H:m',
                 'widget' => 'single_text',
+                'html5' => false,
             ))
             ->add('Terminer', SubmitType::class)
             ->getForm();
@@ -338,8 +418,7 @@ class addController extends Controller
                  */
 
                 $startComp = $form["DateDebut1"]->getData();
-                var_dump($startComp);
-               /*
+
                 $add = $startComp;
                 $startComp = date('Y-m-d H:i:s', $startComp);
                 $startComp = new \DateTime(trim($startComp));
@@ -355,14 +434,13 @@ class addController extends Controller
                 $Comp->setNom('Phase de Comprehension Collective du problème');
                 $Comp->setDateStart($startComp);
                 $Comp->setProcessus($process);
-                $Comp->setDateEnd($endComp);*/
+                $Comp->setDateEnd($endComp);
 
                 /*
                  *Phase de generations
                  */
                 $startGene = $form["DateDebut2"]->getData();
-                var_dump($startGene);
-                die();
+
                 $add = $startGene;
                 $startGene = date('Y-m-d H:i:s', $startGene);
                 $startGene = new \DateTime(trim($startGene));
@@ -477,7 +555,9 @@ class addController extends Controller
                     $em->persist($Decision);
                     $em->flush();
 
-                    return $this->redirectToRoute('gdss_platform_sujets');
+                    return $this->redirectToRoute('gdss_platform_sujet_vue', array(
+                        'id' => $id,
+                    ));
                 }
 
             }

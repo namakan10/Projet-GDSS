@@ -2,12 +2,14 @@
 
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/footers.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/circle_progress_bar.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/send_invitation.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/fontawesome/css/all.css') }}" type="text/css">
+
 {% endblock %}
+
 {% block title %}{{ subjectView.titre }}{% endblock %}
 {% block curentSujet %}active{% endblock %}
 {% block body %}
@@ -16,14 +18,21 @@
       {# INFORMATION DU SUJETS #}
         <div style="border: 1px solid ; border-radius: 10px; background-color: white; min-height: 375px">
             <div style="margin: 10px">
-                <h2>{{ subjectView.titre }}   {% if subjectView.dateFin < now %}
-                        <span class="badge badge-success">Terminer</span>
-                    {% elseif subjectView.dateDebut < now  %}
-                        <span class="badge badge-primary">En cours</span>
-                    {% else %}
-                        <span class="badge badge-warning">Attente</span>
+                <div class="row">
+                    <h2 class="col-sm-11">{{ subjectView.titre }}   {% if subjectView.dateFin < now %}
+                            <span class="badge badge-success">Terminer</span>
+                        {% elseif subjectView.dateDebut < now  %}
+                            <span class="badge badge-primary">En cours</span>
+                        {% else %}
+                            <span class="badge badge-warning">Attente</span>
+                        {% endif %}
+                    </h2>
+                    {% if admin %}
+                        <h2><a class="col-sm-1" href="{{ path('edit_sujet', {'id' : subjectView.id}) }}"><i class="fas fa-edit"></i></a></h2>
                     {% endif %}
-                </h2>
+                </div>
+
+
                 <hr/>
                 <h4>But : {{ subjectView.but }}</h4>
                 <br/>
@@ -84,6 +93,9 @@
                                 <th>Statut</th>
                                 <th>Progression</th>
                                 <th></th>
+                                {% if subjectView.dateFin > now %}
+                                    <th></th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -108,7 +120,7 @@
                                         jr
                                     {% endif %}
                                 </td>
-                                <td>{{ Comp.dateDebut|date('d/m/y h:i') }}</td>
+                                <td>{{ Comp.dateDebut|date('d/m/y H:i') }}</td>
                                 <td><span
                                       {% if now > Comp.dateFin%}
                                           class="badge badge-danger">Terminer
@@ -123,6 +135,15 @@
                                         class="badge badge-info"> Voir
                                      </a>
                                 </td>
+                                {% if admin %}
+                                    {% if subjectView.dateFin > now %}
+                                        <td><a href="{{ path('generation', {'id':id}) }}"
+                                               class="badge badge-warning"> Modifier
+                                            </a>
+                                        </td>
+                                    {% endif %}
+
+                                {% endif %}
 
                               {# FIN DE LA VUE POUR LA COMP COLLECTIVE DU PROBLEME#}
 
@@ -149,7 +170,7 @@
                                         jr
                                     {% endif %}
                                 </td>
-                                <td>{{ Gene.dateDebut|date('d/m/y h:i') }}</td>
+                                <td>{{ Gene.dateDebut|date('d/m/y H:i') }}</td>
                                 <td><span
                                       {% if now > Gene.dateFin%}
                                           class="badge badge-danger">Terminer
@@ -165,6 +186,14 @@
                                         class="badge badge-info"> Voir
                                      </a>
                                 </td>
+                                {% if admin %}
+                                    {% if subjectView.dateFin > now %}
+                                        <td><a href="{{ path('generation', {'id':id}) }}"
+                                               class="badge badge-warning"> Modifier
+                                            </a>
+                                        </td>
+                                    {% endif %}
+                                {% endif %}
 
                             {# FIN DE LA VUE DE LA PHASE DE GENERATIONS DES SOLUTIONS #}
 
@@ -191,7 +220,7 @@
                                         jr
                                     {% endif %}
                                 </td>
-                                <td>{{ Nego.dateDebut|date('d/m/y h:i') }}</td>
+                                <td>{{ Nego.dateDebut|date('d/m/y H:i') }}</td>
                                 <td><span
                                       {% if now > Nego.dateFin%}
                                           class="badge badge-danger">Terminer
@@ -202,10 +231,18 @@
                                       {% endif %}
                                      </span></td>
                                 <td><div class="progress"><div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{ progressNego }}%" aria-valuenow="{{ progressNego }}" aria-valuemin="0" aria-valuemax="100"></div></div></td>
-                                <td><a href=""
+                                <td><a href="{{ path('negociation', {'id':id}) }}"
                                         class="badge badge-info"> Voir
                                      </a>
                                 </td>
+                                {% if admin %}
+                                    {% if subjectView.dateFin > now %}
+                                        <td><a href="{{ path('generation', {'id':id}) }}"
+                                               class="badge badge-warning"> Modifier
+                                            </a>
+                                        </td>
+                                    {% endif %}
+                                {% endif %}
                             </tr>
 
                           {# FIN DE LA VUE DE LA PHASE DE NEGOTIATION#}
@@ -226,10 +263,32 @@
             </div>
             <div class="tab-pane fade" id="decideurs">
                 <br/>
+                {% if defined %}
                 {% if admin %}
-                    {% if defined %}
                         <a href ="#" class="send-invitation" data-toggle="modal" data-target="#send-invitation"><button type="button" class="btn btn-warning">Inviter des decideurs</button></a>
-                    {% endif %}
+                {% endif %}
+                <br/>
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="">
+                            <th>Decideurs</th>
+                            {% if admin %}
+                                <th></th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for decid in decideurs %}
+                            <tr>
+                                <td><i class="fas fa-user-alt"></i> {{ decid.pseudodecideurs }}</td>
+                                {% if admin %}
+                                    <td> <i class="fas fa-trash-alt" style="color:red;"></i></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
                 {% endif %}
                 <br/>
                 <br/>
@@ -239,6 +298,7 @@
     <br/><br/><br/>
 
 
+{#  Modal content #}
 
     <div id="send-invitation" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -267,9 +327,9 @@
                 </div>
                  {{ form_end(form) }}
             </div>
-
         </div>
     </div>
+
 
 {% endblock %}
 

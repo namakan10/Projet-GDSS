@@ -1,0 +1,165 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+
+{% block title %}BucketVote{% endblock %}
+
+{% block customstyle %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('negociation', {'id' : id}) }}"> </a> BucketVote</h1>
+
+
+        {% if admin %}
+            <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une catégorie</a></p>
+        {% endif %}
+
+
+        <ul class="nav nav-tabs" style="margin-right: 190px">
+            <li class="nav-item">
+                <a class="nav-link active show" data-toggle="tab" href="#subsubject">CATEGORIES</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content" style="margin-right: 190px; margin-top: -35px">
+            {% block categoriestab %}
+                <div class="tab-pane fade show active" id="subsubject">
+                    <div>
+                        <h3>Très prioritaire</h3>
+                        <hr/>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr class="">
+                                <th>Titre</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for cat in categorielist %}
+                                    {% if cat.priority == '1' %}
+                                        <tr>
+                                            <td class="col">{{ cat.name }}</td>
+                                            <td><a href="{{ path('BucketVoteCategorie', {'id' : cat.id}) }}"
+                                                       class="badge badge-warning">{% if admin %}Categoriser{% else %}Voir{% endif %}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                        <h3>Moyennement prioritaire</h3>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr class="">
+                                    <th>Titre</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for cat in categorielist %}
+                                {% if cat.priority == '2' %}
+                                    <tr>
+                                        <td class="col">{{ cat.name }}</td>
+                                        <td><a href="{{ path('BucketVoteCategorie', {'id' : cat.id}) }}"
+                                               class="badge badge-warning">{% if admin %}Categoriser{% else %}Voir{% endif %}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+                        <hr/>
+
+                        <h3>Faiblement prioritaire</h3>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr class="">
+                                <th>Titre</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for cat in categorielist %}
+                                {% if cat.priority == '3' %}
+                                    <tr>
+                                        <td class="col">{{ cat.name }}</td>
+                                        <td><a href="{{ path('BucketVoteCategorie', {'id' : cat.id}) }}"
+                                               class="badge badge-warning">{% if admin %}Categoriser{% else %}Voir{% endif %}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            {% endblock %}
+            {% block othertab %}{% endblock %}
+        </div>
+
+        <div id="add_project" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header login-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">Créer une catégorie</h4>
+                    </div>
+                    {{ form_start(form) }}
+
+                    <div style="margin-top: 5px; font-size: large">
+                        {{ form_label(form.Name, "Nom") }}
+                    </div>
+
+                    <div style="margin-left: 5px; margin-right: 5px">
+                        {{ form_widget(form.Name, {'attr': {'class': 'modal-body'}}) }}
+                    </div>
+
+                    <div style="margin-top: 5px; font-size: large">
+                        {{ form_label(form.Priority, "Priorité") }}
+                    </div>
+
+                    <div style="margin-left: 5px; margin-right: 5px">
+                        {{ form_widget(form.Priority) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
+                        {{ form_widget(form.Creer, {'attr': {'class': 'add-project'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="offcanvas"]').click(function(){
+                $("#navigation").toggleClass("hidden-xs");
+            });
+        });
+    </script>
+{% endblock %}

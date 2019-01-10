@@ -1,0 +1,107 @@
+{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/generation.html.twig' %}
+
+{% block title %}FreeBrainstorming Contribution{% endblock %}
+
+{% block content %}
+        <div class="container">
+            <div id="display">
+                {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id':'form_propo'}}) }}
+
+                <div class="form-group">
+                    {{ form_label(form.Proposition, "Proposition", {'label_attr': {'class': 'col-sm-8 control-label'}}) }}
+                    {{ form_errors(form.Proposition) }}
+                    {{ form_widget(form.Proposition, {'attr': {'class': 'col-sm-9'}}) }}
+                </div>
+                <div class="form-inline">
+                    <div class="col-sm-11">
+                        {{ form_widget(form.Envoyer, {'attr': {'class': 'btn linkstyle'}}) }}
+                    </div>
+                </div>
+                <div style="position: relative; margin-left: 748px; margin-top: -39px">
+                    <a href="{{ path('generation', {'id':id}) }}"><button type="button" class="btn btn-outline-primary" id="stop">Retour</button></a>
+                </div>
+                {{ form_end(form) }}
+            </div>
+
+            <div class="propo_list">
+                {% if proposition %}
+                    {% for propo in proposition %}
+                        <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                            <li>
+                                <div class="comment-main-level">
+                                    <div class="comment-box">
+                                        <div class="comment-head">
+                                            <h6 class="comment-name by-author">Proposition {{ propo.numero }}</h6>
+                                        </div>
+                                        <div class="comment-content">
+                                            <p>{{ propo.contribution }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <br/>
+            {{ form_start(submit, {'attr': {'class': 'form-horizontal'}}) }}
+                {{ form_widget(submit.Submit, {'attr': {'class': 'btn linkstyle'}}) }}
+            {{ form_end(submit) }}
+            <br/>
+
+        </div>
+
+{% endblock %}
+
+
+
+{% block customscrpits %}
+    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+
+    <script>
+        {% if alert %}
+            alert("La page a été soumise avec succes");
+        {% endif %}
+        var id = {{ id }}
+            $('#form_propo').on('submit', function (event) {
+                event.preventDefault();
+                var form_data = document.getElementById('form_Proposition').value;
+                $.ajax({
+                    url:"http://www.projetgdss.com/app_dev.php/add_propo/"+id,
+                    type:"POST",
+                    data: {proposition : form_data, status : 'Non Posté'},
+                    dataType: 'JSON',
+                    success:function (data) {
+
+                    }
+                });
+                $(".propo_list").load('http://www.projetgdss.com/app_dev.php/brainstroming_contrib/' +id);
+                document.getElementById('form_Proposition').value = null;
+                element.scrollTop = element.scrollHeight;
+            });
+        {#
+            var user = {{ user.id }}
+        $("#submit").click(function () {
+            ;
+            $.ajax({
+                url :  'http://www.myproject.com/app_dev.php/submit/50',
+                type : 'GET',
+                data : 'user=' +user ,
+                dataType : 'html',
+                success : function(code_html, statut){
+                    alert("Vous m'avez cliqué !");
+                },
+                error : function(resultat, statut, erreur){
+
+                },
+                complete : function(resultat, statut){
+
+                }
+            });
+        });
+        #}
+
+    </script>
+{% endblock %}

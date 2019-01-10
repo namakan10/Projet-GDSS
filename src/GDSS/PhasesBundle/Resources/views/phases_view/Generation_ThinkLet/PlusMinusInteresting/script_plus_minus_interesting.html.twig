@@ -1,0 +1,314 @@
+{% if chat %}
+    {% for ct in chat %}
+        {% if ct.user == user %}
+            <div class="outgoing_msg">
+                <div class="sent_msg">
+                    <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
+                    <ul class="timeline">
+                        <li>
+                            <a class="far fa-thumbs-up"
+                                    {% for reac in reaction %}
+                                        {% if reac.contrib == ct %}
+                                            {% if reac.reaction == "Like" %}
+                                                {% if reac.user == user %}
+                                                    style="color:blue;"
+                                                {% endif %}
+                                            {% else %}
+
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                            > ({{ ct.liked }})</a>
+
+                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#like{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}">
+
+                            </a>
+                            <div class="collapse" id="like{{ ct.id }}">
+
+                                <div class="card card-body">
+                                    {% for reply in contribreply %}
+                                        {% if reply.contribution == ct %}
+                                            {% if reply.reaction ==  "Like"%}
+                                                <div class="incoming_msg">
+                                                    <div class="received_msg">
+                                                        <div class="received_withd_msg">
+                                                            <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        <li/>
+                        <li>
+                            <a class="far fa-thumbs-down"
+
+                                    {% for reac in reaction %}
+                                        {% if reac.contrib == ct %}
+                                            {% if reac.reaction == "Dislike" %}
+                                                {% if reac.user == user %}
+                                                    style="color:red;"
+                                                    {% set checkdislike = true %}
+                                                {% endif %}
+                                            {% else %}
+
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                            > ({{ ct.dislike }})
+                            </a>
+
+                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#dislike{{ ct.id }}" role="button" aria-expanded="false" aria-controls="dislike{{ ct.id }}">
+
+                            </a>
+                            <div class="collapse" id="dislike{{ ct.id }}">
+
+                                <div class="card card-body">
+                                    {% for reply in contribreply %}
+                                        {% if reply.contribution == ct %}
+                                            {% if reply.reaction ==  "Dislike"%}
+                                                <div class="incoming_msg">
+                                                    <div class="received_msg">
+                                                        <div class="received_withd_msg">
+                                                            <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </li>
+                        <li>
+                            <a class="far fa-meh"
+
+                                    {% for reac in reaction %}
+                                        {% if reac.contrib == ct %}
+                                            {% if reac.reaction == "Interesting" %}
+                                                {% if reac.user == user %}
+                                                    style="color: #c69500;"
+
+                                                {% endif %}
+                                            {% else %}
+
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                            > ({{ ct.interesting }})</a>
+
+                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#interesting{{ ct.id }}" role="button" aria-expanded="false" aria-controls="interesting{{ ct.id }}">
+
+                            </a>
+                            <div class="collapse" id="interesting{{ ct.id }}">
+
+                                <div class="card card-body">
+                                    {% for reply in contribreply %}
+                                        {% if reply.contribution == ct %}
+                                            {% if reply.reaction ==  "Interesting"%}
+                                                <div class="incoming_msg">
+                                                    <div class="received_msg">
+                                                        <div class="received_withd_msg">
+                                                            <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        {% else %}
+            <div class="incoming_msg">
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <p><span>{{ ct.pseudo }}</span><br/>{{ ct.contribution }}</p>
+                        <ul class="timeline">
+                            <li>
+                                <a class="far fa-thumbs-up"  href="#" onclick="addreact({{ ct.id }}, 'Like');"
+                                        {% set checklike = false %}
+                                        {% for reac in reaction %}
+                                            {% if reac.contrib == ct %}
+                                                {% if reac.reaction == "Like" %}
+                                                    {% if reac.user == user %}
+                                                        style="color:blue;"
+                                                        {% set checklike = true %}
+                                                    {% endif %}
+                                                {% else %}
+
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                > ({{ ct.liked }})</a>
+
+                                <a class="fas fa-plus-circle" data-toggle="collapse" href="#like{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}">
+
+                                </a>
+                                <div class="collapse" id="like{{ ct.id }}">
+
+                                    <div class="card card-body">
+                                        {% if checklike == true %}
+                                            <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'Like'); return false">
+                                                <div class="form-group">
+                                                    <label for="argument{{ ct.id }}">Argument</label>
+                                                    <textarea class="form-control" id="argument{{ ct.id }}" rows="2" required></textarea>
+                                                    <br/>
+                                                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                </div>
+                                            </form>
+                                        {% endif %}
+
+                                        {% for reply in contribreply %}
+                                            {% if reply.contribution == ct %}
+                                                {% if reply.reaction ==  "Like"%}
+                                                    <div class="incoming_msg">
+                                                        <div class="received_msg">
+                                                            <div class="received_withd_msg">
+                                                                <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            <li/>
+                            <li>
+                                <a class="far fa-thumbs-down" href="#" onclick="addreact({{ ct.id }}, 'Dislike');"
+                                        {% set checkdislike = false %}
+                                        {% for reac in reaction %}
+                                            {% if reac.contrib == ct %}
+                                                {% if reac.reaction == "Dislike" %}
+                                                    {% if reac.user == user %}
+                                                        style="color:red;"
+                                                        {% set checkdislike = true %}
+                                                    {% endif %}
+                                                {% else %}
+
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                > ({{ ct.dislike }})
+                                </a>
+
+                                <a class="fas fa-plus-circle" data-toggle="collapse" href="#dislike{{ ct.id }}" role="button" aria-expanded="false" aria-controls="dislike{{ ct.id }}">
+
+                                </a>
+                                <div class="collapse" id="dislike{{ ct.id }}">
+                                    <div class="card card-body">
+                                        {% if checkdislike == true %}
+                                            <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'Dislike'); return false">
+                                                <div class="form-group">
+                                                    <label for="argument{{ ct.id }}">Argument</label>
+                                                    <textarea class="form-control" id="argument{{ ct.id }}" rows="2" required></textarea>
+                                                    <br/>
+                                                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                </div>
+                                            </form>
+                                        {% endif %}
+                                        {% for reply in contribreply %}
+                                            {% if reply.contribution == ct %}
+                                                {% if reply.reaction ==  "Dislike"%}
+                                                    <div class="incoming_msg">
+                                                        <div class="received_msg">
+                                                            <div class="received_withd_msg">
+                                                                <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="far fa-meh" href="#" onclick="addreact({{ ct.id }}, 'Interesting');"
+                                        {% set checkinteresting = false %}
+                                        {% for reac in reaction %}
+                                            {% if reac.contrib == ct %}
+                                                {% if reac.reaction == "Interesting" %}
+                                                    {% if reac.user == user %}
+                                                        style="color: #c69500;"
+                                                        {% set checkinteresting = true %}
+                                                    {% endif %}
+                                                {% else %}
+
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                > ({{ ct.interesting }})</a>
+
+                                <a class="fas fa-plus-circle" data-toggle="collapse" href="#interesting{{ ct.id }}" role="button" aria-expanded="false" aria-controls="interesting{{ ct.id }}">
+
+                                </a>
+                                <div class="collapse" id="interesting{{ ct.id }}">
+
+                                    <div class="card card-body">
+                                        {% if checkinteresting == true %}
+                                            <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'Interesting'); return false">
+                                                <div class="form-group">
+                                                    <label for="argument{{ ct.id }}">Argument</label>
+                                                    <textarea class="form-control" id="argument{{ ct.id }}" rows="2" required></textarea>
+                                                    <br/>
+                                                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                </div>
+                                            </form>
+                                        {% endif %}
+                                        {% for reply in contribreply %}
+                                            {% if reply.contribution == ct %}
+                                                {% if reply.reaction ==  "Interesting"%}
+                                                    <div class="incoming_msg">
+                                                        <div class="received_msg">
+                                                            <div class="received_withd_msg">
+                                                                <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<script>
+    function addreact(ctid, reac) {
+        $.ajax({
+            url:"http://www.projetgdss.com/app_dev.php/reaction/"+ctid,
+            type:"POST",
+            data: {reac : reac},
+            dataType: 'JSON',
+        })
+    }
+
+    function addcomment(ctid, argument, reaction) {
+
+       $.ajax({
+            url:"http://www.projetgdss.com/app_dev.php/commentreply/"+ctid,
+            type:"POST",
+            data: {reply : argument, reaction: reaction},
+            dataType: 'JSON',
+        })
+    }
+
+</script>

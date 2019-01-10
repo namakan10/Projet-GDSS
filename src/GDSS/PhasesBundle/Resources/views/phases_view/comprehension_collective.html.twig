@@ -3,28 +3,38 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/comment.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chat.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/timer.css') }}" type="text/css">
+    {% block customstylesheets %}
+    {% endblock %}
 {% endblock %}
 
-{% block title %}Compréhension Collective{% endblock %}
+
+
+{% block title %}Comprehension collective{% endblock %}
 
 {% block curentSujet %}active{% endblock %}
 {% block body %}
-    <div class="container">
+    <div class="" style="width: 1000px; margin-left: 50px">
         {% if finish %}
             <div id = "test" class="divscript" style="border: 2px groove; border-radius: 10px; height: 450px; background-color: white; overflow: scroll;">
-                {{ render(controller('GDSSPhasesBundle:View:scriptCCP', {'id' : id} )) }}
+                {% block controller1 %}
+                    {{ render(controller('GDSSPhasesBundle:View:scriptCCP', {'id' : id} )) }}
+                {% endblock %}
             </div>
             <br/>
             <div style="margin-left: 95%">
                 <a href="{{ path('gdss_platform_sujet_vue', {'id':id}) }}"><button type="button" class="btn btn-outline-primary" id="stop">Retour</button></a>
             </div>
         {% else %}
-            <div id = "test" class="divscript" style="border: 2px groove; border-radius: 10px; height: 340px; background-color: white; overflow: scroll;">
-                {{ render(controller('GDSSPhasesBundle:View:scriptCCP', {'id' : id} )) }}
+            <div id = "test" class="divscript" style="border: 2px groove; border-radius: 10px; height: 340px; background-color: white; overflow: scroll; margin-top: 20px">
+
+                {% block controller2 %}
+                    {{ render(controller('GDSSPhasesBundle:View:scriptCCP', {'id' : id} )) }}
+                {% endblock %}
             </div>
             <br/>
-            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id':'chat_form'}}) }}
 
             <div class="form-group">
                 {{ form_label(form.Proposition, "Message", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
@@ -35,42 +45,200 @@
                 <div class="col-sm-11">
                     {{ form_widget(form.Envoyer, {'attr': {'class': 'btn btn-primary'}}) }}
                 </div>
+                {{ form_end(form) }}
                 <div>
-                    <a href="{{ path('gdss_platform_sujet_vue', {'id':id}) }}"><button type="button" class="btn btn-outline-primary" id="stop">Retour</button></a>
+                    <a href="{% block backpath %}{{ path('gdss_platform_sujet_vue', {'id':id}) }}{% endblock %}"><button type="button" class="btn btn-outline-primary" id="stop">Retour</button></a>
                 </div>
             </div>
-            {{ form_end(form) }}
+
         {% endif %}
+        <br/><br/>
     </div>
+    {% block countdown %}
+        <div style="position: fixed; margin-left: 1050px;" >
+            <div style="border-left: 6px solid gray; height: 400px; position: fixed; margin-top: -500px; margin-left: 15px"></div>
+            <div class="wrap" style="position: fixed; margin-left: 1100px; margin-top: 80px">
+                <h2>Temps restants</h2>
+                <br/>
+                <div class="countdown">
+                    <div class="bloc-time hours" data-init-value="00">
+
+                        <div class="figure hours hours-1">
+                            <span class="top" style="">0</span>
+                            <span class="top-back">
+                            <span>0</span>
+                        </span>
+                            <span class="bottom" style="">0</span>
+                            <span class="bottom-back">
+                            <span>0</span>
+                        </span>
+                        </div>
+
+                        <div class="figure hours hours-2">
+                            <span class="top">0</span>
+                            <span class="top-back">
+                            <span>0</span>
+                        </span>
+                            <span class="bottom">0</span>
+                            <span class="bottom-back">
+                            <span>0</span>
+                        </span>
+                        </div>
+                        <span class="count-title"><br/>Heures</span>
+
+                    </div>
+
+                    <div class="bloc-time min" data-init-value="0">
+
+                        <div class="figure min min-1">
+                            <span class="top">0</span>
+                            <span class="top-back">
+                            <span>0</span>
+                        </span>
+                            <span class="bottom">0</span>
+                            <span class="bottom-back">
+                            <span>0</span>
+                        </span>
+                        </div>
+
+                        <div class="figure min min-2">
+                            <span class="top">0</span>
+                            <span class="top-back">
+                            <span>0</span>
+                        </span>
+                            <span class="bottom">0</span>
+                            <span class="bottom-back">
+                            <span>0</span>
+                        </span>
+                        </div>
+                        <span class="count-title">Minutes</span>
+                    </div>
+
+                    <div class="bloc-time sec" data-init-value="0">
+
+
+                        <div class="figure sec sec-1">
+                            <span class="top">0</span>
+                            <span class="top-back">
+                            <span>0</span>
+                        </span>
+                            <span class="bottom">0</span>
+                            <span class="bottom-back">
+                            <span>0</span>
+                        </span>
+                        </div>
+
+                        <div class="figure sec sec-2">
+                            <span class="top">0</span>
+                            <span class="top-back">
+                            <span>0</span>
+                        </span>
+                            <span class="bottom">0</span>
+                            <span class="bottom-back">
+                            <span>0</span>
+                        </span>
+                        </div>
+                        <span class="count-title">Secondes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
 
 {% endblock %}
+
+
+
 {% block javascripts %}
 
     <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/jQuery-plugin-progressbar.js') }}"></script>
+    <script src="{{ asset('bundles/gdssphases/js/TweenMax.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssphases/js/collapse.js') }}"></script>
     <script>
+        var hr = {{ hours }}
+        var minu = {{ minutes }}
+        var sec = {{ seconds }}
+        var autorise = true;
+    </script>
+    <script src="{{ asset('bundles/gdssphases/js/timer.js') }}"></script>
+    <script>
+
         {% if finish %}
         {% else %}
-        element_b = document.getElementById('test');
-        element_b.scrollTop = element_b.scrollHeight;
-        var inf = element_b.scrollTop;
-        var sup = element_b.scrollHeight;
-        $("document").ready(function () {
-            var id = {{ id }}
-            var y = setInterval(function(){
-                element_a = document.getElementById('test');
-                if(element_b.scrollTop = element_a.scrollHeight){
 
+        $("document").ready(function () {
+
+            element_b = document.getElementById('test');
+            element_b.scrollTop = element_b.scrollHeight;
+            var aut = false;
+            var element = document.getElementById('test');
+
+
+            var id = {{ id }}
+            $('#chat_form').on('submit', function (event) {
+                event.preventDefault();
+                setTimeout(y, 5000);
+                var form_data = document.getElementById('form_Proposition').value;
+                {% block customAjax %}
+                    $.ajax({
+                        url:"http://www.projetgdss.com/app_dev.php/add_comp/"+id,
+                        type:"POST",
+                        data: {proposition : form_data},
+                        dataType: 'JSON',
+                        success:function (data) {
+
+                        }
+                    })
+                {% endblock %}
+                document.getElementById('form_Proposition').value = null;
+                element.scrollTop = element.scrollHeight;
+            });
+
+
+            /*var collapsearray = [];
+
+            setInterval(function () {
+                var collapsearray = [];
+
+                var doc = document.getElementsByClassName('show');
+                for(var i = 0; i < doc.length; i++){
+                    collapsearray.push(doc[i].id);
                 }
-                else{
-                    element_a.scrollTop = element_a.scrollHeight;
+                for(var i = 0; i< collapsearray.length; i++){
+                    console.log('#'.concat(collapsearray[i]));
                 }
-                $(".divscript").load('http://www.myproject.com:8080/app_dev.php/platform/sujet_vue/sujet/' +id)
-            }, 2000);
+            }, 5000);*/
+
+
+
+            var y = setInterval(function(){
+                if(aut === true){
+                    element.scrollTop = element.scrollHeight;
+                    aut = false;
+                }
+                setTimeout(function(){
+                    element = document.getElementById('test');
+                    if(element.scrollHeight - element.scrollTop === element.clientHeight){
+                        aut = true;
+                    }
+                }, 1000);
+                {% block customLoad %}
+                    $(".divscript").load('http://www.projetgdss.com/app_dev.php/platform/sujet_vue/sujet/comp/' +id);
+                {% endblock %}
+
+            }, {% block interval %}5000{% endblock %});
+
+
 
             $('#stop').click(function () {
                 clearInterval(y);
             })
+
+            {% block customScrpit %}{% endblock %}
+
+
         });
         {% endif %}
     </script>

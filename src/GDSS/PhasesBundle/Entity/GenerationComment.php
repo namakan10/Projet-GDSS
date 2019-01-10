@@ -35,10 +35,15 @@ class GenerationComment
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GenerationContribution")
+     * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\GenerationContribution", inversedBy="comment")
      * @ORM\JoinColumn(nullable=false)
      */
     private $contribution;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\GenerationCommentReply", mappedBy="comment", cascade={"remove"})
+     */
+    private $reply;
 
     /**
      * @var string
@@ -46,6 +51,14 @@ class GenerationComment
      * @ORM\Column(name="pseudo", type="string", length=255)
      */
     private $pseudo;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="reaction", type="string", length=255)
+     */
+    private $reaction;
 
 
     /**
@@ -152,5 +165,70 @@ class GenerationComment
     public function getPseudo()
     {
         return $this->pseudo;
+    }
+
+    /**
+     * Set reaction
+     *
+     * @param string $reaction
+     *
+     * @return GenerationComment
+     */
+    public function setReaction($reaction)
+    {
+        $this->reaction = $reaction;
+
+        return $this;
+    }
+
+    /**
+     * Get reaction
+     *
+     * @return string
+     */
+    public function getReaction()
+    {
+        return $this->reaction;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->reply = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add reply
+     *
+     * @param \GDSS\PhasesBundle\Entity\GenerationCommentReply $reply
+     *
+     * @return GenerationComment
+     */
+    public function addReply(\GDSS\PhasesBundle\Entity\GenerationCommentReply $reply)
+    {
+        $this->reply[] = $reply;
+
+        return $this;
+    }
+
+    /**
+     * Remove reply
+     *
+     * @param \GDSS\PhasesBundle\Entity\GenerationCommentReply $reply
+     */
+    public function removeReply(\GDSS\PhasesBundle\Entity\GenerationCommentReply $reply)
+    {
+        $this->reply->removeElement($reply);
+    }
+
+    /**
+     * Get reply
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReply()
+    {
+        return $this->reply;
     }
 }

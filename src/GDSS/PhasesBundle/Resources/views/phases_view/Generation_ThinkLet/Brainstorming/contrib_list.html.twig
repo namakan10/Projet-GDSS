@@ -1,0 +1,20 @@
+<div style="">
+    {% if proposition %}
+        {% for propo in proposition %}
+            <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                <li>
+                    <div class="comment-main-level">
+                        <div class="comment-box">
+                            <div class="comment-head">
+                                <h6 class="comment-name by-author">Proposition {{ propo.numero }}</h6>
+                            </div>
+                            <div class="comment-content">
+                                <p>{{ propo.contribution }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        {% endfor %}
+    {% endif %}
+</div>

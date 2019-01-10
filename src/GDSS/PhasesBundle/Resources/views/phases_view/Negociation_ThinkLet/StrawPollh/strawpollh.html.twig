@@ -1,0 +1,191 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+{% block title %}StrawPoll- Sélection{% endblock %}
+
+{% block customstyle %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/rating.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/morris.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+
+    <div style="margin-right: 25%; margin-left: 5%">
+        <h1 style="text-decoration-style: double; margin-left: -15%"><a href="{{ path('negociation', {'id' : id}) }}"><i class="fas fa-arrow-left"></i></a> StarwPoll - Sélection</h1>
+
+
+        {% if decideurs %}
+            {% if decideurs.selection != true %}
+                <p>Vous devez évaluez les propositions sur la base des critères prédéfinis</p>
+                <br/>
+
+                <form method="post" href="#">
+                    <div class="form-group">
+                        {% for ctcat in contribution %}
+                            <div class="form-group col-sm-12">
+                                <div>
+                                    <i class="outgoing_msg">
+                                        <i class="sent_msg" style="float: none">
+                                            <p><span>{{ ctcat.pseudo }}<br/></span> {{ ctcat.contribution }} </p>
+                                        </i>
+                                    </i>
+
+                                    <div class="rating">
+                                        <input type="radio" name="star{{ ctcat.id }}" id="star1{{ ctcat.id }}" value="5">
+                                        <label for="star1{{ ctcat.id }}"></label>
+                                        <input type="radio" name="star{{ ctcat.id }}" id="star2{{ ctcat.id }}" value="4">
+                                        <label for="star2{{ ctcat.id }}"></label>
+                                        <input type="radio" name="star{{ ctcat.id }}" id="star3{{ ctcat.id }}" value="3">
+                                        <label for="star3{{ ctcat.id }}"></label>
+                                        <input type="radio" name="star{{ ctcat.id }}" id="star4{{ ctcat.id }}" value="2">
+                                        <label for="star4{{ ctcat.id }}"></label>
+                                        <input type="radio" name="star{{ ctcat.id }}" id="star5{{ ctcat.id }}" value="1">
+                                        <label for="star5{{ ctcat.id }}"></label>
+
+                                    </div>
+                                    <br/>
+                                    {% set coll = false %}
+                                    {% for cmt in comment %}
+                                        {% if cmt.contribution == ctcat %}
+                                            {% set coll = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if coll == true %}
+                                        <a class="fas fa-plus-circle" data-toggle="collapse" href="#collanot{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
+                                    {% endif %}
+                                    <div class="collapse" id="collanot{{ ctcat.id }}">
+                                        {% for cmt in comment %}
+                                            {% if cmt.contribution == ctcat %}
+                                                <i class="incoming_msg" style="margin-left: 50px">
+                                                    <i class="received_msg">
+                                                        <i class="received_withd_msg">
+                                                            <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
+                                                        </i>
+                                                    </i>
+                                                </i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <br/>
+                            </div>
+                            {#
+                                <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="customCheck{{ ctcat.id }}" name="{{ ctcat.id }}" value="{{ ctcat.id }}">
+                                <label class="custom-control-label" for="">
+
+                                </label>
+                            </div>
+                            #}
+
+                        {% endfor %}
+                        <div class="form-inline">
+                            <div class="col-sm-11">
+
+                                <input type="submit" value="Votez" class="btn btn-warning" name="Evaluer">
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <canvas id="myChart"></canvas>
+            {% endif %}
+
+            <div style="position: fixed; margin-left: 1050px;">
+
+                <div class="wrap" style="border: 0px solid whitesmoke; width: 200px; height: auto; position: fixed; margin-left: 60%; margin-top: 100px">
+                    <div style="background: #1a1a1a">
+                        <a class="fas fa-plus-circle" data-toggle="collapse" href="#criteres" role="button" aria-expanded="false" aria-controls="criteres" style="color: white; margin: 10%" id=""> Critères</a>
+                    </div>
+
+                    <div class="collapse" id="criteres" style="background: white">
+                        <br/>
+                        {% for list in criteres %}
+                            <h6 style="margin-left: 10px;">
+                                <img style="width: 24px" src="{{ asset('bundles/gdssplatform/icons/ic_my_location_24px.svg') }}"> {{ list.description }}
+                            </h6>
+                        {% endfor %}
+                        <br/>
+                    </div>
+                </div>
+
+            </div>
+
+        {% else %}
+            <canvas id="myChart"></canvas>
+        {% endif %}
+
+        <br/><br/>
+
+    </div>
+
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script src="{{ asset('bundles/gdssphases/js/Chart.min.js') }}"></script>
+    <script>
+
+        {#
+            new Morris.Bar({
+            // ID of the element in which to draw the chart.
+            element: 'myfirstchart',
+            // Chart data records -- each entry in this array corresponds to a point on
+            // the chart.
+            data: [
+                {% for chart in contributionchart %}
+                    { decideur: '{{ chart.pseudo }}', propo: '{{ chart.contribution }}', value: {{ chart.liked }} },
+                {% endfor %}
+            ],
+            // The name of the data record attribute that contains x-values.
+            xkey: 'decideur',
+            // A list of names of data record attributes that contain y-values.
+            ykeys: ['value'],
+            // Labels for the ykeys -- will be displayed when you hover over the
+            // chart.
+            labels: ['Vote'],
+            hideHover: 'auto',
+        });
+        #}
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'bar',
+
+            // The data for our dataset
+            data: {
+                labels: [
+                    {% for contrib in contributionchart %}
+                        "{{ contrib.contribution }}",
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: "Vote",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [
+                        {% for contrib in contributionchart %}
+                            {{ contrib.liked }},
+                        {% endfor %}
+                    ],
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    xAxes: [{
+                        display: false
+                    }],
+                }
+            }
+        });
+
+
+    </script>
+{% endblock %}

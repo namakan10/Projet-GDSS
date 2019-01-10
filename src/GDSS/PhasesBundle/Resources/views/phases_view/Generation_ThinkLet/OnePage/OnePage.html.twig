@@ -1,0 +1,27 @@
+{% extends '@GDSSPhases/phases_view/comprehension_collective.html.twig' %}
+{% block title %}OnePage{% endblock %}
+
+{% block controller1 %}
+    {{ render(controller('GDSSPhasesBundle:GenerationThinklet:onePageScript', {'id' : id} )) }}
+{% endblock %}
+
+{% block controller2 %}
+    {{ render(controller('GDSSPhasesBundle:GenerationThinklet:onePageScript', {'id' : id} )) }}
+{% endblock %}
+
+
+ {% block customLoad %}
+     $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/OnePage/script/' +id)
+ {% endblock %}
+
+{% block customAjax %}
+    $.ajax({
+    url:"http://www.projetgdss.com/app_dev.php/add_propo/"+id,
+    type:"POST",
+    data: {proposition : form_data},
+    dataType: 'JSON',
+    success:function (data) {
+
+    }
+    })
+{% endblock %}

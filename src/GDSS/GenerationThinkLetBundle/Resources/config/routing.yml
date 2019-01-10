@@ -1,3 +1,0 @@
-gdss_generation_think_let_homepage:
-    path:     /
-    defaults: { _controller: GDSSGenerationThinkLetBundle:Default:index }

@@ -2,7 +2,7 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 <br/>
-<div class="login-sec">
+<div class="col-md-5 login-sec">
     <h2 class="text-center">Inscrivez-vous</h2>
     <div class="form" style="margin-left: 20px">
     {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'form-group'}}) }}
@@ -39,4 +39,10 @@
     </div>
     {{ form_end(form) }}
     </div>
+
+</div>
+
+<div class="col-md-7 banner-sec" style="margin-left: -110px">
+    <img class="pos" src="{{ asset('bundles/gdssplatform/images/group-2822423_1920.png') }}">
+    <div class="textpos text-justify"><p>Group Decision System Support</p></div>
 </div>

@@ -1,0 +1,101 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+{% block title %}Pin The Tail On The Donkey{% endblock %}
+
+{% block customstyle %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('negociation', {'id' : id}) }}"></a>  Pin the tail on the donkey</h1>
+
+        {% if admin %}
+            <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une catégorie</a></p>
+        {% endif %}
+
+        <ul class="nav nav-tabs" style="margin-right: 190px">
+            <li class="nav-item">
+                <a class="nav-link active show" data-toggle="tab" href="#subsubject">CATEGORIES</a>
+            </li>
+        </ul>
+
+        <div id="myTabContent" class="tab-content" style="margin-right: 190px; margin-top: -35px">
+            <div class="tab-pane fade show active" id="subsubject">
+                <div>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr class="">
+                            <th>Titre</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for cat in categorielist %}
+                            <tr>
+                                <td>{{ cat.name }}</td>
+                                {% if admin %}
+                                    <td><a href="{{ path('PinTheTailOntheDonkey_Categorizer', {'id' : cat.id}) }}"
+                                           class="badge badge-warning">Categoriser
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td><a href="{{ path('PinTheTailOntheDonkey_Rating', {'id' : cat.id}) }}"
+                                           class="badge badge-info">Voir
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="add_project" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header login-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">Créer une catégorie</h4>
+                    </div>
+                    {{ form_start(form) }}
+
+                    <div style="margin-top: 5px; font-size: large">
+                        {{ form_label(form.Nom) }}
+                    </div>
+
+                    <div style="+margin-left: 5px; margin-right: 5px">
+                        {{ form_widget(form.Nom, {'attr': {'class': 'modal-body'}}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
+                        {{ form_widget(form.Creer, {'attr': {'class': 'add-project'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block customscrpits %}
+    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="offcanvas"]').click(function(){
+                $("#navigation").toggleClass("hidden-xs");
+            });
+        });
+    </script>
+{% endblock %}

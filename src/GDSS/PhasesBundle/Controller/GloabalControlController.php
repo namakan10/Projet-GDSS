@@ -246,4 +246,5 @@ class GloabalControlController extends Controller
         ));
 
     }
+
 }

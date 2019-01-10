@@ -1,7 +1,3 @@
-gdss_generation_think_let:
-    resource: "@GDSSGenerationThinkLetBundle/Resources/config/routing.yml"
-    prefix:   /ghost/
-
 gdss_phases:
     resource: "@GDSSPhasesBundle/Resources/config/routing.yml"
     prefix:   /
@@ -16,3 +12,6 @@ fos_user:
 fos_message:
     resource: "@FOSMessageBundle/Resources/config/routing.xml"
     prefix: /platform/inbox/
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

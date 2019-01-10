@@ -1,0 +1,167 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+{% block title %}CheckMark{% endblock %}
+
+{% block customstyle %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('negociation', {'id' : id}) }}"> </a> CheckMark</h1>
+        {% if nego.selection == null %}
+
+            {% if admin %}
+                <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Définir la séléction</a></p>
+                <p>Veuillez définir le nombre de contribution à séléctionner ! </p>
+            {% else %}
+                <p>Nombre de séléction des contributions pas encore définie par le facilitateur ! </p>
+            {% endif %}
+
+        {% else %}
+
+            {% if admin == false %}
+                {% if decideur.selection == false %}
+                    <div style="margin-right: 25%; margin-left: 5%">
+                    <p>Vous devez choisir {{ nego.selection }} contributions ! </p>
+                    <br/>
+                    <form method="post" href="#" name="formcontrib">
+                        <div class="form-group">
+                            {% for ct in contribution %}
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck{{ ct.id }}" name="{{ ct.id }}" value="{{ ct.id }}">
+                                    <label class="custom-control-label" for="customCheck{{ ct.id }}">
+                                        <i class="outgoing_msg">
+                                            <i class="sent_msg" style="float: none">
+                                                <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
+                                            </i>
+                                        </i>
+                                        {% set coll = false %}
+                                        {% for cmt in comment %}
+                                            {% if cmt.contribution == ct %}
+                                                {% set coll = true %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if coll == true %}
+                                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#noncatego{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                                        {% endif %}
+
+                                        <div class="collapse" id="noncatego{{ ct.id }}">
+                                            {% for cmt in comment %}
+                                                {% if cmt.contribution == ct %}
+                                                    <div class="incoming_msg" style="margin-left: 50px; margin-bottom: 8px">
+                                                        <div class="received_msg">
+                                                            <div class="received_withd_msg">
+                                                                <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <br/><br/>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            <div class="form-inline">
+                                <div class="col-sm-11">
+                                    <input type="submit" value="Valider" class="btn btn-outline-primary">
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+
+                    <br/><br/>
+                </div>
+                {% endif %}
+            {% endif %}
+
+            {% set showorder = false %}
+
+            {% if admin == true %}
+                {% set showorder = true %}
+
+            {% elseif decideur.selection == true %}
+                {% set showorder = true %}
+            {% endif %}
+
+            {% if showorder == true %}
+                <h2 style="margin-left: 5%">Propositions classées par ordre décroissant selon les votes</h2>
+                <br/>
+                {% for ct in contributionorder %}
+                    <div style="margin-right: 25%; margin-left: 5%">
+                        <i class="outgoing_msg">
+                            <i class="sent_msg" style="float: none">
+                                <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
+                            </i>
+                        </i>
+                        {% set coll = false %}
+                        {% for cmt in comment %}
+                            {% if cmt.contribution == ct %}
+                                {% set coll = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if coll == true %}
+                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#noncatego{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                        {% endif %}
+
+                        <div class="collapse" id="noncatego{{ ct.id }}">
+                            {% for cmt in comment %}
+                                {% if cmt.contribution == ct %}
+                                    <div class="incoming_msg" style="margin-left: 50px; margin-bottom: 8px">
+                                        <div class="received_msg">
+                                            <div class="received_withd_msg">
+                                                <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p style="color: darkorange">Vote ({{ ct.liked }})</p>
+                        <br/>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% endif %}
+
+
+        <div id="add_project" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header login-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">Définir le nombre de contribution à séléctionner</h4>
+                    </div>
+                    {{ form_start(form) }}
+
+                    <div style="margin-top: 5px; font-size: large">
+                        {{ form_label(form.Pourcentage, "Nombre de sélection") }}
+                    </div>
+
+                    <div style="margin-left: 5px; margin-right: 5px">
+                        {{ form_widget(form.Pourcentage, {'attr': {'class': 'modal-body', 'min' : '1', 'max' : allcontrib-1  }}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
+                        {{ form_widget(form.Definir, {'attr': {'class': 'add-project'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block customscrpits %}
+    {% if error is defined %}
+        <script>
+            alert("{{ error }}");
+        </script>
+    {% endif %}
+{% endblock %}

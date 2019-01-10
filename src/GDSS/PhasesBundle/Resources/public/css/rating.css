@@ -1,0 +1,40 @@
+.rating{
+    position: absolute;
+    transform: rotateY(180deg);
+    display: flex;
+}
+.rating input{
+    display : none
+}
+
+.rating label{
+    display: block;
+    cursor: pointer;
+}
+
+.rating label:before{
+    font-family: "Font Awesome 5 Free";
+    content: "\f005";
+    position: relative;
+    display: block;
+}
+
+.rating label:after{
+    font-family: "Font Awesome 5 Free";
+    content: "\f005";
+    position: absolute;
+    display: block;
+    color: #ffc107;
+    font-weight: 900;
+    top: 0;
+    opacity: 0;
+    transition: .5s;
+    text-shadow: 0 2px 5px rgba(0,0,0,.5);
+}
+
+.rating label:hover:after,
+.rating label:hover ~ label:after,
+.rating input:checked ~ label:after
+{
+    opacity: 1;
+}

@@ -28,11 +28,24 @@ class Phases
     private $processus;
 
     /**
+     * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\NegociationCategories", mappedBy="phase", cascade={"remove"})
+     */
+    private $categorie;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
      */
     private $nom;
+
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="selection", type="integer", nullable=true)
+     */
+    private $selection;
 
     /**
      * @var string
@@ -42,6 +55,10 @@ class Phases
     private $periodemin;
 
 
+    /**
+     * @ORM\Column(name="expert", type="string", length=255, nullable=true)
+     */
+    private $expert = null;
 
     /**
      * @var string
@@ -289,5 +306,115 @@ class Phases
     public function getPeriodemax()
     {
         return $this->periodemax;
+    }
+
+    /**
+     * Set dateDebut
+     *
+     * @param \DateTime $dateDebut
+     *
+     * @return Phases
+     */
+    public function setDateDebut($dateDebut)
+    {
+        $this->dateDebut = $dateDebut;
+
+        return $this;
+    }
+
+    /**
+     * Set dateFin
+     *
+     * @param \DateTime $dateFin
+     *
+     * @return Phases
+     */
+    public function setDateFin($dateFin)
+    {
+        $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    /**
+     * Add categorie
+     *
+     * @param \GDSS\PhasesBundle\Entity\NegociationCategories $categorie
+     *
+     * @return Phases
+     */
+    public function addCategorie(\GDSS\PhasesBundle\Entity\NegociationCategories $categorie)
+    {
+        $this->categorie[] = $categorie;
+
+        return $this;
+    }
+
+    /**
+     * Remove categorie
+     *
+     * @param \GDSS\PhasesBundle\Entity\NegociationCategories $categorie
+     */
+    public function removeCategorie(\GDSS\PhasesBundle\Entity\NegociationCategories $categorie)
+    {
+        $this->categorie->removeElement($categorie);
+    }
+
+    /**
+     * Get categorie
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCategorie()
+    {
+        return $this->categorie;
+    }
+
+    /**
+     * Set selection
+     *
+     * @param integer $selection
+     *
+     * @return Phases
+     */
+    public function setSelection($selection)
+    {
+        $this->selection = $selection;
+
+        return $this;
+    }
+
+    /**
+     * Get selection
+     *
+     * @return integer
+     */
+    public function getSelection()
+    {
+        return $this->selection;
+    }
+
+    /**
+     * Set expert
+     *
+     * @param string $expert
+     *
+     * @return Phases
+     */
+    public function setExpert($expert)
+    {
+        $this->expert = $expert;
+
+        return $this;
+    }
+
+    /**
+     * Get expert
+     *
+     * @return string
+     */
+    public function getExpert()
+    {
+        return $this->expert;
     }
 }

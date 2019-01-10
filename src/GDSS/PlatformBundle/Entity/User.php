@@ -22,9 +22,14 @@ class User extends BaseUser implements ParticipantInterface
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="GDSS\PlatformBundle\Entity\Decideurs", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="GDSS\PlatformBundle\Entity\Decideurs", mappedBy="user", cascade={"remove"})
      */
     private $decideurs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\Reaction", mappedBy="user", cascade={"remove"})
+     */
+    private $reac;
 
     public function __construct()
     {
@@ -64,5 +69,39 @@ class User extends BaseUser implements ParticipantInterface
     public function getDecideurs()
     {
         return $this->decideurs;
+    }
+
+    /**
+     * Add reac
+     *
+     * @param \GDSS\PhasesBundle\Entity\Reaction $reac
+     *
+     * @return User
+     */
+    public function addReac(\GDSS\PhasesBundle\Entity\Reaction $reac)
+    {
+        $this->reac[] = $reac;
+
+        return $this;
+    }
+
+    /**
+     * Remove reac
+     *
+     * @param \GDSS\PhasesBundle\Entity\Reaction $reac
+     */
+    public function removeReac(\GDSS\PhasesBundle\Entity\Reaction $reac)
+    {
+        $this->reac->removeElement($reac);
+    }
+
+    /**
+     * Get reac
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReac()
+    {
+        return $this->reac;
     }
 }

@@ -1,7 +1,13 @@
 phase_comprehension_vue:
-    path: /platform/sujet_vue/sujet/phase1/{id}
+    path: /platform/subject/comprehension_collective/{id}
     defaults:
       _controller: GDSSPhasesBundle:View:comprehension
+
+add_comp_chat:
+  path: /add_comp/{id}
+  defaults:
+    _controller: GDSSPhasesBundle:View:addComprehensionChat
+  methods: POST
 
 phase_edit:
     path: /platform/sujet_vue/edit_phase/{id}
@@ -9,26 +15,213 @@ phase_edit:
       _controller: GDSSPhasesBundle:GloabalControl:modifPhase
 
 generation:
-    path: /platform/sujet_vue/sujet/Freebrainstorming/{id}
+    path: /platform/subject/Generation/{id}
     defaults:
       _controller: GDSSPhasesBundle:GenerationThinklet:generation
 
+add_propo_gene:
+  path: /add_propo/{id}
+  defaults:
+    _controller: GDSSPhasesBundle:GenerationScript:addpropo
+  methods: POST
+
+freebrainstorming:
+    path:  platform/subject/Freebrainstorming/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstorming
+
 freebrainstorming_contribution:
-    path: /platform/sujet_vue/sujet/Freebrainstorming/Contribuer/{id}
+    path: /platform/subject/Freebrainstorming/Contribuer/{id}
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingContribution
 
+freebrainstorming_contribution_list:
+  path: /brainstroming_contrib/{id}
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingcontrib
+
 freebrainstorming_comment:
-    path: /platform/sujet_vue/sujet/Freebrainstorming/Comment/{id}
+    path: /platform/subject/Freebrainstorming/Comment/{id}
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingComment
 
-freebrainstorming_add_comment:
-    path: /platform/sujet_vue/sujet/Freebrainstorming/Comment/add/{id}
+freebrainstorming_comment_list:
+    path: /commentlist/{id}
     defaults:
-      _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingAddComment
+      _controller:  GDSSPhasesBundle:GenerationScript:commentlist
 
 scipts_comp:
-    path : /platform/sujet_vue/sujet/{id}
+    path : /platform/sujet_vue/sujet/comp/{id}
     defaults:
       _controller:  GDSSPhasesBundle:View:scriptCCP
+
+one_page:
+    path : /platform/subject/OnePage/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:onePage
+
+one_page_script:
+    path : /sujet_vue/OnePage/script/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:onePageScript
+
+leafhopper:
+    path : /platform/subject/LeafHopper/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:leafhopper
+
+leafhopper_subject:
+    path : /sujet_vue/LeafHopper/Subject/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:leafhoppersubject
+
+leafhopper_subject_script:
+    path : /sujet_vue/LeafHopper/script/{id}
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:leafhopperScript
+
+plusminus:
+  path : /sujet_vue/PlusMunisInteresting/{id}
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationThinklet:plusminusinteresting
+
+plusminus_scrpit:
+  path : /sujet_vue/plusminus/script/{id}
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationThinklet:plusminusScript
+
+reaction:
+  path: /reaction/{id}
+  defaults:
+    _controller: GDSSPhasesBundle:GenerationScript:reaction
+  methods: POST
+
+generationcommentreply:
+  path: /commentreply/{id}
+  defaults:
+    _controller: GDSSPhasesBundle:GenerationScript:commentreply
+  methods: POST
+
+
+list_contrib:
+  path : /listcontrib/{id}
+  defaults:
+    _controller: GDSSPhasesBundle:GenerationThinklet:contriblist
+  methods: [post]
+
+branchbuilder:
+  path : /sujet_vue/Branchbuilder/{id}
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationThinklet:branchbuilter
+
+branchbuilder_scrpit:
+  path : /sujet_vue/branchbuilder/script/{id}
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationScript:branchbuilderscrpit
+
+
+thelobbyist:
+  path : /sujet_vue/TheLobbyist/{id}
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationThinklet:thelobbyist
+
+thelobbyist_scrpit:
+  path : /sujet_vue/thelobbyist/script/{id}
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationScript:thelobbyistscprit
+
+negociation:
+    path: /platform/subject/negociation/{id}
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:negociation
+
+FastFocus:
+    path: /platform/subject/FastFocus/{id}
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:fastfocus
+
+FastFocusCategorie:
+    path: /platform/subject/FastFocus/Categorie/{id}
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:fastfocuscategorizer
+
+BroomWagon:
+    path: /platform/subject/BroomWagon/{id}
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:broomwagon
+
+BroomWagon_rating:
+    path: /platform/subject/BroomWagon/Select/{id}
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:broomwagonrating
+
+BroomWagon_classement:
+    path: /platform/subject/BroomWagon/Rating/{id}
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:broomwagonclassement
+
+PinTheTailOntheDonkey:
+  path: /platform/subject/PinTheTailOntheDonkey/{id}
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:pinthetailonthedonkey
+
+PinTheTailOntheDonkey_Categorizer:
+  path: /platform/subject/PinTheTailOntheDonkey/Categorizer/{id}
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:pinthetailonthedonkeycategorizer
+
+PinTheTailOntheDonkey_Rating:
+  path: /platform/subject/PinTheTailOntheDonkey/Rating/{id}
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:pinthetailonthedonkeyrating
+
+
+ExpertChoice:
+  path: /platform/subject/ExpertChoice/tueomdpqneh47e226cc25gmapdefejh?ldzhdzlpfee{id}74fefvaqwepmpafvwvnbkltp5320
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:expertchoice
+
+SetExpert:
+  path: /platform/server1dbtablepos0tokene7dcfc1e{id}ea013ab27f46c5922b55f3d0tueomdpqneh47e226cc25gmapdefejhldzhdzlpfee74fefvaqwepmpafvwvnbkltp5320
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationScrpit:setexpert
+
+ExpertChoice_Categorizer:
+  path: /platform/subject/ExpertChoice/Categorizer/campaign{id}ea013ab27unsubscribedmdpqneh47e226cc25gmapzcjfazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:expertchoicecategorizer
+
+StrawPoolh:
+  path: /platform/subject/StrawPoolh/ategorcmpaigne4754dfrgthmleea013ab27unsubMKmpazer7810scribedmdpq5mp{id}neh47e226cc25gmapzcjfazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:strawpoolh
+
+
+PopCornSort:
+  path: /platform/subject/PopCornSort/ategorcmpaigne4754dfrgthmleea013ab27unsubMKmpazer7810scribedmdpq5mp{id}neh47e226cc25gmapzcjfazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:popcornsort
+
+
+MultiCriteria:
+  path: /platform/subject/MultiCriteria/afrgthmleea013ab27unsubMKmpazer7810s50jazf546zfcribedmdpq5mp{id}neh47e226cc25gmapzcjfazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:multicriteria
+
+
+CheckMark:
+  path: /platform/subject/CheckMark/Cacaaiglznxnpakxnn{id}AZECWX86000413ab27unsubscribedmdpqnexzvbb4011fazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:checkMark
+
+
+BucketVote:
+  path: /platform/subject/BucketVote/482520daadzoserver1dbtablepos0tne7dcacaaiglznxnpakxnn{id}ea013ab27unsubscribedmdpqnexzvbb4011fazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:bucketvote
+
+
+BucketVoteCategorie:
+  path: /platform/subject/BucketVote/Categorie/4AuA1XIyiOeaNlwTfgZ2YCw0tne7dcacaaiglznZAEFG40{id}8500kkscribedmdpqnexzvbb4011fazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:bucketvotecategorie

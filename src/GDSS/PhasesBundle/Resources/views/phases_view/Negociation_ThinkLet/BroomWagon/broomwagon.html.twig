@@ -1,0 +1,56 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+{% block title %}BroomWagon{% endblock %}
+
+{% block customstyle %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('negociation', {'id' : id}) }}"> </a> BROOMWAGON</h1>
+        {% if nego.selection == null %}
+            {% if admin %}
+                <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Définir la séléction</a></p>
+                <p>Veuillez définir le pourcentage de contribution à séléctionner ! </p>
+            {% else %}
+                <p>Pourcentage de séléction des contributions pas encore définie par le facilitateur ! </p>
+            {% endif %}
+        {% else %}
+            {% if admin == false %}
+                {% if decideur.selection != true %}
+                    <a href="{{ path('BroomWagon_rating', {'id': id }) }}"><button type="button" class="btn btn-outline-primary">Faire la séléction</button></a>
+                {% endif %}
+            {% endif %}
+            <a href="{{ path('BroomWagon_classement', {'id': id }) }}"><button type="button" class="btn btn-outline-primary">Voir les séléctions</button></a>
+        {% endif %}
+
+        <div id="add_project" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header login-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">Définir le % de contribution à séléctionner</h4>
+                    </div>
+                    {{ form_start(form) }}
+
+                    <div style="margin-top: 5px; font-size: large">
+                        {{ form_label(form.Pourcentage) }}
+                    </div>
+
+                    <div style="margin-left: 5px; margin-right: 5px">
+                        {{ form_widget(form.Pourcentage, {'attr': {'class': 'modal-body', 'min' : '1', 'max' : '100'}}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
+                        {{ form_widget(form.Definir, {'attr': {'class': 'add-project'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

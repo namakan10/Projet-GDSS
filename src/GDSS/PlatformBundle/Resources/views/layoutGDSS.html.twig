@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/footers.css') }}" type="text/css">
 {% endblock %}
 {% block hedears %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #FEB58A">
         <a class="navbar-brand" href="#">
             {#<img src="{{ asset('bundles/gdssplatform/images/GDSS - Copie.png') }}" width="60" height="35" alt="">#}
         </a>
@@ -25,11 +24,12 @@
             </ul>
 
                 <div class="btn-group" role="group" aria-label="Basic example">
-
-                    <button type="submit" class="btn btn-light" name="profil">{{ app.user.username }}</button>
+                    <a href="" style="color: black">
+                        <button type="submit" class="btn btn-light" name="profil"><i class="fas fa-user"></i>  {{ app.user.username }}</button>
+                    </a>
                     <a href="{{ path('fos_user_security_logout') }}">
                         <button type="submit" class="btn btn-light" name="disconnect" style="color: #007bff">
-                            Deconnexion
+                            Deconnexion <i class="fas fa-power-off"></i>
                         </button>
                     </a>
                 </div>

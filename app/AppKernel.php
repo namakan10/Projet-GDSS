@@ -21,7 +21,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new FOS\MessageBundle\FOSMessageBundle(),
             new GDSS\PhasesBundle\GDSSPhasesBundle(),
-            new GDSS\GenerationThinkLetBundle\GDSSGenerationThinkLetBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

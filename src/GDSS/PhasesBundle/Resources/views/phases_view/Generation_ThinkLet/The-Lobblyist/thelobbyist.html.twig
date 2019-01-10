@@ -1,0 +1,32 @@
+{% extends '@GDSSPhases/phases_view/comprehension_collective.html.twig' %}
+{% block title %}TheLobbyist{% endblock %}
+
+{% block customstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chatline.css') }}" type="text/css">
+{% endblock %}
+
+{% block controller1 %}
+    {{ render(controller('GDSSPhasesBundle:GenerationScript:thelobbyistscprit', {'id' : id} )) }}
+{% endblock %}
+
+{% block controller2 %}
+    {{ render(controller('GDSSPhasesBundle:GenerationScript:thelobbyistscprit', {'id' : id} )) }}
+{% endblock %}
+
+{% block customAjax %}
+    $.ajax({
+    url:"http://www.projetgdss.com/app_dev.php/add_propo/"+id,
+    type:"POST",
+    data: {proposition : form_data},
+    dataType: 'JSON',
+    success:function (data) {
+
+    }
+    })
+{% endblock %}
+
+{% block interval %}60000{% endblock %}
+
+ {% block customLoad %}
+     $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/thelobbyist/script/' +id)
+ {% endblock %}

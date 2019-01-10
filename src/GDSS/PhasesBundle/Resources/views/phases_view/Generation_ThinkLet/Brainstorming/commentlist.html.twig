@@ -1,0 +1,20 @@
+{% if comment %}
+    {% for cmt in comment %}
+
+            <ul class="comments-list reply-list">
+                <li>
+                    <!-- Contenedor del Comentario -->
+                    <div class="comment-box">
+                        <div class="comment-head">
+                            <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                        </div>
+                        <div class="comment-content">
+                            {{ cmt.comment }}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <!-- Fin boucle secondaire -->
+
+    {% endfor %}
+{% endif %}

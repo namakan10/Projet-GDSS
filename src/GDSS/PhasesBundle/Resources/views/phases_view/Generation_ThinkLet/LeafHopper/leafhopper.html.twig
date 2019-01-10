@@ -1,0 +1,99 @@
+{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/generation.html.twig' %}
+
+{% block title %}LeafHopper{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/comment.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/timer.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/circle_progress_bar.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/fontawesome/css/all.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <h1 style="text-decoration-style: double; margin-left: -170px">LEAFHOPPER</h1>
+
+        {% if admin %}
+            <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une discussion</a></p>
+        {% endif %}
+
+        <ul class="nav nav-tabs" style="margin-right: 190px">
+            <li class="nav-item">
+                <a class="nav-link active show" data-toggle="tab" href="#subsubject">GROUPES DE DISCUSSION</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content" style="margin-right: 190px; margin-top: -35px">
+            <div class="tab-pane fade show active" id="subsubject">
+                <div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="">
+                                <th>Titre</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subject in subjectlist %}
+                                <tr>
+                                    <td>{{ subject.name }}</td>
+                                    <td><a href="{{ path('leafhopper_subject', {'id' : subject.id}) }}"
+                                           class="badge badge-info"> Rejoindre
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="add_project" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header login-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">Créer une discussion</h4>
+                    </div>
+                    {{ form_start(form) }}
+
+                    <div style="margin-top: 5px; font-size: large">
+                        {{ form_label(form.Titre) }}
+                    </div>
+
+                    <div style="margin-left: 5px; margin-right: 5px">
+                        {{ form_widget(form.Titre, {'attr': {'class': 'modal-body'}}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
+                        {{ form_widget(form.Creer, {'attr': {'class': 'add-project'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="offcanvas"]').click(function(){
+                $("#navigation").toggleClass("hidden-xs");
+            });
+        });
+    </script>
+{% endblock %}

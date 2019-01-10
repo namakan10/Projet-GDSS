@@ -6,6 +6,7 @@ namespace GDSS\PlatformBundle\Controller;
 use GDSS\PlatformBundle\Entity\Repertoire;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -65,57 +66,6 @@ class ViewController extends Controller
 
     }
 
-    public function sujetdetailsAction($id){
-
-        $em = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Sujet');
-        $subjectView = $em->find($id);
-
-        $decideurs = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Decideurs')->findOneBy(
-            array(
-                'user' => $this->getUser()
-            )
-        );
-
-        $admin = null;
-
-        if($subjectView->getUser() == $this->getUser()){
-            $admin = true;
-        }
-
-        if ($admin == null AND $decideurs == null){
-            return $this->redirectToRoute('gdss_platform_sujets');
-        }
-
-
-        $em1 = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Criteres');
-        $criteres = $em1->findBy(array(
-            'sujet' => $subjectView,
-            )
-        );
-
-        $em2 = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Contraintes');
-        $contraintes = $em2->findBy(array(
-                'sujet' => $subjectView,
-            )
-        );
-
-
-        if (null === $subjectView) {
-            throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-        }
-
-        /**if($subjectView != $user){
-            throw new NotFoundHttpException("Vou n'avez pas publié ce sujet");
-        }**/
-
-        return $this->render('@GDSSPlatform/details/sujet_details.html.twig', array(
-            'subjectView' => $subjectView,
-            'critereslist' => $criteres,
-            'contraintelist' => $contraintes,
-            'id' => $id,
-        ));
-    }
-
     public function sujet_vueAction($id, Request $request){
 
         $users = $this->getUser();
@@ -126,11 +76,11 @@ class ViewController extends Controller
          * Recuperation des informations complètes sur le sujet
          */
         $data = $this->container->get('platform.sujectdata')->sujetdata($id);
-        $subjectView = $data[0];
-        $process = $data[1];
-        $critere = $data[2];
-        $contrainte = $data[3];
-        $phase = $data[4];
+        $subjectView = $data["subject"];
+        $process = $data["process"];
+        $critere = $data["critere"];
+        $contrainte = $data["contrainte"];
+        $phase = $data["phase"];
 
         /*
          * CHECK ACCESS
@@ -161,20 +111,10 @@ class ViewController extends Controller
          *  Recuperations des phases s'ils sont definies
          */
         if($defined == true){
-            $Comp = $repository->getRepository('GDSSPlatformBundle:Phases')->findOneBy(array(
-                'nom' => 'Phase de Comprehension Collective du problème',
-                'processus' => $process
-            ));
 
-            $Gene = $repository->getRepository('GDSSPlatformBundle:Phases')->findOneBy(array(
-                'nom' => 'Phase de Generations des solutions',
-                'processus' => $process
-            ));
-
-            $Nego = $repository->getRepository('GDSSPlatformBundle:Phases')->findOneBy(array(
-                'nom' => 'Phase de Negociations de confrontations des points de vue',
-                'processus' => $process
-            ));
+            $Comp = $data["Comp"];
+            $Gene = $data["Gene"];
+            $Nego = $data["Nego"];
         }
 
         /*
@@ -197,9 +137,6 @@ class ViewController extends Controller
         /*
          * Envoie d'invitation
          */
-
-        $defaultdata = array('name' => 'description');
-
         $em = $repository->getRepository('GDSSPlatformBundle:Repertoire');
         $listrepertoire = $em->findBy(array(
             'userproprietaire' => $this->getUser()->getId(),
@@ -216,7 +153,10 @@ class ViewController extends Controller
             $listid['id'. $compteur] = $nbre->getUser();
             $compteur++;
         }
-        //Formulaire
+        /*
+         * Formulaire pour envoie d'invitation
+         */
+        $defaultdata = array('name' => 'description');
         $form = $this->createFormBuilder($defaultdata)
             ->add('Contact', EntityType::class, array(
                 'class' => 'GDSSPlatformBundle:User',
@@ -229,6 +169,24 @@ class ViewController extends Controller
         $form->handleRequest($request);
 
 
+
+        /*
+         * Formulaire pour mise à jour du sujet
+         */
+        $defaultdata = array('name' => 'description');
+        $formSubject = $this->createFormBuilder($defaultdata)
+                    ->add('Start', DateTimeType::class, array(
+                        'label' => 'Date de début',
+                    ))
+                    ->add('End', DateTimeType::class, array(
+                        'label' => 'Date de fin',
+                    ))
+                    ->add('uodate', SubmitType::class, array(
+                        'label' => 'Mettre à jour'
+                    ))->getForm();
+
+
+
         $result = null;
         if ($form->isSubmitted() && $form->isValid()){
             $result = $this->container->get('platform.sendmsg')->sendInvitation($form, $subjectView, $users);
@@ -237,6 +195,10 @@ class ViewController extends Controller
         /*
          * FIN
          */
+
+        $decideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findBy(array(
+            'sujet' => $subjectView,
+        ));
 
 
         $now = new \DateTime("now");
@@ -258,7 +220,9 @@ class ViewController extends Controller
             'progressGene' => $progressGene,
             'progressNego' => $progressNego,
             'form' => $form->createView(),
+            'formSubject' => $formSubject->createView(),
             'result' => $result,
+            'decideurs' => $decideurs,
         ));
     }
 
@@ -331,6 +295,13 @@ class ViewController extends Controller
         $listid = $em->findBy(array(
             'userproprietaire' => $this->getUser(),
         ));
+
+        //Creation du formulaire
+        $form = $this->createFormBuilder($defaultdata)
+            ->add('Pseudo', TextType::class)
+            ->add('Ajouter', SubmitType::class)
+            ->getForm();
+        $form->handleRequest($request);
 
         return $this->render('GDSSPlatformBundle:Carnet Contact:repertoire.html.twig', array(
             'listcontact' => $listid,

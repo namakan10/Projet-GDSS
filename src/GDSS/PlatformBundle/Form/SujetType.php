@@ -19,10 +19,12 @@ class SujetType extends AbstractType
             ->add('But', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
             ->add('Domaine', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
             ->add('DateDebut', \Symfony\Component\Form\Extension\Core\Type\DateTimeType::class, array(
-                'date_format' => 'ddMMyyyy',
+                'format' => 'dd-MM-yyyy H:m',
+                'widget' => 'single_text',
             ))
             ->add('DateFin', \Symfony\Component\Form\Extension\Core\Type\DateTimeType::class, array(
-                'date_format' => 'ddMMyyyy',
+                'format' => 'dd-MM-yyyy H:m',
+                'widget' => 'single_text',
             ))
             ->add('Contexte', TextareaType::class)
             ->add('Suivant', SubmitType::class);

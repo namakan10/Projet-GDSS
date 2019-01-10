@@ -1,0 +1,39 @@
+{% extends 'GDSSPhasesBundle:phases_view:comprehension_collective.html.twig' %}
+
+{% block customstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chatline.css') }}" type="text/css">
+{% endblock %}
+
+{% block title %}PlusMinusInteresting{% endblock %}
+
+{% block controller1 %}
+    {{ render(controller('GDSSPhasesBundle:GenerationThinklet:plusminusScript', {'id' : id} )) }}
+{% endblock %}
+
+{% block controller2 %}
+    {{ render(controller('GDSSPhasesBundle:GenerationThinklet:plusminusScript', {'id' : id} )) }}
+{% endblock %}
+
+
+{% block customAjax %}
+    $.ajax({
+    url:"http://www.projetgdss.com/app_dev.php/add_propo/"+id,
+    type:"POST",
+    data: {proposition : form_data},
+    dataType: 'JSON',
+    success:function (data) {
+
+    }
+    })
+{% endblock %}
+
+{% block interval %}20000{% endblock %}
+
+{% block customScrpit %}
+
+{% endblock %}
+
+
+ {% block customLoad %}
+     $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/plusminus/script/' +id)
+ {% endblock %}

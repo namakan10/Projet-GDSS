@@ -1,0 +1,186 @@
+{% if chat %}
+    {% for ct in chat %}
+        {% if ct.user == user %}
+
+            {#-----------------------------------------------Message envoyé par le user courant----------------------------------------#}
+
+            <div class="outgoing_msg">
+                <div class="sent_msg">
+                    <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
+
+                    {#--------------------------------------Commentaire de niveau 1----------------------------------------------------#}
+
+                    <ul class="timeline">
+                        <li>
+                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#like{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}">
+
+                            </a>
+                            <div class="collapse" id="like{{ ct.id }}">
+                                <div class="card card-body">
+                                    <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'Like'); return false">
+                                        <div class="form-group">
+                                            <label for="argument{{ ct.id }}">Argument</label>
+                                            <textarea class="form-control" id="argument{{ ct.id }}" rows="2" required></textarea>
+                                            <br/>
+                                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                                        </div>
+                                    </form>
+                                    {% for reply in contribreply %}
+                                        {% if reply.contribution == ct %}
+                                            <div class="incoming_msg">
+                                                <div class="received_msg">
+                                                    <div class="received_withd_msg">
+                                                        <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {#------------------------------------------------------------COMMENTAIRE DE NIVEAU 2--------------------------------------------#}
+
+                                            <ul class="timeline">
+                                                <li>
+                                                    <a class="fas fa-plus-circle" data-toggle="collapse" href="#commentreply{{ reply.id }}" role="button" aria-expanded="false" aria-controls="commentreply{{ reply.id }}">
+
+                                                    </a>
+                                                    <div class="collapse" id="commentreply{{ reply.id }}">
+                                                        <div class="card card-body">
+                                                            <form method="post" action="#" onsubmit="addcomment({{ reply.id }}, document.getElementById('reply{{ reply.id }}').value, 'CommentReply'); return false">
+                                                                <div class="form-group">
+                                                                    <label for="reply{{ reply.id }}">Argument</label>
+                                                                    <textarea class="form-control" id="reply{{ reply.id }}" rows="2" required></textarea>
+                                                                    <br/>
+                                                                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                                </div>
+                                                            </form>
+                                                            {% for ctreply in commentreply %}
+                                                                {% if ctreply.comment == reply %}
+                                                                    <div class="incoming_msg">
+                                                                        <div class="received_msg">
+                                                                            <div class="received_withd_msg">
+                                                                                <p><span>{{ ctreply.pseudo }}</span><br/>{{ ctreply.reply }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+
+                                            {#--------------------------------------------------FIN DU COMMENTAIRE DE NIVEAU 2--------------------------------------------#}
+
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    {#-------------------------------------------------------------FIN DU COMMENTAIRE DE NIVEAU 1--------------------------------------------------------------------------------#}
+
+                </div>
+
+            </div>
+
+        {#--------------------------------------------------------FIN MESSAGE ENVOYER PAR USER COURANT----------------------------------------------------------------------------#}
+
+
+        {#--------------------------------------------------------MESSAGE RECU-----------------------------------------------------------------------------------------------------#}
+
+        {% else %}
+            <div class="incoming_msg">
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <p><span>{{ ct.pseudo }}</span><br/>{{ ct.contribution }}</p>
+
+                        {#--------------------------------------------------------COMMENTAIRE DE NIVEAU 1--------------------------------------------------------------------------#}
+                        <ul class="timeline">
+                            <li>
+                                <a class="fas fa-plus-circle" data-toggle="collapse" href="#like{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}">
+
+                                </a>
+                                <div class="collapse" id="like{{ ct.id }}">
+                                    <div class="card card-body">
+                                        <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'CommentReply'); return false">
+                                            <div class="form-group">
+                                                <label for="argument{{ ct.id }}">Argument</label>
+                                                <textarea class="form-control" id="argument{{ ct.id }}" rows="2" required></textarea>
+                                                <br/>
+                                                <button type="submit" class="btn btn-primary">Ajouter</button>
+                                            </div>
+                                        </form>
+                                        {% for reply in contribreply %}
+                                            {% if reply.contribution == ct %}
+                                                <div class="incoming_msg">
+                                                    <div class="received_msg">
+                                                        <div class="received_withd_msg">
+                                                            <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {#------------------------------------------------------COMMENTAIRE NIVEAU 2---------------------------------------------#}
+
+                                                <ul class="timeline">
+                                                    <li>
+                                                        <a class="fas fa-plus-circle" data-toggle="collapse" href="#commentreply{{ reply.id }}" role="button" aria-expanded="false" aria-controls="commentreply{{ reply.id }}">
+
+                                                        </a>
+                                                        <div class="collapse" id="commentreply{{ reply.id }}">
+                                                            <div class="card card-body">
+                                                                <form method="post" action="#" onsubmit="addcomment({{ reply.id }}, document.getElementById('reply{{ reply.id }}').value, 'CommentReply'); return false">
+                                                                    <div class="form-group">
+                                                                        <label for="reply{{ reply.id }}">Argument</label>
+                                                                        <textarea class="form-control" id="reply{{ reply.id }}" rows="2" required></textarea>
+                                                                        <br/>
+                                                                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                                    </div>
+                                                                </form>
+                                                                {% for ctreply in commentreply %}
+                                                                    {% if ctreply.comment == reply %}
+                                                                        <div class="incoming_msg">
+                                                                            <div class="received_msg">
+                                                                                <div class="received_withd_msg">
+                                                                                    <p><span>{{ ctreply.pseudo }}</span><br/>{{ ctreply.reply }}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+
+                                                {#------------------------------------------------------FIN COMMENTAIRE NIVEAU 2-----------------------------------------#}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                        {#-----------------------------------------------------FIN COMMENTAIRE NIVEAU 1------------------------------------------------------------#}
+                    </div>
+                </div>
+            </div>
+
+
+        {% endif %}
+
+    {% endfor %}
+{% endif %}
+
+<script>
+    function addcomment(ctid, argument, reaction) {
+
+        $.ajax({
+            url:"http://www.projetgdss.com/app_dev.php/commentreply/"+ctid,
+            type:"POST",
+            data: {reply : argument, reaction: reaction},
+            dataType: 'JSON',
+        })
+    }
+
+</script>

@@ -1,0 +1,100 @@
+{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/generation.html.twig' %}
+
+{% block title %}FreeBrainstorming Comment{% endblock %}
+
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="comments-container">
+                {% for contrib in contribution %}
+                    {% if contrib.user != users %}
+                        <ul id="comments-list" class="comments-list">
+                            <li>
+                                <div class="comment-main-level">
+                                    <!-- Contenedor del Comentario -->
+                                    <div class="comment-box">
+                                        <div class="comment-head">
+                                            <h6 class="comment-name by-author">{{ contrib.Pseudo }}</h6>
+                                        </div>
+                                        <div class="comment-content">
+                                            {{ contrib.contribution }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="divcomment{{ contrib.id }}">
+                                    {% if comment %}
+                                        {% for cmt in comment %}
+                                            {% if cmt.contribution == contrib %}
+                                                <ul class="comments-list reply-list">
+                                                    <li>
+                                                        <!-- Contenedor del Comentario -->
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                {{ cmt.comment }}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <!-- Fin boucle secondaire -->
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <!------------------------------------>
+                                <ul class="comments-list reply-list">
+                                    <li>
+                                        <!-- Contenedor del Comentario -->
+                                        <div class="comment-box">
+                                            <div class="comment-head">
+                                                <label for = "comment"><strong>Commentez</strong></label>
+                                            </div>
+                                            <form method="post" action="#" onsubmit="addcomment({{ contrib.id }}, document.getElementById('argument{{ contrib.id }}').value, 'Like'); return false">
+                                                <div class="form-group">
+                                                    <label for="argument{{ contrib.id }}" hidden>Argument</label>
+                                                    <textarea class="form-control" id="argument{{ contrib.id }}" rows="2" required></textarea>
+                                                    <br/>
+                                                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+                {% if contribution is null %}
+                    Pas de nouvelle page posté !
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script>
+
+        function addcomment(ctid, argument, reaction) {
+
+            $.ajax({
+                url:"http://www.projetgdss.com/app_dev.php/commentreply/"+ctid,
+                type:"POST",
+                data: {reply : argument, reaction: reaction},
+                dataType: 'JSON',
+            });
+            $(".divcomment"+ctid).load('http://www.projetgdss.com/app_dev.php/commentlist/' +ctid);
+            document.getElementById('argument'+ctid).value = null;
+        }
+    </script>
+{% endblock %}
+
