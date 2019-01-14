@@ -225,3 +225,15 @@ BucketVoteCategorie:
   path: /platform/subject/BucketVote/Categorie/4AuA1XIyiOeaNlwTfgZ2YCw0tne7dcacaaiglznZAEFG40{id}8500kkscribedmdpqnexzvbb4011fazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:bucketvotecategorie
+
+
+PointCounterPoint:
+  path: /platform/subject/PointCounterPoint/{id}8500kkscribedmdpqnexzvbb4011fazbfneovleznfbaizpcvnasbmkcdjccavzefojazv7unsubMKmpazer7810s50jazf546APD202xd482z
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:pointcounterpoint
+
+
+RedLigthGreenLigth:
+  path: /platform/subject/RedLigthGreenLigth/klwTfgZ2YCw0tpqnexzvbb4011fazbfne{id}8500ovleznfbaizpcvnasbmkcdjccavzefojazv7unsubMKmpazer7zdflzakfzXfcA6758xd482z
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:redligthgreenligth

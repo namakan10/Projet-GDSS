@@ -1,0 +1,157 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+{% block title %}RedLigthGreenLigth{% endblock %}
+
+{% block customstyle %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/rating.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chatv2.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/morris.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+
+    <div style="margin-right: 25%; margin-left: 5%">
+        <h1 style="text-decoration-style: double; margin-left: -15%"><a href="{{ path('negociation', {'id' : id}) }}"><i class="fas fa-arrow-left"></i></a> RedLigthGreenLigth</h1>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active show" data-toggle="tab" href="#multicriteriaresult">RESULTAT DU MULTICRITERIA</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#contributions">CONTRIBUTIONS</a>
+            </li>
+        </ul>
+
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade show active" id="multicriteriaresult">
+                <canvas id="myChart"></canvas>
+            </div>
+            <div class="tab-pane fade" id="contributions">
+                <br/>
+                {% for ct in contribution %}
+                    <div style="margin-right: 20%; margin-left: 10%">
+                        <div>
+                            <i class="outgoing_msg">
+                                <i class="sent_msg_green" style="float: none">
+                                    <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
+                                </i>
+                            </i>
+                        </div>
+
+                        {% set coll = false %}
+                        {% for cmt in comment %}
+                            {% if cmt.contribution == ct %}
+                                {% set coll = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if coll == true %}
+                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#noncatego{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                        {% endif %}
+
+                        <div class="collapse" id="noncatego{{ ct.id }}">
+                            {% for cmt in comment %}
+                                {% if cmt.contribution == ct %}
+                                    <div class="incoming_msg" style="margin-left: 50px; margin-bottom: 8px">
+                                        <div class="received_msg">
+                                            <div class="received_withd_msg">
+                                                <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p style="color: darkorange">Vote ({{ ct.liked }})</p>
+                        <br/>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+
+
+
+        <br/><br/>
+
+    </div>
+
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script src="{{ asset('bundles/gdssphases/js/Chart.min.js') }}"></script>
+    <script>
+
+        {#
+            new Morris.Bar({
+            // ID of the element in which to draw the chart.
+            element: 'myfirstchart',
+            // Chart data records -- each entry in this array corresponds to a point on
+            // the chart.
+            data: [
+                {% for chart in contributionchart %}
+                    { decideur: '{{ chart.pseudo }}', propo: '{{ chart.contribution }}', value: {{ chart.liked }} },
+                {% endfor %}
+            ],
+            // The name of the data record attribute that contains x-values.
+            xkey: 'decideur',
+            // A list of names of data record attributes that contain y-values.
+            ykeys: ['value'],
+            // Labels for the ykeys -- will be displayed when you hover over the
+            // chart.
+            labels: ['Vote'],
+            hideHover: 'auto',
+        });
+        #}
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'bar',
+
+            // The data for our dataset
+            data: {
+                labels: [
+                    {% for contrib in contributionchart %}
+                    "{{ contrib.contribution }}",
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: "Proposition vote",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [
+                        {% for contrib in contributionchart %}
+                        {{ contrib.liked }},
+                        {% endfor %}
+                    ],
+                }, {
+                    label: "Accord (%)",
+                    backgroundColor: 'rgb(80, 120, 132)',
+                    data: [
+                        {% for agree in agrement %}
+                        {{ agree }},
+                        {% endfor %}
+                    ],
+
+                }
+
+                ]
+            },
+
+            // Configuration options go here
+            options: {
+                legend: {
+                    display: true,
+                },
+                scales: {
+                    xAxes: [{
+                        display: false
+                    }],
+                }
+            }
+        });
+
+
+    </script>
+{% endblock %}

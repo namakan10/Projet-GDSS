@@ -2215,4 +2215,200 @@ class NegociationThinkletController extends Controller
 
 
 
+    public function pointcounterpointAction($id, Request $request){
+
+        $user = $this->getUser();
+
+        /*
+         * CHECK ACCESS
+         */
+        $decideurs=$this->container->get('platform.checkaccess')->decideursAccess($id, $user);
+        $admin = $this->container->get('platform.checkaccess')->adminAccess($id, $user);
+        if($admin == false AND $decideurs == null){
+            return $this->redirectToRoute('gdss_platform_sujets');
+        }
+
+        $repository = $this->getDoctrine()->getManager();
+
+        $data = $this->container->get('platform.sujectdata')->sujetdata($id);
+
+        $decideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findBy(array(
+            'sujet' => $data['subject']
+        ));
+
+        $listdecideurs = array();
+        $comp = 0;
+
+
+        $contribution = $repository->getRepository('GDSSPhasesBundle:GenerationContribution')->findBy(array(
+            'phases' => $data["Gene"],
+            'status' => "Posté",
+        ));
+
+        $contribshow = round(count($contribution)/3);
+
+        $contribidlist = array();
+        $contribidlistshow = array();
+        $comp = 0 ;
+
+        foreach ($contribution as $ct){
+            $contribidlist[$comp] = $ct->getId();
+            $comp++;
+        }
+
+        $rand_keys = array_rand($contribidlist, $contribshow);
+        $comp = 0;
+        foreach ($rand_keys as $key){
+
+            $contribidlistshow[$comp] = $contribidlist[$rand_keys[$comp]];
+            $k = array_search($contribidlist[$rand_keys[$comp]], $contribidlist);
+            unset($contribidlist[$k]);
+            $comp++;
+        }
+
+        //$contribidlist = array_merge(array("0" => ''), $contribidlist);
+
+
+        $now = new \DateTime();
+        $finish = false;
+        if($data["Gene"]->getDateFin() < $now){
+            $finish = true;
+        }
+
+        $comment = $repository->getRepository('GDSSPhasesBundle:GenerationComment')->findAll();
+
+        /*
+         * Recuperatin du temps restants
+         */
+        $time = $this->container->get('timer')->getime($data["Gene"]);
+        $hours = $time["hours"];
+        $minutes = $time["minutes"];
+        $seconds = $time["seconds"];
+
+
+        return $this->render('@GDSSPhases/phases_view/Negociation_ThinkLet/PointCounterPoint/pointcounterpoint.html.twig', array(
+            'contribution' => $contribution,
+            'comment' => $comment,
+            'users' => $this->getUser(),
+            'finish' => $finish,
+            'hours' => $hours,
+            'minutes' => $minutes,
+            'seconds' => $seconds,
+            'id' => $id,
+            'contriblistshow' => $contribidlistshow
+        ));
+    }
+
+
+    public function redligthgreenligthAction($id, Request $request){
+        $user = $this->getUser();
+
+        /*
+         * CHECK ACCESS
+         */
+        $decideurs=$this->container->get('platform.checkaccess')->decideursAccess($id, $user);
+        $admin = $this->container->get('platform.checkaccess')->adminAccess($id, $user);
+        if($admin == false AND $decideurs == null){
+            return $this->redirectToRoute('gdss_platform_sujets');
+        }
+
+        $repository = $this->getDoctrine()->getManager();
+
+        $data = $this->container->get('platform.sujectdata')->sujetdata($id);
+
+        $contribution = $repository->getRepository('GDSSPhasesBundle:GenerationContribution')->findBy(array(
+            'phases' => $data["Gene"],
+        ));
+        $contributionchart = $repository->getRepository('GDSSPhasesBundle:GenerationContribution')->findBy(array(
+            'phases' => $data["Gene"],
+        ), array(
+            'liked' => 'DESC'
+        ));
+
+        /*
+         * Calcul du nombre exact de proposition à sélectionner en fonction du pourcentage
+         */
+        $nbrecontrib = 0;
+        foreach ($contribution as $contrib){
+            $nbrecontrib++;
+        }
+        $nbreselection = ($data["Nego"]->getSelection()*$nbrecontrib)/100;
+        $nbreselection = round($nbreselection);
+
+        $comment = $repository->getRepository('GDSSPhasesBundle:GenerationComment')->findAll();
+
+        $now = new \DateTime();
+
+        $time = $this->container->get('timer')->getime($data["Nego"]);
+        $hours = $time["hours"];
+        $minutes = $time["minutes"];
+        $seconds = $time["seconds"];
+        $finish = false;
+
+        $alldecideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findBy(array(
+            'sujet' => $id,
+        ));
+
+        $alldecideurs = count($alldecideurs);
+
+        $agrement = array();
+        $comp = 0;
+
+        foreach ($contributionchart as $ct){
+            $agrement[$comp] = ($ct->getLiked()*100)/($alldecideurs*5);
+            $comp++;
+        }
+
+
+        if($data["Nego"]->getDateFin() < $now){
+            $finish = true;
+        }
+
+        $progress = $this->container->get('platform.progress')->progression($data["Nego"]);
+
+        if($request->isMethod('POST')){
+
+            if(isset($_POST["Evaluer"])){
+                foreach ($contribution as $contrib){
+                    if(isset($_POST['star'.$contrib->getId()])){
+                        $vote = $_POST['star'.$contrib->getId()];
+                        $contrib->setLiked($contrib->getLiked()+$vote);
+
+                        $decideurs->setSelection(1);
+
+
+                        $repository->persist($decideurs);
+                        $repository->flush();
+                    }
+                }
+            }
+
+            return $this->redirectToRoute('MultiCriteria', array(
+                'id' => $id,
+            ));
+
+        }
+
+
+
+
+        return $this->render('GDSSPhasesBundle:phases_view/Negociation_ThinkLet/RedLightGreenLight:redlightgreenlight.html.twig', array(
+            'id' => $id,
+            'admin' => $admin,
+            'contribution' => $contribution,
+            'comment' => $comment,
+            'finish' => $finish,
+            'progress' => $progress,
+            'hours' => $hours,
+            'minutes' => $minutes,
+            'seconds' => $seconds,
+            'selection' => $nbreselection,
+            'pourcentage' => $data["Nego"]->getSelection(),
+            'criteres' => $data['critere'],
+            'decideurs' => $decideurs,
+            'contributionchart' => $contributionchart,
+            'agrement' => $agrement,
+        ));
+    }
+
 }

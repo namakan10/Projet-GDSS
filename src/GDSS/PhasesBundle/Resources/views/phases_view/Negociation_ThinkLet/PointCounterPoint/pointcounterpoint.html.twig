@@ -1,15 +1,20 @@
-{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/generation.html.twig' %}
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
 
-{% block title %}PointCounterPoint Comment{% endblock %}
+{% block title %}PointCounterPoint{% endblock %}
+
+{% block customstyle %}<link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/comment.css') }}" type="text/css">{% endblock %}
 
 
 {% block content %}
 
     <div class="container">
+
+        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('negociation', {'id' : id}) }}"> </a> PointCounterPoint</h1>
+
         <div class="row">
-            <div class="comments-container">
+            <div class="comments-container" style="margin-left: 5%">
                 {% for contrib in contribution %}
-                    {% if contrib.user != users %}
+                    {% if contrib.id in contriblistshow %}
                         <ul id="comments-list" class="comments-list">
                             <li>
                                 <div class="comment-main-level">
@@ -93,6 +98,18 @@
                 dataType: 'JSON',
             });
             $(".divcomment"+ctid).load('http://www.projetgdss.com/app_dev.php/commentlist/' +ctid);
+            document.getElementById('argument'+ctid).value = null;
+        }
+
+        function reolad(id, argument, reaction) {
+
+            $.ajax({
+                url:"http://www.projetgdss.com/app_dev.php/reloadpointcounterpoint/"+id,
+                type:"POST",
+                data: {reply : argument, reaction: reaction},
+                dataType: 'JSON',
+            });
+            $(".divcomment"+ctid).load('http://www.projetgdss.com/app_dev.php/reloadpointcounterpoint/' +ctid);
             document.getElementById('argument'+ctid).value = null;
         }
     </script>
