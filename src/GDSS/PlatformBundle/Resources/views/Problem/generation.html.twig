@@ -1,0 +1,98 @@
+<tr>
+    <td><strong>Génération des solutions</strong></td>
+    {% if Gene %}
+        <td>{{ Gene.durationmin }} min - {{ Gene.durationmax }} min</td>
+        <td>{{ Gene.datestart|date('d/m/y H:i') }}</td>
+        <td><span
+                    {% if now > Gene.dateend%}
+                    class="badge badge-danger">Terminer
+                {% elseif now > Gene.datestart%}
+                    class="badge badge-success">En cours
+                {% else %}
+                    class="badge badge-warning">En attente
+                {% endif %}
+                                         </span>
+        </td>
+        <td><div class="progress"><div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{ progressGene }}%" aria-valuenow="{{ progressGene }}" aria-valuemin="0" aria-valuemax="100"></div></div></td>
+        {% if now > Gene.datestart %}
+            <td>
+                <a href="{{ path('generation', {'id':id}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% elseif now > Gene.dateend %}
+            <td>
+                <a href="{{ path('generation', {'id':id}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% endif %}
+
+        {% if admin %}
+            {% if Nego1 %}
+                <td></td>
+            {% else %}
+                {% if Gene.dateend <= now %}
+                    {% if end == false %}
+                        <td>
+                            <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Gene", 'action' : 'edit' }) }}">
+                                <i class="fas fa-sync"></i>
+                            </a>
+                        </td>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% else%}
+        <td></td>
+        <td></td>
+        <td><span class="badge badge-warning">En attente</span></td>
+        <td></td>
+        {% if Comp %}
+            {% if now > Comp.dateend%}
+                {% if admin %}
+                    {% if end == false %}
+                        {% if constraintsdescript.description == "6" %}
+                            {% if problem.subproblemdefinied == false %}
+                                <td>
+                                    <a href="{{ path('definied_subproblem', {'id':id, 'thinklet' : 'Plus-Minus-Interesting' }) }}">
+                                        <span class="badge badge-info">Donner les idées principales</span>
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Gene", 'action' : 'create' }) }}">
+                                        <span class="badge badge-primary">Démarrer</span>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        {% elseif constraintsdescript.description == "7" %}
+                            {% if problem.subproblemdefinied == false %}
+                                <td>
+                                    <a href="{{ path('definied_subproblem', {'id':id, 'thinklet' : 'BranchBuilder' }) }}">
+                                        <span class="badge badge-info">Définir les sous problèmes</span>
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Gene", 'action' : 'create' }) }}">
+                                        <span class="badge badge-primary">Démarrer</span>
+                                    </a>
+                                </td>
+                            {% endif %}
+
+                        {% else %}
+                            <td>
+                                <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Gene", 'action' : 'create' }) }}">
+                                    <span class="badge badge-primary">Démarrer</span>
+                                </a>
+                            </td>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <td></td>
+        {% endif %}
+    {% endif %}
+</tr>

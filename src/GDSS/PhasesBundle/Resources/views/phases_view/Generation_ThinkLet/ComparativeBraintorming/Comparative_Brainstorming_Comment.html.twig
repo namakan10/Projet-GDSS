@@ -1,0 +1,117 @@
+{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/generation.html.twig' %}
+
+{% block title %}ComparativeBrainstorming Comment{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Génération : ComparativeBrainstorming - Commentaires</h1>
+{% endblock %}
+
+{% block help %}
+    <p class="text-center">Vous pouvez commentez les propostions des autres decideurs.</p>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="noti"></div>
+            <div class="comments-container">
+                {% for contrib in contribution %}
+                    {% if contrib.user != users %}
+                        <ul id="comments-list" class="comments-list">
+                            <li>
+                                <div class="comment-main-level">
+                                    <!-- Contenedor del Comentario -->
+                                    <div class="comment-box">
+                                        <div class="comment-head">
+                                            <h6 class="comment-name by-author">{{ contrib.Pseudo }}</h6>
+                                        </div>
+                                        <div class="comment-content">
+                                            {{ contrib.contribution }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="divcomment{{ contrib.id }}">
+                                    {% if comment %}
+                                        {% for cmt in comment %}
+                                            {% if cmt.contribution == contrib %}
+                                                <ul class="comments-list reply-list">
+                                                    <li>
+                                                        <!-- Contenedor del Comentario -->
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                {{ cmt.comment }}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <!-- Fin boucle secondaire -->
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <!------------------------------------>
+                                <ul class="comments-list reply-list">
+                                    <li>
+                                        <!-- Contenedor del Comentario -->
+                                        <div class="comment-box">
+                                            <div class="comment-head">
+                                                <label for = "comment"><strong>Commentez</strong></label>
+                                            </div>
+                                            <form method="post" action="#" onsubmit="addcomment({{ contrib.id }}, document.getElementById('argument{{ contrib.id }}').value, 'Like'); return false">
+                                                <div class="form-group">
+                                                    <label for="argument{{ contrib.id }}" hidden>Argument</label>
+                                                    <textarea class="form-control" id="argument{{ contrib.id }}" rows="2" required></textarea>
+                                                    <br/>
+                                                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+                <br/><br/>
+
+                {% if contribution is null %}
+                    Vous avez eu toutes les pages disponibles !
+                {% else %}
+                    <button class="btn btn-warning"  onclick="location.reload()">Afficher une autre page</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <br/>
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script>
+        let id = {{ id }};
+        let step = "ComparativeBrainstorming";
+
+            function addcomment(ctid, argument, reaction) {
+
+                $.ajax({
+                    url: Routing.generate('generationcommentreply', {'id' : ctid}),
+                    type:"POST",
+                    data: {reply : argument, reaction: reaction},
+                    dataType: 'JSON',
+                });
+                setTimeout(function(){
+                    $(".divcomment"+ctid).load(Routing.generate('brainstorming_comment_list', {'id' : ctid}));
+                }, 2000);
+
+                document.getElementById('argument'+ctid).value = "";
+            }
+    </script>
+{% endblock %}
+

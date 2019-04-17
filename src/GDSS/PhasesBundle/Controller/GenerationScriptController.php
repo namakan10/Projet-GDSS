@@ -12,12 +12,14 @@ use GDSS\PhasesBundle\Entity\GenerationSubSubjectContribution;
 use GDSS\PhasesBundle\Entity\Reaction;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class GenerationScriptController extends Controller
 {
     /**
      * @param $id
      * @param Request $request
+     * @return Response
      */
     public function addpropoAction($id, Request $request){
 
@@ -32,38 +34,38 @@ class GenerationScriptController extends Controller
 
                 $user = $this->getUser();
                 $data = $this->container->get('leafhopper')->data($id, $user);
-                $subject = $data['subject'];
+                $subproblem = $data['subproblem'];
                 $pseudo = $data['pseudo'];
 
 
                 $Gene = new GenerationSubSubjectContribution();
                 $Gene->setPseudo($pseudo);
                 $Gene->setContrib($prop);
-                $Gene->setSubsubject($subject);
+                $Gene->setSubsubject($subproblem);
                 $Gene->setUser($this->getUser());
 
             }
             else{
 
 
-                $data = $this->container->get('platform.sujectdata')->sujetdata($id);
+                $data = $this->container->get('problemdata')->problemdata($id);
                 $phase = $data["Gene"];
-                $sujet = $data["subject"];
+                $problem = $data["problem"];
 
-                $decideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findOneBy(array(
-                    'sujet' => $sujet,
+                $maker = $repository->getRepository('GDSSPlatformBundle:DecisionMakers')->findOneBy(array(
+                    'process' => $data["process"],
                     'user' => $user
                 ));
 
-                if($decideurs == null AND $sujet->getUser() != $user ){
-                    return $this->redirectToRoute('gdss_platform_sujets');
+                if($maker == null AND $problem->getUser() != $user ){
+                    return $this->redirectToRoute('problem_list');
                 }
 
-                if($user == $sujet->getUser()){
+                if($user == $problem->getUser()){
                     $pseudo = 'Facilitateur';
                 }
                 else{
-                    $pseudo = $decideurs->getPseudodecideurs();
+                    $pseudo = $maker->getPseudoMaker();
                 }
 
 
@@ -101,8 +103,7 @@ class GenerationScriptController extends Controller
             $repository->flush();
         }
 
-        die();
-        //Return 0;
+        return new Response();
     }
 
     /**
@@ -146,6 +147,7 @@ class GenerationScriptController extends Controller
     /**
      * @param $id
      * @param Request $request
+     * @return Response
      */
     public function commentreplyAction($id, Request $request){
 
@@ -154,6 +156,7 @@ class GenerationScriptController extends Controller
 
         $reply = $_POST['reply'];
         $reaction = $_POST['reaction'];
+        $comment = null;
 
         if($reaction == 'CommentReply'){
             $comment = $repository->getRepository('GDSSPhasesBundle:GenerationComment')->find($id);
@@ -164,21 +167,21 @@ class GenerationScriptController extends Controller
         }
 
 
-        $phase = $repository->getRepository('GDSSPlatformBundle:Phases')->find($contrib->getPhases());
+        $phase = $repository->getRepository('GDSSPhasesBundle:Phase')->find($contrib->getPhases());
 
-        $process = $repository->getRepository('GDSSPlatformBundle:Processus')->find($phase->getProcessus());
+        $process = $repository->getRepository('GDSSPlatformBundle:Process')->find($phase->getProcess());
 
-        $sujet =$repository->getRepository('GDSSPlatformBundle:Sujet')->find($process->getSujet());
+        $problem =$repository->getRepository('GDSSPlatformBundle:Problem')->find($process->getProblem());
 
-        $decideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findOneBy(array(
-            'sujet' => $sujet,
+        $maker = $repository->getRepository('GDSSPlatformBundle:DecisionMakers')->findOneBy(array(
+            'process' => $process,
             'user' => $this->getUser(),
         ));
-        if($this->getUser() == $sujet->getUser()){
+        if($this->getUser() == $problem->getUser()){
             $pseudo = 'Facilitateur';
         }
         else{
-                $pseudo = $decideurs->getPseudodecideurs();
+                $pseudo = $maker->getPseudoMaker();
             }
 
         if($request->isXmlHttpRequest()){
@@ -190,6 +193,7 @@ class GenerationScriptController extends Controller
                 $commentreply->setComment($comment);
                 $commentreply->setPseudo($pseudo);
                 $commentreply->setUser($this->getUser());
+                $commentreply->setPhase($phase);
 
                 $repository->persist($commentreply);
 
@@ -201,6 +205,7 @@ class GenerationScriptController extends Controller
                 $contribreply->setComment($reply);
                 $contribreply->setPseudo($pseudo);
                 $contribreply->setReaction($reaction);
+                $contribreply->setPhase($phase);
 
                 $repository->persist($contribreply);
 
@@ -208,7 +213,7 @@ class GenerationScriptController extends Controller
             $repository->flush();
         }
 
-        die();
+        return new Response();
     }
 
     /**
@@ -233,7 +238,7 @@ class GenerationScriptController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function branchbuilderscrpitAction($id){
-        $phase = $this->container->get('platform.sujectdata')->sujetdata($id);
+        $phase = $this->container->get('problemdata')->problemdata($id);
         $phase = $phase["Gene"];
 
 
@@ -242,6 +247,14 @@ class GenerationScriptController extends Controller
         $chat = $repository->getRepository('GDSSPhasesBundle:GenerationContribution')->findBy(array(
             'phases' => $phase,
         ));
+
+        $definedcontrib = false;
+
+        foreach ($chat as $ct){
+            if($ct->getStatus() == "Posté"){
+                $definedcontrib = true;
+            }
+        }
 
 
         $comment = $repository->getRepository('GDSSPhasesBundle:GenerationComment')->findAll();
@@ -252,12 +265,17 @@ class GenerationScriptController extends Controller
             'id' => $id,
             'user' => $this->getUser(),
             'contribreply' => $comment,
-            'commentreply' => $commentreply
+            'commentreply' => $commentreply,
+            'definied' => $definedcontrib,
         ));
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function thelobbyistscpritAction($id){
-        $phase = $this->container->get('platform.sujectdata')->sujetdata($id);
+        $phase = $this->container->get('problemdata')->problemdata($id);
         $phase = $phase["Gene"];
 
 
@@ -278,6 +296,78 @@ class GenerationScriptController extends Controller
             'contribreply' => $comment,
 
         ));
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function checkthelobbyistAction($id){
+        $user = $this->getUser();
+
+        /*
+         * CHECK ACCESS
+         */
+        $decideurs=$this->container->get('platform.checkaccess')->decideursAccess($id, $user);
+        $admin = $this->container->get('platform.checkaccess')->adminAccess($id, $user);
+        if($admin == false AND $decideurs == null){
+            return $this->redirectToRoute('problem_list');
+        }
+
+
+
+        $data = $this->container->get('problemdata')->problemdata($id);
+
+        $phase = $data["Gene"];
+
+        if($phase->getThinklet() == "TheLobbyist"){
+            return $this->redirectToRoute('thelobbyist', array('id' => $id));
+        }
+
+        return new Response();
+    }
+
+
+    public function end_delete_sub_problemAction($action, $id, $thinklet, $backid){
+
+        $user = $this->getUser();
+        /*
+         * CHECK ACCESS
+         */
+        $admin = $this->container->get('platform.checkaccess')->adminAccess($backid, $user);
+        if($admin == false){
+            return $this->redirectToRoute('problem_list');
+        }
+
+
+        $repository = $this->getDoctrine()->getManager();
+
+        if($action == "end"){
+            $subproblem = $repository->getRepository('GDSSPhasesBundle:GenerationSubSubject')->find($id);
+            $group = $repository->getRepository('GDSSPhasesBundle:MakersGroup')->findBy(array(
+                'subproblem' => $subproblem
+            ));
+
+            $group = count($group);
+
+            if($thinklet == 'dealerschoice'){
+                if($group < 2){
+                    return $this->redirectToRoute('dealerschoice', array(
+                        'id' => $backid,
+                        'error' => "Vous devez affecter au moins deux décideurs dans le groupe de discussion : ".$subproblem->getName()." !",
+                    ));
+                }
+                else{
+                    $subproblem->setAllow(1);
+                    $repository->persist($subproblem);
+                    $repository->flush();
+                    return $this->redirectToRoute('dealerschoice', array(
+                        'id' => $backid,
+                    ));
+                }
+            }
+        }
+        return new Response();
     }
 
 }

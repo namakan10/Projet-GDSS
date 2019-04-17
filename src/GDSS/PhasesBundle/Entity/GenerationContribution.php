@@ -45,7 +45,7 @@ class GenerationContribution
     private $comment;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GDSS\PlatformBundle\Entity\Phases")
+     * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\Phase", inversedBy="contribution")
      * @ORM\JoinColumn(nullable=false)
      */
     private $phases;
@@ -56,6 +56,29 @@ class GenerationContribution
      * @ORM\Column(name="pseudo", type="string", length=255)
      */
     private $pseudo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="color", type="string", length=255, nullable=true)
+     */
+    private $color = null;
+
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="selection", type="boolean")
+     */
+    private $selection = 0;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="similar_ambiguous", type="boolean", nullable=true)
+     */
+    private $similar_ambiguous = 0;
+
 
     /**
      * @var string
@@ -185,29 +208,6 @@ class GenerationContribution
         return $this->pseudo;
     }
 
-    /**
-     * Set phases
-     *
-     * @param \GDSS\PlatformBundle\Entity\Phases $phases
-     *
-     * @return GenerationContribution
-     */
-    public function setPhases(\GDSS\PlatformBundle\Entity\Phases $phases)
-    {
-        $this->phases = $phases;
-
-        return $this;
-    }
-
-    /**
-     * Get phases
-     *
-     * @return \GDSS\PlatformBundle\Entity\Phases
-     */
-    public function getPhases()
-    {
-        return $this->phases;
-    }
 
     /**
      * Set numero
@@ -426,5 +426,101 @@ class GenerationContribution
     public function getCategorie()
     {
         return $this->categorie;
+    }
+
+    /**
+     * Set color
+     *
+     * @param string $color
+     *
+     * @return GenerationContribution
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get color
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * Set phases
+     *
+     * @param \GDSS\PhasesBundle\Entity\Phase $phases
+     *
+     * @return GenerationContribution
+     */
+    public function setPhases(\GDSS\PhasesBundle\Entity\Phase $phases)
+    {
+        $this->phases = $phases;
+
+        return $this;
+    }
+
+    /**
+     * Get phases
+     *
+     * @return \GDSS\PhasesBundle\Entity\Phase
+     */
+    public function getPhases()
+    {
+        return $this->phases;
+    }
+
+    /**
+     * Set selection
+     *
+     * @param boolean $selection
+     *
+     * @return GenerationContribution
+     */
+    public function setSelection($selection)
+    {
+        $this->selection = $selection;
+
+        return $this;
+    }
+
+    /**
+     * Get selection
+     *
+     * @return boolean
+     */
+    public function getSelection()
+    {
+        return $this->selection;
+    }
+
+    /**
+     * Set similarAmbiguous
+     *
+     * @param boolean $similarAmbiguous
+     *
+     * @return GenerationContribution
+     */
+    public function setSimilarAmbiguous($similarAmbiguous)
+    {
+        $this->similar_ambiguous = $similarAmbiguous;
+
+        return $this;
+    }
+
+    /**
+     * Get similarAmbiguous
+     *
+     * @return boolean
+     */
+    public function getSimilarAmbiguous()
+    {
+        return $this->similar_ambiguous;
     }
 }

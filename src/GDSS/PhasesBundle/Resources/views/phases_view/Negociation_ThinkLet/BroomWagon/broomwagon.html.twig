@@ -2,28 +2,323 @@
 
 {% block title %}BroomWagon{% endblock %}
 
-{% block customstyle %}
+{% block customstylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center">
+        <a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"></a>
+        Négociation : BroomWagon
+    </h1>
+{% endblock %}
+
+{% block help %}
+    {% if finish %}
+        <p>
+            Liste des contributions retenues.
+        </p>
+    {% else %}
+        {% if nego.selection == null %}
+            {% if admin %}
+                <p>
+                    Veuillez définir le pourcentage de contribution pertinante que les décideurs devront séléctionner.
+                    Le pourcentage définie doit être entre 20% et 33%.
+                </p>
+            {% else %}
+                <p>
+                    En attente du facilitateur !
+                </p>
+            {% endif %}
+        {% else %}
+            {% if admin %}
+                <p>
+                    Liste des contributions classées par ordre de mérite
+                </p>
+            {% else %}
+                {% if maker.selection != true %}
+                    <p>
+                        Choisissez {{ pourcentage }}% des contributions qui méritent d'être retenues soit {{ selection }} contributions
+                    </p>
+                {% else %}
+                    <p>
+                        Liste des contributions classées par ordre de mérite
+                    </p>
+                {% endif %}
+            {% endif %}
+
+        {% endif %}
+    {% endif %}
+
+
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('negociation', {'id' : id}) }}"> </a> BROOMWAGON</h1>
-        {% if nego.selection == null %}
-            {% if admin %}
-                <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Définir la séléction</a></p>
-                <p>Veuillez définir le pourcentage de contribution à séléctionner ! </p>
+        {% if finish == false %}
+            {% if nego.selection == null %}
+                {% if admin %}
+                    <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Définir le pourcentage</a></p>
+                {% else %}
+                    <p>En attente du facilitateur ! </p>
+                {% endif %}
             {% else %}
-                <p>Pourcentage de séléction des contributions pas encore définie par le facilitateur ! </p>
-            {% endif %}
-        {% else %}
-            {% if admin == false %}
-                {% if decideur.selection != true %}
-                    <a href="{{ path('BroomWagon_rating', {'id': id }) }}"><button type="button" class="btn btn-outline-primary">Faire la séléction</button></a>
+                {% if admin == false %}
+                    {% if maker.selection != true %}
+                        <p>
+                            Choisissez {{ pourcentage }}% des contributions qui méritent d'être retenues soit {{ selection }} contributions
+                        </p>
+                        <form method="post" href="#">
+                            <div class="form-group">
+                                {% for ct in contribution %}
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck{{ ct.id }}" name="{{ ct.id }}" value="{{ ct.id }}">
+                                        <label class="custom-control-label" for="customCheck{{ ct.id }}">
+                                            <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                                                <li>
+                                                    <div class="comment-main-level">
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{ ct.pseudo }}</h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                <p>{{ ct.contribution }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            {% set coll = false %}
+                                            {% for cmt in comment %}
+                                                {% if cmt.contribution == ct %}
+                                                    {% set coll = true %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if coll == true %}
+                                                <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#noncatego{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                                            {% endif %}
+
+                                            <div class="collapse" id="noncatego{{ ct.id }}">
+                                                <ul class="timeline">
+                                                    {% for cmt in comment %}
+                                                        {% if cmt.contribution == ct %}
+                                                            <li>
+                                                                <ul class="comments-list reply-list">
+                                                                    <li>
+                                                                        <!-- Contenedor del Comentario -->
+                                                                        <div class="comment-box">
+                                                                            <div class="comment-head">
+                                                                                <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                                            </div>
+                                                                            <div class="comment-content">
+                                                                                {{ cmt.comment }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                            <br/><br/>
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                <div class="form-inline">
+                                    <div class="col-sm-11">
+                                        <input type="submit" value="Valider" class="btn btn-outline-primary" id="checkBtn">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                        <div class="alert0"></div>
+                        <br/>
+                        <br/>
+                    {% else %}
+                        {% if finish %}
+                            <p>Liste des contriutions retenues</p>
+                        {% else %}
+                            <p>Liste des contriutions classées par ordre de mérite</p>
+                        {% endif %}
+
+                        <div class = "contrib" id = "contribid">
+                            {% for ct in contribution %}
+                                <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                                    <li>
+                                        <div class="comment-main-level">
+                                            <div class="comment-box">
+                                                <div class="comment-head">
+                                                    <h6 class="comment-name by-author">{{ ct.pseudo }}</h6>
+                                                </div>
+                                                <div class="comment-content">
+                                                    <p>{{ ct.contribution }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                {% set coll = false %}
+                                {% for cmt in comment %}
+                                    {% if cmt.contribution == ct %}
+                                        {% set coll = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if coll == true %}
+                                    <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#contrib{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                                {% endif %}
+
+                                <div class="collapse" id="contrib{{ ct.id }}">
+                                    <ul class="timeline">
+                                        {% for cmt in comment %}
+                                            {% if cmt.contribution == ct %}
+                                                <li>
+                                                    <ul class="comments-list reply-list">
+                                                        <li>
+                                                            <!-- Contenedor del Comentario -->
+                                                            <div class="comment-box">
+                                                                <div class="comment-head">
+                                                                    <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                                </div>
+                                                                <div class="comment-content">
+                                                                    {{ cmt.comment }}
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <p style="color: orangered">Votes ({{ ct.liked }})</p>
+                                <br/><br/>
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    {% if finish %}
+                        <p>Liste des contriutions retenues</p>
+                    {% else %}
+                        <p>Liste des contriutions classées par ordre de mérite</p>
+                    {% endif %}
+
+                    <div class = "contrib" id = "contribid">
+                        {% for ct in contribution %}
+                            <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                                <li>
+                                    <div class="comment-main-level">
+                                        <div class="comment-box">
+                                            <div class="comment-head">
+                                                <h6 class="comment-name by-author">{{ ct.pseudo }}</h6>
+                                            </div>
+                                            <div class="comment-content">
+                                                <p>{{ ct.contribution }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            {% set coll = false %}
+                            {% for cmt in comment %}
+                                {% if cmt.contribution == ct %}
+                                    {% set coll = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if coll == true %}
+                                <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#contrib{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                            {% endif %}
+
+                            <div class="collapse" id="contrib{{ ct.id }}">
+                                <ul class="timeline">
+                                    {% for cmt in comment %}
+                                        {% if cmt.contribution == ct %}
+                                            <li>
+                                                <ul class="comments-list reply-list">
+                                                    <li>
+                                                        <!-- Contenedor del Comentario -->
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                {{ cmt.comment }}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <p style="color: orangered">Votes ({{ ct.liked }})</p>
+                            <br/><br/>
+
+                        {% endfor %}
+                    </div>
                 {% endif %}
             {% endif %}
-            <a href="{{ path('BroomWagon_classement', {'id': id }) }}"><button type="button" class="btn btn-outline-primary">Voir les séléctions</button></a>
+        {% else %}
+            <p>Liste des contriutions retenues</p>
+            <div class = "contrib" id = "contribid">
+                {% for ct in contribution %}
+                    <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                        <li>
+                            <div class="comment-main-level">
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author">{{ ct.pseudo }}</h6>
+                                    </div>
+                                    <div class="comment-content">
+                                        <p>{{ ct.contribution }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    {% set coll = false %}
+                    {% for cmt in comment %}
+                        {% if cmt.contribution == ct %}
+                            {% set coll = true %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if coll == true %}
+                        <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#contrib{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                    {% endif %}
+
+                    <div class="collapse" id="contrib{{ ct.id }}">
+                        <ul class="timeline">
+                            {% for cmt in comment %}
+                                {% if cmt.contribution == ct %}
+                                    <li>
+                                        <ul class="comments-list reply-list">
+                                            <li>
+                                                <!-- Contenedor del Comentario -->
+                                                <div class="comment-box">
+                                                    <div class="comment-head">
+                                                        <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                    </div>
+                                                    <div class="comment-content">
+                                                        {{ cmt.comment }}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <p style="color: orangered">Votes ({{ ct.liked }})</p>
+                    <br/><br/>
+
+                {% endfor %}
+            </div>
         {% endif %}
+
 
         <div id="add_project" class="modal fade" role="dialog">
             <div class="modal-dialog">
@@ -40,7 +335,7 @@
                     </div>
 
                     <div style="margin-left: 5px; margin-right: 5px">
-                        {{ form_widget(form.Pourcentage, {'attr': {'class': 'modal-body', 'min' : '1', 'max' : '100'}}) }}
+                        {{ form_widget(form.Pourcentage, {'attr': {'class': 'modal-body', 'min' : '20', 'max' : '33'}}) }}
                     </div>
 
                     <div class="modal-footer">
@@ -53,4 +348,75 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block customscrpits %}
+    {% if finish == false %}
+        <script>
+            let step = "BroomWagon";
+            {% if admin %}
+                let admin = true;
+            {% else %}
+                let admin = false;
+            {% endif %}
+        </script>
+        {% if nego.selection == null %}
+            {% if admin == false %}
+                <script>
+                    setTimeout(function () {
+                        window.location = window.location.pathname;
+                    }, 20000);
+                </script>
+            {% endif %}
+        {% else %}
+            {% if admin == false %}
+                {% if maker.selection != true %}
+                    <script>
+                        let selection0 = {{ selection }}
+                            $(document).ready(function () {
+                                let selection0 = {{ selection }}
+                                    $('#checkBtn').click(function() {
+                                        checked = $("input[type=checkbox]:checked").length;
+
+                                        if(!checked) {
+                                            $(function() {
+                                                $(".alert0").notify("Aucune contribution séléctionnée");
+                                            });
+                                            return false;
+                                        }
+                                        else if(checked !== selection0){
+                                            $(function() {
+                                                $(".alert0").notify("Vouz devez choisir " +selection0+ " contribution(s)");
+                                            });
+                                            return false;
+                                        }
+
+                                    });
+                            });
+                    </script>
+                {% else %}
+                    <script>
+                        let id = {{ id }}
+                            setInterval(function(){
+                                $(".contrib").load(Routing.generate('BroomWagon_classement', {'id' : id}), function () {
+                                    let sneaky = new ScrollSneak(location.hostname);
+                                    document.getElementById('contribid').onload = sneaky.sneak;
+                                });
+                            }, 10000);
+                    </script>
+                {% endif %}
+
+            {% else %}
+                <script>
+                    let id = {{ id }}
+                        setInterval(function(){
+                            $(".contrib").load(Routing.generate('BroomWagon_classement', {'id' : id}), function () {
+                                let sneaky = new ScrollSneak(location.hostname);
+                                document.getElementById('contribid').onload = sneaky.sneak;
+                            });
+                        }, 10000);
+                </script>
+            {% endif %}
+        {% endif %}
+    {% endif %}
 {% endblock %}

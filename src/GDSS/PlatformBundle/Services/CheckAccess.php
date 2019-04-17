@@ -28,9 +28,9 @@ class CheckAccess
      */
     public function adminAccess($id, $users){
 
-        $subjectView = $this->em->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+        $problem = $this->em->getRepository('GDSSPlatformBundle:Problem')->find($id);
 
-        if($subjectView->getUser() == $users){
+        if($problem->getUser() == $users){
             $admin = true;
         }
         else{
@@ -43,17 +43,17 @@ class CheckAccess
     /**
      * @param $id
      * @param $users
-     * @return \GDSS\PlatformBundle\Entity\Decideurs|null|object
+     * @return \GDSS\PlatformBundle\Entity\DecisionMakers|null|object
      */
     public function decideursAccess($id, $users){
-        $subjectView = $this->em->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+        $problem = $this->em->getRepository('GDSSPlatformBundle:Problem')->find($id);
 
-        $decideurs = $this->em->getRepository('GDSSPlatformBundle:Decideurs')->findOneBy(array(
+        $makers = $this->em->getRepository('GDSSPlatformBundle:DecisionMakers')->findOneBy(array(
             'user' => $users,
-            'sujet' => $subjectView,
+            'process' => $problem->getProcess(),
         ));
 
-        return $decideurs;
+        return $makers;
     }
 
 }

@@ -76,20 +76,95 @@ var Countdown = {
             }
             else {
                 clearInterval(that.countdown_interval);
-                document.getElementById('chat_form').className='cache';
+                $(".noti").notify("Le temps total est écoulé !", { position : "top", autoHide: false});
+                if(typeof step !== "undefined"){
+                    if(step === "generation"){
+                        let url = Routing.generate('generation', {'id' : id});
+                        $(location).attr("href", url);
+                    }
+                    else if(step === "PreNego"){
+                        let url = Routing.generate('problem', {'id' : id});
+                        $(location).attr("href", url);
+                    }
+                    else if(step === "ComparativeBrainstorming"){
+                        let url = Routing.generate('ComparativeBrainstorming', {'id' : id});
+                        $(location).attr("href", url);
+                    }
+                    else if(step === "DealersChoice"){
+                        let url = Routing.generate('leafhopper_subject', {'id' : id, 'thinklet' : 'DealersChoice'});
+                        $(location).attr("href", url);
+                    }
+                    else if(step === "LeafHopper"){
+                        let url = Routing.generate('leafhopper_subject', {'id' : id, 'thinklet' : 'LeafHopper'});
+                        $(location).attr("href", url);
+                    }
+                    else if(step === "ExpertChoice - Categorizer"){
+                        window.location = window.location.pathname;
+                    }
+                    else if(step === "FastFocus - GoldMiner"){
+                        window.location = window.location.pathname;
+                    }
+                    else if(step === "PIN"){
+                        window.location = window.location.pathname;
+                    }
+                    else if(step === "ThemeSeeker"){
+                        window.location = window.location.pathname;
+                    }
+                    else if(step === "BroomWagon"){
+                        if(typeof admin !== "undefined"){
+                            if(admin === false){
+                                setTimeout(function () {
+                                    window.location = window.location.pathname;
+                                }, 5000)
+                            }
+                            else{
+                                window.location = window.location.pathname;
+                            }
+                        }
+                    }
+                }
+
             }
 
 
-            if(that.total_seconds == 299){
-                    alert('Il ne reste plus que 5 minutes !');
+            if(that.total_seconds === 299){
+                $(".noti").notify("Il reste moins de 5 minutes !", { position : "top", autoHide: false})
             }
+            if(that.total_seconds === 240){
+                $(".noti").notify("Il reste moins de 5 minutes !", { position : "top", autoHide: false})
+            }
+            if(that.total_seconds === 180){
+                $(".noti").notify("Il reste moins de 5 minutes !", { position : "top", autoHide: false})
+            }
+            if(that.total_seconds === 120){
+                $(".noti").notify("Il reste moins de 5 minutes !", { position : "top", autoHide: false})
+            }
+            if(that.total_seconds === 60){
+                $(".noti").notify("Il reste moins de 5 minutes !", { position : "top", autoHide: false})
+            }
+            if(that.total_seconds === 901){
+                if(typeof think !== "undefined"){
+                    if(think === "ComparativeBrainstorming"){
+                        let url = Routing.generate('ComparativeBrainstormingComment', {'id' : id});
+                        $(location).attr("href", url);
+                    }
+                }
+            }
+            if(that.total_seconds === 1500){
+                if(typeof think !== "undefined"){
+                    if(think === "ExpertChoice"){
+                        window.location = window.location.pathname;
+                    }
+                }
+            }
+
 
         }, 1000);
     },
 
     animateFigure: function($el, value) {
 
-        var that         = this,
+        let that         = this,
             $top         = $el.find('.top'),
             $bottom      = $el.find('.bottom'),
             $back_top    = $el.find('.top-back'),

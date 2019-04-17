@@ -4,7 +4,7 @@
 
 {% block customstyle %}
     <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/rating.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chatv2.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chat2.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/morris.css') }}" type="text/css">
 {% endblock %}
 
@@ -15,57 +15,115 @@
 
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active show" data-toggle="tab" href="#multicriteriaresult">RESULTAT DU MULTICRITERIA</a>
+                <a class="nav-link active show" data-toggle="tab" href="#contributions">CONTRIBUTIONS</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#contributions">CONTRIBUTIONS</a>
+                <a class="nav-link" data-toggle="tab" href="#multicriteriaresult">RESULTAT DU MULTICRITERIA</a>
             </li>
         </ul>
 
         <div id="myTabContent" class="tab-content">
-            <div class="tab-pane fade show active" id="multicriteriaresult">
-                <canvas id="myChart"></canvas>
-            </div>
-            <div class="tab-pane fade" id="contributions">
+            <div class="tab-pane fade show active" id="contributions">
                 <br/>
-                {% for ct in contribution %}
-                    <div style="margin-right: 20%; margin-left: 10%">
-                        <div>
-                            <i class="outgoing_msg">
-                                <i class="sent_msg_green" style="float: none">
-                                    <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
-                                </i>
-                            </i>
+                {% if admin %}
+                    <form method="post" href="#">
+                        <div class="form-group">
+                            {% for ctcat in contribution %}
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck{{ ctcat.id }}" name="{{ ctcat.id }}" value="{{ ctcat.id }}">
+                                    <label class="custom-control-label" for="customCheck{{ ctcat.id }}">
+                                        <i class="outgoing_msg">
+                                            <i {% if ctcat.color == "green" %}class="sent_msg_green" {% elseif ctcat.color == "red" %} class="sent_msg_red"{% elseif ctcat.color == "lightgreen" %} class="sent_msg_ligth_green"{% elseif ctcat.color == "yellow" %} class="sent_msg_yellow"{% elseif ctcat.color == "orange" %} class="sent_msg_orange"{% endif %} style="float: none">
+                                                <p><span>{{ ctcat.pseudo }}<br/></span> {{ ctcat.contribution }} </p>
+                                            </i>
+                                        </i>
+                                        {% set coll = false %}
+                                        {% for cmt in comment %}
+                                            {% if cmt.contribution == ctcat %}
+                                                {% set coll = true %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if coll == true %}
+                                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#catego{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
+                                        {% endif %}
+
+                                        <div class="collapse" id="catego{{ ctcat.id }}">
+                                            {% for cmt in comment %}
+                                                {% if cmt.contribution == ctcat %}
+                                                    <div class="incoming_msg" style="margin-left: 50px">
+                                                        <div class="received_msg">
+                                                            <div class="received_withd_msg">
+                                                                <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+
+                                        <br/><br/>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            <div class="form-inline">
+                                <div class="col-sm-2">
+                                    <select class="form-control" id="exampleFormControlSelect1" name="color">
+                                        <option value="green">Vert</option>
+                                        <option value="ligthgreen">Vert clair</option>
+                                        <option value="yellow">Jaune</option>
+                                        <option value="orange">Orange</option>
+                                        <option value="red">Rouge</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="submit" value="Changer de couleur" class="btn btn-warning" name="Change" id="checkBtn">
+                                </div>
+                            </div>
                         </div>
+                    </form>
+                {% else %}
+                    {% for ct in contribution %}
+                        <div style="margin-right: 20%; margin-left: 10%">
+                            <div>
+                                <i class="outgoing_msg">
+                                    <i {% if ct.color == "green" %}class="sent_msg_green" {% elseif ct.color == "red" %} class="sent_msg_red"{% endif %} style="float: none">
+                                        <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
+                                    </i>
+                                </i>
+                            </div>
 
-                        {% set coll = false %}
-                        {% for cmt in comment %}
-                            {% if cmt.contribution == ct %}
-                                {% set coll = true %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if coll == true %}
-                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#noncatego{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
-                        {% endif %}
-
-                        <div class="collapse" id="noncatego{{ ct.id }}">
+                            {% set coll = false %}
                             {% for cmt in comment %}
                                 {% if cmt.contribution == ct %}
-                                    <div class="incoming_msg" style="margin-left: 50px; margin-bottom: 8px">
-                                        <div class="received_msg">
-                                            <div class="received_withd_msg">
-                                                <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% set coll = true %}
                                 {% endif %}
                             {% endfor %}
+                            {% if coll == true %}
+                                <a class="fas fa-plus-circle" data-toggle="collapse" href="#noncatego{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                            {% endif %}
+
+                            <div class="collapse" id="noncatego{{ ct.id }}">
+                                {% for cmt in comment %}
+                                    {% if cmt.contribution == ct %}
+                                        <div class="incoming_msg" style="margin-left: 50px; margin-bottom: 8px">
+                                            <div class="received_msg">
+                                                <div class="received_withd_msg">
+                                                    <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <br/><br/>
                         </div>
-                        <p style="color: darkorange">Vote ({{ ct.liked }})</p>
-                        <br/>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% endif %}
             </div>
+            <div class="tab-pane fade" id="multicriteriaresult">
+                <canvas id="myChart"></canvas>
+            </div>
+
 
         </div>
 
@@ -82,27 +140,17 @@
     <script src="{{ asset('bundles/gdssphases/js/Chart.min.js') }}"></script>
     <script>
 
-        {#
-            new Morris.Bar({
-            // ID of the element in which to draw the chart.
-            element: 'myfirstchart',
-            // Chart data records -- each entry in this array corresponds to a point on
-            // the chart.
-            data: [
-                {% for chart in contributionchart %}
-                    { decideur: '{{ chart.pseudo }}', propo: '{{ chart.contribution }}', value: {{ chart.liked }} },
-                {% endfor %}
-            ],
-            // The name of the data record attribute that contains x-values.
-            xkey: 'decideur',
-            // A list of names of data record attributes that contain y-values.
-            ykeys: ['value'],
-            // Labels for the ykeys -- will be displayed when you hover over the
-            // chart.
-            labels: ['Vote'],
-            hideHover: 'auto',
+        $(document).ready(function () {
+            $('#checkBtn').click(function() {
+                checked = $("input[type=checkbox]:checked").length;
+
+                if(!checked) {
+                    alert("Aucune contribution sélectionnée ! ");
+                    return false;
+                }
+
+            });
         });
-        #}
 
         var ctx = document.getElementById('myChart').getContext('2d');
         var chart = new Chart(ctx, {
@@ -130,7 +178,7 @@
                     backgroundColor: 'rgb(80, 120, 132)',
                     data: [
                         {% for agree in agrement %}
-                        {{ agree }},
+                            {{ agree }},
                         {% endfor %}
                     ],
 

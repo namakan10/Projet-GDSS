@@ -19,8 +19,8 @@ class Progress
 
 
         $now = new \DateTime("now");
-        $datestrat = strtotime($obj->getDateDebut()->format("Y-m-d H:i:s"));
-        $dateend = strtotime($obj->getDateFin()->format("Y-m-d H:i:s"));
+        $datestrat = strtotime($obj->getDatestart()->format("Y-m-d H:i:s"));
+        $dateend = strtotime($obj->getDateend()->format("Y-m-d H:i:s"));
         $nowint =$dateend - strtotime($now->format("Y-m-d H:i:s"));
         $diff = $dateend-$datestrat;
 

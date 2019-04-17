@@ -2,25 +2,40 @@
 
 {% block title %}FreeBrainstorming Contribution{% endblock %}
 
-{% block content %}
-        <div class="container">
-            <div id="display">
-                {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id':'form_propo'}}) }}
+{% block subtitle %}
+    <h1 style="text-decoration-style: double;" class="text-lg-left container"><a class="fas fa-arrow-left" href="{{ path('freebrainstorming', {'id' : id}) }}"> </a> FreeBrainstorming - Contribution </h1>
+{% endblock %}
 
-                <div class="form-group">
-                    {{ form_label(form.Proposition, "Proposition", {'label_attr': {'class': 'col-sm-8 control-label'}}) }}
-                    {{ form_errors(form.Proposition) }}
-                    {{ form_widget(form.Proposition, {'attr': {'class': 'col-sm-9'}}) }}
-                </div>
-                <div class="form-inline">
-                    <div class="col-sm-11">
-                        {{ form_widget(form.Envoyer, {'attr': {'class': 'btn linkstyle'}}) }}
+{% block help %}
+    {% if finish %}
+        <p>L'etape de génération est à présent terminé !</p>
+    {% else %}
+        <p>Vous pouvez donnez de propositions concernant le probème. Une fois avoir fini, soumettez la page pour qu'elle soit visible par les autres participants.</p>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+        <div class="container">
+
+            <div id="display">
+                <div class="noti"></div>
+                {% if finish == false %}
+
+                    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id':'form_propo'}}) }}
+
+                    <div class="form-group">
+                        {{ form_label(form.Proposition, "Proposition", {'label_attr': {'class': 'col-sm-8 control-label'}}) }}
+                        {{ form_errors(form.Proposition) }}
+                        {{ form_widget(form.Proposition, {'attr': {'class': 'col-sm-9'}}) }}
                     </div>
-                </div>
-                <div style="position: relative; margin-left: 748px; margin-top: -39px">
-                    <a href="{{ path('generation', {'id':id}) }}"><button type="button" class="btn btn-outline-primary" id="stop">Retour</button></a>
-                </div>
-                {{ form_end(form) }}
+                    <div class="form-inline">
+                        <div class="col-sm-11">
+                            {{ form_widget(form.Envoyer, {'attr': {'class': 'btn linkstyle'}}) }}
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                {% endif %}
             </div>
 
             <div class="propo_list">
@@ -57,19 +72,19 @@
 
 
 {% block customscrpits %}
-    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
-
     <script>
+        let step = "FreeBrainstorming";
         {% if alert %}
-            alert("La page a été soumise avec succes");
+            $(function() {
+                $(".noti").notify("La page à été soumise avec succès !", "success", {position: "top"});
+            });
         {% endif %}
         var id = {{ id }}
             $('#form_propo').on('submit', function (event) {
                 event.preventDefault();
                 var form_data = document.getElementById('form_Proposition').value;
                 $.ajax({
-                    url:"http://www.projetgdss.com/app_dev.php/add_propo/"+id,
+                    url: Routing.generate('add_propo_gene', {'id' : id}),
                     type:"POST",
                     data: {proposition : form_data, status : 'Non Posté'},
                     dataType: 'JSON',
@@ -77,31 +92,13 @@
 
                     }
                 });
-                $(".propo_list").load('http://www.projetgdss.com/app_dev.php/brainstroming_contrib/' +id);
-                document.getElementById('form_Proposition').value = null;
-                element.scrollTop = element.scrollHeight;
-            });
-        {#
-            var user = {{ user.id }}
-        $("#submit").click(function () {
-            ;
-            $.ajax({
-                url :  'http://www.myproject.com/app_dev.php/submit/50',
-                type : 'GET',
-                data : 'user=' +user ,
-                dataType : 'html',
-                success : function(code_html, statut){
-                    alert("Vous m'avez cliqué !");
-                },
-                error : function(resultat, statut, erreur){
+                setTimeout(function(){
+                    $(".propo_list").load(Routing.generate('brainstorming_contribution_list', {'id' : id}));
+                }, 2000);
 
-                },
-                complete : function(resultat, statut){
-
-                }
+                document.getElementById('form_Proposition').value = "";
             });
-        });
-        #}
+
 
     </script>
 {% endblock %}

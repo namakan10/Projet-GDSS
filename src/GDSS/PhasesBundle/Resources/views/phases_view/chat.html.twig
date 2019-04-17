@@ -1,0 +1,28 @@
+{% for ct in chat %}
+    {% if ct.users == user %}
+        <div class="row msg_container base_sent">
+            <div class="col-md-9 col-xs-9">
+                <div class="messages msg_sent">
+                    <p>{{ ct.message }}</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-xs-3 avatar">
+                <img src="{{ asset('bundles/gdssplatform/icons/users_icon.svg') }}" alt="" class="img-circle">
+                <span style="font-size: small">{{ ct.pseudo }}</span>
+            </div>
+        </div>
+    {% else %}
+        <div class="row msg_container base_receive">
+            <div class="col-md-3 col-xs-3 avatar">
+                <img src="{{ asset('bundles/gdssplatform/icons/users_icon.svg') }}" alt="" class="img-circle">
+                <span style="font-size: small">{{ ct.pseudo }}</span>
+            </div>
+            <div class="col-md-9 col-xs-9">
+                <div class="messages msg_receive">
+                    <p>{{ ct.message }}</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+

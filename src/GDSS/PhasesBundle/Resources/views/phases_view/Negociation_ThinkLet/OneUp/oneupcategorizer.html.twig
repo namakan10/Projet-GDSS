@@ -1,0 +1,17 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/Pin-the-Tail-on-the-Donkey/pin-the-tail-categorizer.html.twig' %}
+
+{% block subtitle %}
+    <h1 class="text-center"><a href="{{ path('OneUp', {'id' : backid}) }}"><i class="fas fa-arrow-left"></i></a> Négociation : OneUp - Categorizer ({{ categorie.name }})</h1>
+{% endblock %}
+
+{% block title %}
+    OneUp - Categorizer
+{% endblock %}
+
+{% block help %}
+    <p>
+        Déplacez les contributions dans cette catégorie.
+        Une fois catégorisées elles n'appaîtront plus dans la liste de départ.
+        Chaque décideur choisira dans les différentes catégories une seul contribution qu'il juge la plus pertinente.
+    </p>
+{% endblock %}

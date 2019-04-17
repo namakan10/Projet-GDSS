@@ -1,0 +1,253 @@
+<tr>
+    <td><strong>Négociation et de confrontation des points de vue</strong></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+
+
+
+
+
+<tr>
+    <td><span style="margin-left: 3em">-Phase 1</span></td>
+    {% if Nego1 %}
+        <td>{{ Nego1.durationmin }} min - {{ Nego1.durationmax }} min</td>
+        <td>{{ Nego1.datestart|date('d/m/y H:i') }}</td>
+        <td>
+            <span {% if now > Nego1.dateend%}
+                    class="badge badge-danger">Terminer
+                {% elseif now > Nego1.datestart%}
+                    class="badge badge-success">En cours
+                {% else %}
+                    class="badge badge-warning">En attente
+                {% endif %}
+            </span>
+        </td>
+        <td>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{ progressNego1 }}%" aria-valuenow="{{ progressNego1 }}" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+        </td>
+
+        {% if now > Nego1.dateend %}
+            <td>
+                <a href="{{ path('negociation', {'id':id, 'phase' : 1}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% elseif now > Nego1.datestart %}
+            <td>
+                <a href="{{ path('negociation', {'id':id, 'phase' : 1}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% endif %}
+
+        {% if admin %}
+            {% if Nego2 %}
+                <td></td>
+            {% else %}
+                {% if Nego1.dateend <= now %}
+                    {% if end == false %}
+                        <td>
+                            <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Nego1", 'action' : 'edit'}) }}">
+                                <i class="fas fa-sync"></i>
+                            </a>
+                        </td>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% else%}
+        {% if Gene %}
+            {% if now > Gene.dateend%}
+
+                {% if end == false %}
+
+                    {% if PreNego1 %}
+                        {% if now > PreNego1.dateend %}
+                            <td></td>
+                            <td></td>
+                            <td><span class="badge badge-warning">En attente</span></td>
+                            <td></td>
+                            {% if admin %}
+                                <td>
+                                    <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Nego1", 'action' : 'create' }) }}">
+                                        <span class="badge badge-primary">Démarrer</span>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        {% else %}
+                            <td></td>
+                            <td></td>
+                            <td><span class="badge badge-warning">Soumission de formulaire en cours</span></td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{ progressPreNego1 }}%" aria-valuenow="{{ progressPreNego1 }}" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </td>
+                            {% if admin == false %}
+                                {% if maker.selection == 0 %}
+                                    <td>
+                                        <a href="{{ path('negociation_vote_form', {'id':id, 'phase' : 'phase1'}) }}">
+                                            <span class="badge badge-primary">Remplir le formulaire</span>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                        <td><span class="badge badge-warning">En attente</span></td>
+                        <td></td>
+                        {% if admin %}
+                            <td>
+                                <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "PreNego1", 'action' : 'create' }) }}">
+                                    <span class="badge badge-primary">Démarrer</span>
+                                </a>
+                            </td>
+                        {% endif %}
+                    {% endif %}
+
+                {% endif %}
+
+            {% else %}
+                <td></td>
+                <td></td>
+                <td><span class="badge badge-warning">En attente</span></td>
+                <td></td>
+            {% endif %}
+        {% else %}
+            <td></td>
+            <td></td>
+            <td><span class="badge badge-warning">En attente</span></td>
+            <td></td>
+        {% endif %}
+
+    {% endif %}
+</tr>
+
+
+
+
+
+
+<tr>
+    <td><span style="margin-left: 3em">-Phase 2</span></td>
+    {% if Nego2 %}
+        <td>{{ Nego2.durationmin }} min - {{ Nego2.durationmax }} min</td>
+        <td>{{ Nego2.datestart|date('d/m/y H:i') }}</td>
+        <td>
+            <span {% if now > Nego2.dateend%}
+                    class="badge badge-danger">Terminer
+                {% elseif now > Nego2.datestart%}
+                    class="badge badge-success">En cours
+                {% else %}
+                    class="badge badge-warning">En attente
+                {% endif %}
+            </span>
+        </td>
+        <td>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{ progressNego2 }}%" aria-valuenow="{{ progressNego2 }}" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+        </td>
+
+        {% if now > Nego2.dateend %}
+            <td>
+                <a href="{{ path('negociation', {'id':id, 'phase' : 2}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% elseif now > Nego2.datestart %}
+            <td>
+                <a href="{{ path('negociation', {'id':id, 'phase' : 2}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% endif %}
+    {% else%}
+        {% if Nego1 %}
+            {% if now > Nego1.dateend%}
+
+                {% if end == false %}
+
+                    {% if PreNego2 %}
+                        {% if now > PreNego2.dateend %}
+                            <td></td>
+                            <td></td>
+                            <td><span class="badge badge-warning">En attente</span></td>
+                            <td></td>
+                            {% if admin %}
+                                <td>
+                                    <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Nego2", 'action' : 'create' }) }}">
+                                        <span class="badge badge-primary">Démarrer</span>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        {% else %}
+                            <td></td>
+                            <td></td>
+                            <td><span class="badge badge-warning">Soumission de formulaire en cours</span></td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{ progressPreNego2 }}%" aria-valuenow="{{ progressPreNego2 }}" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </td>
+                            {% if admin == false %}
+                                {% if maker.selection == 0 %}
+                                    <td>
+                                        <a href="{{ path('negociation_vote_form', {'id':id, 'phase' : 'phase2'}) }}">
+                                            <span class="badge badge-primary">Remplir le formulaire</span>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                        <td><span class="badge badge-warning">En attente</span></td>
+                        <td></td>
+                        {% if admin %}
+                            <td>
+                                <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "PreNego2", 'action' : 'create' }) }}">
+                                    <span class="badge badge-primary">Démarrer</span>
+                                </a>
+                            </td>
+                        {% endif %}
+                    {% endif %}
+
+                {% endif %}
+
+            {% else %}
+                <td></td>
+                <td></td>
+                <td><span class="badge badge-warning">En attente</span></td>
+                <td></td>
+            {% endif %}
+        {% else %}
+            <td></td>
+            <td></td>
+            <td><span class="badge badge-warning">En attente</span></td>
+            <td></td>
+        {% endif %}
+
+    {% endif %}
+</tr>
+
+
+
+
+<tr>
+    <td><span style="margin-left: 3em">-Phase 3</span></td>
+</tr>

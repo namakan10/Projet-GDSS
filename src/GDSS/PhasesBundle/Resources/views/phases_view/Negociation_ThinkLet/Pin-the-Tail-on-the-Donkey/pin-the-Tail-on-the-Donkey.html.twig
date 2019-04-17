@@ -2,100 +2,283 @@
 
 {% block title %}Pin The Tail On The Donkey{% endblock %}
 
-{% block customstyle %}
+{% block customstylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/rating.css') }}" type="text/css">
+{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center">
+        <a href="{{ path('problem', {'id' : id}) }}">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        Négociation : PTTOTDonkey
+    </h1>
+{% endblock %}
+
+{% block help %}
+    {% if admin %}
+        <p class="text-center">Les décideurs annotent les contributions ! </p>
+    {% else %}
+        {% if maker.selection == false %}
+            <p class="text-center">Veuillez annoter les contributions !</p>
+        {% else %}
+            <p class="text-center">Vous avez déjà annoter les contributions !</p>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-    <div class="container">
 
-        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('negociation', {'id' : id}) }}"></a>  Pin the tail on the donkey</h1>
+    <div>
 
-        {% if admin %}
-            <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une catégorie</a></p>
+        {% set alreadyselect = true %}
+        {% if admin == false %}
+            {% if maker.selection == false %}
+                {% set alreadyselect = false %}
+            {% endif %}
         {% endif %}
-
-        <ul class="nav nav-tabs" style="margin-right: 190px">
-            <li class="nav-item">
-                <a class="nav-link active show" data-toggle="tab" href="#subsubject">CATEGORIES</a>
-            </li>
+        <ul class="nav nav-tabs">
+            {% if finish == false %}
+                {% if maker %}
+                    {% if alreadyselect != true %}
+                        <li class="nav-item">
+                            <a class="nav-link active show" data-toggle="tab" href="#annoter">ANNOTER</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link {% if alreadyselect %}active show{% elseif admin %}active show{% endif %}" data-toggle="tab" href="#annotationlist">VOTE</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link active show" data-toggle="tab" href="#annotationlist">VOTE</a>
+                </li>
+            {% endif %}
         </ul>
+        <div id="myTabContent" class="tab-content">
 
-        <div id="myTabContent" class="tab-content" style="margin-right: 190px; margin-top: -35px">
-            <div class="tab-pane fade show active" id="subsubject">
-                <div>
-                    <table class="table table-hover">
-                        <thead>
-                        <tr class="">
-                            <th>Titre</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {% for cat in categorielist %}
-                            <tr>
-                                <td>{{ cat.name }}</td>
-                                {% if admin %}
-                                    <td><a href="{{ path('PinTheTailOntheDonkey_Categorizer', {'id' : cat.id}) }}"
-                                           class="badge badge-warning">Categoriser
-                                        </a>
-                                    </td>
-                                {% else %}
-                                    <td><a href="{{ path('PinTheTailOntheDonkey_Rating', {'id' : cat.id}) }}"
-                                           class="badge badge-info">Voir
-                                        </a>
-                                    </td>
+            {% if finish == false %}
+                {% if maker %}
+                    {% if alreadyselect != true %}
+                        <div class="tab-pane fade show active" id="annoter">
+                            <form method="post" href="#">
+                                <div class="form-group">
+                                    {% for ctcat in contribution %}
+                                        <div class="form-group col-sm-12">
+                                            <div>
+                                                <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                                                    <li>
+                                                        <div class="comment-main-level">
+                                                            <div class="comment-box">
+                                                                <div class="comment-head">
+                                                                    <h6 class="comment-name by-author">{{ ctcat.pseudo }}</h6>
+                                                                </div>
+                                                                <div class="comment-content">
+                                                                    <p>{{ ctcat.contribution }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                {% set coll = false %}
+                                                {% for cmt in comment %}
+                                                    {% if cmt.contribution == ctcat %}
+                                                        {% set coll = true %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if coll == true %}
+                                                    <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#collanot{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
+                                                {% endif %}
+                                                <div class="collapse" id="collanot{{ ctcat.id }}">
+                                                    {% for cmt in comment %}
+                                                        {% if cmt.contribution == ctcat %}
+                                                            <li>
+                                                                <ul class="comments-list reply-list">
+                                                                    <li>
+                                                                        <!-- Contenedor del Comentario -->
+                                                                        <div class="comment-box">
+                                                                            <div class="comment-head">
+                                                                                <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                                            </div>
+                                                                            <div class="comment-content">
+                                                                                {{ cmt.comment }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="rating" style="margin-left: 20px">
+                                                <input type="radio" name="star{{ ctcat.id }}" id="star1{{ ctcat.id }}" value="5">
+                                                <label for="star1{{ ctcat.id }}"></label>
+                                                <input type="radio" name="star{{ ctcat.id }}" id="star2{{ ctcat.id }}" value="4">
+                                                <label for="star2{{ ctcat.id }}"></label>
+                                                <input type="radio" name="star{{ ctcat.id }}" id="star3{{ ctcat.id }}" value="3">
+                                                <label for="star3{{ ctcat.id }}"></label>
+                                                <input type="radio" name="star{{ ctcat.id }}" id="star4{{ ctcat.id }}" value="2">
+                                                <label for="star4{{ ctcat.id }}"></label>
+                                                <input type="radio" name="star{{ ctcat.id }}" id="star5{{ ctcat.id }}" value="1">
+                                                <label for="star5{{ ctcat.id }}"></label>
+                                            </div>
+                                            <br/>
+                                        </div>
+                                    {% endfor %}
+                                    <br/>
+                                    <div class="form-inline">
+                                        <div class="col-sm-11">
+                                            {% if contribution %}
+                                                <input type="submit" value="Votez" class="btn btn-warning" name="Votez" id="checkBtn">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="alert0"></div>
+                            <br/>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                <div class="tab-pane fade {% if alreadyselect == true %}show active{% elseif admin %}show active{% endif %} ratinglist" id="annotationlist">
+                    {% for ctcat in ordercontribution %}
+                        <div>
+                            <ul id="comments-list" class="comments-list">
+                                <li>
+                                    <div class="comment-main-level">
+                                        <div class="comment-box">
+                                            <div class="comment-head">
+                                                <h6 class="comment-name by-author">{{ ctcat.pseudo }}</h6>
+                                            </div>
+                                            <div class="comment-content">
+                                                <p>{{ ctcat.contribution }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            {% set coll = false %}
+                            {% for cmt in comment %}
+                                {% if cmt.contribution == ctcat %}
+                                    {% set coll = true %}
                                 {% endif %}
-                            </tr>
-                        {% endfor %}
+                            {% endfor %}
+                            {% if coll == true %}
+                                <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#coll{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
+                            {% endif %}
 
+                            <div class="collapse" id="coll{{ ctcat.id }}">
+                                {% for cmt in comment %}
+                                    {% if cmt.contribution == ctcat %}
+                                        <li>
+                                            <ul class="comments-list reply-list">
+                                                <li>
+                                                    <!-- Contenedor del Comentario -->
+                                                    <div class="comment-box">
+                                                        <div class="comment-head">
+                                                            <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                        </div>
+                                                        <div class="comment-content">
+                                                            {{ cmt.comment }}
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p style="margin-left: 20px; color: #f9a825">Vote ({{ ctcat.liked }})</p>
+                        </div>
 
-                        </tbody>
-
-                    </table>
+                    {% endfor %}
+                    <br/><br/>
                 </div>
-            </div>
-        </div>
+            {% else %}
+                <div class="tab-pane fade show active">
+                    {% for ctcat in ordercontribution %}
+                        <div>
+                            <ul id="comments-list" class="comments-list" >
+                                <li>
+                                    <div class="comment-main-level">
+                                        <div class="comment-box">
+                                            <div class="comment-head">
+                                                <h6 class="comment-name by-author">{{ ctcat.pseudo }}</h6>
+                                            </div>
+                                            <div class="comment-content">
+                                                <p>{{ ctcat.contribution }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            {% set coll = false %}
+                            {% for cmt in comment %}
+                                {% if cmt.contribution == ctcat %}
+                                    {% set coll = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if coll == true %}
+                                <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#coll{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
+                            {% endif %}
 
-        <div id="add_project" class="modal fade" role="dialog">
-            <div class="modal-dialog">
+                            <div class="collapse" id="coll{{ ctcat.id }}">
+                                {% for cmt in comment %}
+                                    {% if cmt.contribution == ctcat %}
+                                        <li>
+                                            <ul class="comments-list reply-list">
+                                                <li>
+                                                    <!-- Contenedor del Comentario -->
+                                                    <div class="comment-box">
+                                                        <div class="comment-head">
+                                                            <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                        </div>
+                                                        <div class="comment-content">
+                                                            {{ cmt.comment }}
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p style="margin-left: 20px; color: #f9a825">Vote ({{ ctcat.liked }})</p>
+                        </div>
 
-                <div class="modal-content">
-                    <div class="modal-header login-header">
-                        <button type="button" class="close" data-dismiss="modal">X</button>
-                        <h4 class="modal-title">Créer une catégorie</h4>
-                    </div>
-                    {{ form_start(form) }}
-
-                    <div style="margin-top: 5px; font-size: large">
-                        {{ form_label(form.Nom) }}
-                    </div>
-
-                    <div style="+margin-left: 5px; margin-right: 5px">
-                        {{ form_widget(form.Nom, {'attr': {'class': 'modal-body'}}) }}
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
-                        {{ form_widget(form.Creer, {'attr': {'class': 'add-project'}}) }}
-                    </div>
-                    {{ form_end(form) }}
+                    {% endfor %}
+                    <br/><br/>
                 </div>
+            {% endif %}
 
-            </div>
         </div>
     </div>
 {% endblock %}
 
 {% block customscrpits %}
-    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
-
     <script type="text/javascript">
-        $(document).ready(function(){
-            $('[data-toggle="offcanvas"]').click(function(){
-                $("#navigation").toggleClass("hidden-xs");
+        let id = {{ id }};
+        let step = "PIN";
+        $(document).ready(function () {
+            $('#checkBtn').click(function() {
+                checked = $("input[type=radio]:checked").length;
+
+                if(!checked) {
+                    $(function() {
+                        $(".alert0").notify("Aucune contribution notée !");
+                    });
+                    return false;
+                }
+
             });
+            setInterval(function () {
+                $('.ratinglist').load(Routing.generate('PinRatingList', {'id' : id}), function () {
+                    let sneaky = new ScrollSneak(location.hostname);
+                    document.getElementById('annotationlist').onload = sneaky.sneak;
+                })
+            }, 10000);
         });
     </script>
 {% endblock %}

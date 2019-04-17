@@ -1,108 +1,28 @@
 {% if chat %}
     {% for ct in chat %}
-        {% if ct.user == user %}
-
-            {#-----------------------------------------------Message envoyé par le user courant----------------------------------------#}
-
-            <div class="outgoing_msg">
-                <div class="sent_msg">
-                    <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
-
-                    {#--------------------------------------Commentaire de niveau 1----------------------------------------------------#}
-
-                    <ul class="timeline">
-                        <li>
-                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#like{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}">
-
-                            </a>
-                            <div class="collapse" id="like{{ ct.id }}">
-                                <div class="card card-body">
-                                    <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'Like'); return false">
-                                        <div class="form-group">
-                                            <label for="argument{{ ct.id }}">Argument</label>
-                                            <textarea class="form-control" id="argument{{ ct.id }}" rows="2" required></textarea>
-                                            <br/>
-                                            <button type="submit" class="btn btn-primary">Ajouter</button>
-                                        </div>
-                                    </form>
-                                    {% for reply in contribreply %}
-                                        {% if reply.contribution == ct %}
-                                            <div class="incoming_msg">
-                                                <div class="received_msg">
-                                                    <div class="received_withd_msg">
-                                                        <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {#------------------------------------------------------------COMMENTAIRE DE NIVEAU 2--------------------------------------------#}
-
-                                            <ul class="timeline">
-                                                <li>
-                                                    <a class="fas fa-plus-circle" data-toggle="collapse" href="#commentreply{{ reply.id }}" role="button" aria-expanded="false" aria-controls="commentreply{{ reply.id }}">
-
-                                                    </a>
-                                                    <div class="collapse" id="commentreply{{ reply.id }}">
-                                                        <div class="card card-body">
-                                                            <form method="post" action="#" onsubmit="addcomment({{ reply.id }}, document.getElementById('reply{{ reply.id }}').value, 'CommentReply'); return false">
-                                                                <div class="form-group">
-                                                                    <label for="reply{{ reply.id }}">Argument</label>
-                                                                    <textarea class="form-control" id="reply{{ reply.id }}" rows="2" required></textarea>
-                                                                    <br/>
-                                                                    <button type="submit" class="btn btn-primary">Ajouter</button>
-                                                                </div>
-                                                            </form>
-                                                            {% for ctreply in commentreply %}
-                                                                {% if ctreply.comment == reply %}
-                                                                    <div class="incoming_msg">
-                                                                        <div class="received_msg">
-                                                                            <div class="received_withd_msg">
-                                                                                <p><span>{{ ctreply.pseudo }}</span><br/>{{ ctreply.reply }}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-
-                                            {#--------------------------------------------------FIN DU COMMENTAIRE DE NIVEAU 2--------------------------------------------#}
-
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
+        {#--------------------------------------------------------CONTRIBUTION RECU-----------------------------------------------------------------------------------------------------#}
+            <ul id="comments-list" class="comments-list">
+                <li>
+                    <div class="comment-main-level">
+                        <div class="comment-box">
+                            <div class="comment-head">
+                                <h6 class="comment-name by-author">Proposition {{ ct.numero }}</h6>
                             </div>
-                        </li>
-                    </ul>
-
-                    {#-------------------------------------------------------------FIN DU COMMENTAIRE DE NIVEAU 1--------------------------------------------------------------------------------#}
-
-                </div>
-
-            </div>
-
-        {#--------------------------------------------------------FIN MESSAGE ENVOYER PAR USER COURANT----------------------------------------------------------------------------#}
-
-
-        {#--------------------------------------------------------MESSAGE RECU-----------------------------------------------------------------------------------------------------#}
-
-        {% else %}
-            <div class="incoming_msg">
-                <div class="received_msg">
-                    <div class="received_withd_msg">
-                        <p><span>{{ ct.pseudo }}</span><br/>{{ ct.contribution }}</p>
-
+                            <div class="comment-content">
+                                <p>{{ ct.contribution }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% if definied %}
                         {#--------------------------------------------------------COMMENTAIRE DE NIVEAU 1--------------------------------------------------------------------------#}
                         <ul class="timeline">
                             <li>
-                                <a class="fas fa-plus-circle" data-toggle="collapse" href="#like{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}">
+                                <a class="fa collapsed" data-toggle="collapse" href="#like{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}" style="margin-left: 30px">
 
                                 </a>
                                 <div class="collapse" id="like{{ ct.id }}">
                                     <div class="card card-body">
-                                        <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'CommentReply'); return false">
+                                        <form method="post" action="#" onsubmit="addcomment({{ ct.id }}, document.getElementById('argument{{ ct.id }}').value, 'ContribReply'); return false">
                                             <div class="form-group">
                                                 <label for="argument{{ ct.id }}">Argument</label>
                                                 <textarea class="form-control" id="argument{{ ct.id }}" rows="2" required></textarea>
@@ -112,47 +32,60 @@
                                         </form>
                                         {% for reply in contribreply %}
                                             {% if reply.contribution == ct %}
-                                                <div class="incoming_msg">
-                                                    <div class="received_msg">
-                                                        <div class="received_withd_msg">
-                                                            <p><span>{{ reply.pseudo }}</span><br/>{{ reply.comment }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {#------------------------------------------------------COMMENTAIRE NIVEAU 2---------------------------------------------#}
-
-                                                <ul class="timeline">
+                                                <ul class="comments-list reply-list">
                                                     <li>
-                                                        <a class="fas fa-plus-circle" data-toggle="collapse" href="#commentreply{{ reply.id }}" role="button" aria-expanded="false" aria-controls="commentreply{{ reply.id }}">
-
-                                                        </a>
-                                                        <div class="collapse" id="commentreply{{ reply.id }}">
-                                                            <div class="card card-body">
-                                                                <form method="post" action="#" onsubmit="addcomment({{ reply.id }}, document.getElementById('reply{{ reply.id }}').value, 'CommentReply'); return false">
-                                                                    <div class="form-group">
-                                                                        <label for="reply{{ reply.id }}">Argument</label>
-                                                                        <textarea class="form-control" id="reply{{ reply.id }}" rows="2" required></textarea>
-                                                                        <br/>
-                                                                        <button type="submit" class="btn btn-primary">Ajouter</button>
-                                                                    </div>
-                                                                </form>
-                                                                {% for ctreply in commentreply %}
-                                                                    {% if ctreply.comment == reply %}
-                                                                        <div class="incoming_msg">
-                                                                            <div class="received_msg">
-                                                                                <div class="received_withd_msg">
-                                                                                    <p><span>{{ ctreply.pseudo }}</span><br/>{{ ctreply.reply }}</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    {% endif %}
-                                                                {% endfor %}
+                                                        <!-- Contenedor del Comentario -->
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{ reply.pseudo }}</h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                {{ reply.comment }}
                                                             </div>
                                                         </div>
+                                                        {#------------------------------------------------------COMMENTAIRE NIVEAU 2---------------------------------------------#}
+
+                                                        <ul class="timeline">
+                                                            <li>
+                                                                <a class="fa collapsed" data-toggle="collapse" href="#commentreply{{ reply.id }}" role="button" aria-expanded="false" aria-controls="commentreply{{ reply.id }}" style="margin-left: 30px">
+
+                                                                </a>
+                                                                <div class="collapse" id="commentreply{{ reply.id }}">
+                                                                    <div class="card card-body">
+                                                                        <form method="post" action="#" onsubmit="addcomment({{ reply.id }}, document.getElementById('reply{{ reply.id }}').value, 'CommentReply'); return false">
+                                                                            <div class="form-group">
+                                                                                <label for="reply{{ reply.id }}">Argument</label>
+                                                                                <textarea class="form-control" id="reply{{ reply.id }}" rows="2" required></textarea>
+                                                                                <br/>
+                                                                                <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                                            </div>
+                                                                        </form>
+                                                                        {% for ctreply in commentreply %}
+                                                                            {% if ctreply.comment == reply %}
+                                                                                <ul class="comments-list reply-list">
+                                                                                    <li>
+                                                                                        <!-- Contenedor del Comentario -->
+                                                                                        <div class="comment-box" style="width: 100%;">
+                                                                                            <div class="comment-head">
+                                                                                                <h6 class="comment-name by-author">{{ ctreply.pseudo }}</h6>
+                                                                                            </div>
+                                                                                            <div class="comment-content">
+                                                                                                {{ ctreply.reply }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+
+                                                        {#------------------------------------------------------FIN COMMENTAIRE NIVEAU 2-----------------------------------------#}
                                                     </li>
                                                 </ul>
 
-                                                {#------------------------------------------------------FIN COMMENTAIRE NIVEAU 2-----------------------------------------#}
                                             {% endif %}
                                         {% endfor %}
                                     </div>
@@ -162,12 +95,12 @@
                         </ul>
 
                         {#-----------------------------------------------------FIN COMMENTAIRE NIVEAU 1------------------------------------------------------------#}
-                    </div>
-                </div>
-            </div>
+                    {% endif %}
+                </li>
+            </ul>
 
 
-        {% endif %}
+
 
     {% endfor %}
 {% endif %}

@@ -1,0 +1,52 @@
+{% for ctcat in contribution %}
+    <div>
+        <ul id="comments-list" class="comments-list">
+            <li>
+                <div class="comment-main-level">
+                    <div class="comment-box">
+                        <div class="comment-head">
+                            <h6 class="comment-name by-author">{{ ctcat.pseudo }}</h6>
+                        </div>
+                        <div class="comment-content">
+                            <p>{{ ctcat.contribution }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        {% set coll = false %}
+        {% for cmt in comment %}
+            {% if cmt.contribution == ctcat %}
+                {% set coll = true %}
+            {% endif %}
+        {% endfor %}
+        {% if coll == true %}
+            <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#coll{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
+        {% endif %}
+
+        <div class="collapse" id="coll{{ ctcat.id }}">
+            {% for cmt in comment %}
+                {% if cmt.contribution == ctcat %}
+                    <li>
+                        <ul class="comments-list reply-list">
+                            <li>
+                                <!-- Contenedor del Comentario -->
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                    </div>
+                                    <div class="comment-content">
+                                        {{ cmt.comment }}
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <p style="margin-left: 20px; color: #f9a825">Vote ({{ ctcat.liked }})</p>
+    </div>
+
+{% endfor %}
+<br/><br/>

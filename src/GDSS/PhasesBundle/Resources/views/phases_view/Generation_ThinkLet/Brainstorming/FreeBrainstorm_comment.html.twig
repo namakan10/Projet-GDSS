@@ -2,11 +2,19 @@
 
 {% block title %}FreeBrainstorming Comment{% endblock %}
 
+{% block subtitle %}
+    <h1 style="text-decoration-style: double;" class="text-lg-left container"><a class="fas fa-arrow-left" href="{{ path('freebrainstorming', {'id' : id}) }}"> </a> FreeBrainstorming - Commentaires</h1>
+{% endblock %}
+
+{% block help %}
+    <p class="text-center">Vous pouvez commentez les propostions des autres decideurs.</p>
+{% endblock %}
 
 {% block content %}
 
     <div class="container">
         <div class="row">
+            <div class="noti"></div>
             <div class="comments-container">
                 {% for contrib in contribution %}
                     {% if contrib.user != users %}
@@ -71,8 +79,12 @@
                         </ul>
                     {% endif %}
                 {% endfor %}
+                <br/><br/>
+
                 {% if contribution is null %}
-                    Pas de nouvelle page posté !
+                    Vous avez eu toutes les pages disponibles !
+                {% else %}
+                    <button class="btn btn-warning"  onclick="location.reload()">Afficher une autre page</button>
                 {% endif %}
             </div>
         </div>
@@ -83,17 +95,21 @@
 
 {% block customscrpits %}
     <script>
-
+        let id = {{ id }};
+        let step = "FreeBrainstorming";
         function addcomment(ctid, argument, reaction) {
 
             $.ajax({
-                url:"http://www.projetgdss.com/app_dev.php/commentreply/"+ctid,
+                url: Routing.generate('generationcommentreply', {'id' : ctid}),
                 type:"POST",
                 data: {reply : argument, reaction: reaction},
                 dataType: 'JSON',
             });
-            $(".divcomment"+ctid).load('http://www.projetgdss.com/app_dev.php/commentlist/' +ctid);
-            document.getElementById('argument'+ctid).value = null;
+            setTimeout(function(){
+                $(".divcomment"+ctid).load(Routing.generate('brainstorming_comment_list', {'id' : ctid}));
+            }, 2000);
+
+            document.getElementById('argument'+ctid).value = "";
         }
     </script>
 {% endblock %}

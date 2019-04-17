@@ -1,0 +1,109 @@
+{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/generation.html.twig' %}
+
+
+{% block title %}ComparativeBrainstorming{% endblock %}
+{% block curentSujet %}active{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Génération : ComparativeBainstorming</h1>
+{% endblock %}
+
+{% block help %}
+    {% if finish == false %}
+        <p class="text-center">Veuillez attendre que le temps soit écouler.</p>
+    {% else %}
+        {% if admin %}
+            <p class="text-center">
+                L'étape de génération est à present terminé. Si vouz jugez que le nombre de contributions générés est assez
+                important et nécessite plus d’élaboration cliquer sur "ELABORER". Sinon revenez à la page de présentation
+                du problème et lancez la phase suivante
+            </p>
+        {% else %}
+            <p class="text-center">
+                Resumé de l'étape de génération.
+                Revenez à la page de présentation du problème pour passer à la phase suivante
+            </p>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+        <div class="container">
+            {% if finish %}
+                <h2>Liste des contributions générés par les décideurs</h2>
+                {% for contrib in contribution %}
+                    <br/>
+                    <ul id="comments-list" class="comments-list">
+                        <li>
+                            <div class="comment-main-level">
+                                <!-- Contenedor del Comentario -->
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author">{{ contrib.Pseudo }}</h6>
+                                    </div>
+                                    <div class="comment-content">
+                                        {{ contrib.contribution }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="divcomment{{ contrib.id }}">
+                                {% if comment %}
+                                    {% for cmt in comment %}
+                                        {% if cmt.contribution == contrib %}
+                                            <ul class="comments-list reply-list">
+                                                <li>
+                                                    <!-- Contenedor del Comentario -->
+                                                    <div class="comment-box">
+                                                        <div class="comment-head-reply">
+                                                            <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                        </div>
+                                                        <div class="comment-content">
+                                                            {{ cmt.comment }}
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <!-- Fin boucle secondaire -->
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+
+                            <!------------------------------------>
+                        </li>
+                    </ul>
+
+                {% endfor %}
+                <br/>
+                {% if admin %}
+                    <a href="{{ path('thelobbyist', {'id' : id }) }}"><button class="btn linkstyle">ELABORER</button></a>
+                {% endif %}
+                <br/><br/>
+            {% else %}
+                <p>Veuillez attendre que le temps soit écouler.</p>
+            {% endif %}
+
+        </div>
+{% endblock %}
+
+{% block customscrpits %}
+    <script>
+        let step ="ComparativeBrainstorming";
+        let id = {{ id }};
+    </script>
+    {% if finish %}
+        {% if admin == false %}
+            <script>
+                let y = setInterval(function(){
+                    $.ajax({
+                        url:"http://www.projetgdss.com/app_dev.php/check_thelobbyist/"+id,
+                        type:"POST",
+                        data: {id : id},
+                        dataType: 'JSON',
+                    });
+                }, 10000);
+            </script>
+        {% endif %}
+    {% endif %}
+{% endblock%}

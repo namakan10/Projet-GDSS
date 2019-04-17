@@ -1,0 +1,61 @@
+{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/generation.html.twig' %}
+
+{% block title %}DealersChoice{% endblock %}
+
+{% block customstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center"><a class="fas fa-arrow-left" href="{{ path('generation', {'id' : backid}) }}"> </a> Génération : DealersChoice - Assignment</h1>
+{% endblock %}
+
+{% block help %}
+    <p class="text-center">Affecter les décideurs qui pourront participer à ce groupe de discussion.</p>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <br/>
+        <h2>Categorie : {{ subproblem.name }}</h2>
+        <br/>
+        <h4>Décideurs affectés</h4>
+        {% if allowmakers != null %}
+            <form  method="post" class="form-group">
+                {% for allow in allowmakers %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="{{ allow.id }}" id="makers{{ allow.id }}" value="{{ allow.id }}">
+                        <label class="form-check-label" for="makers{{ allow.id }}">
+                            {{ allow.pseudoMaker }}
+                        </label>
+                    </div>
+                {% endfor %}
+                <br/>
+                <input type="submit" value="Désaffecter" name="Désaffecter" class="btn linkstyle">
+            </form>
+        {% else %}
+            <p>Aucun décideur affecté !</p>
+        {% endif %}
+        <hr/>
+        <br/>
+        <h4>Décideurs non affectés</h4>
+        <hr/>
+        {% if notallowmakers != null %}
+            <form  method="post" class="form-group">
+                {% for notallow in notallowmakers %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="{{ notallow.id }}" id="makers{{ notallow.id }}" value="{{ notallow.id }}">
+                        <label class="form-check-label" for="makers{{ notallow.id }}">
+                            {{ notallow.pseudoMaker }}
+                        </label>
+                    </div>
+                {% endfor %}
+                <br/>
+                <input type="submit" value="Affecter" name="Affecter" class="btn linkstyle">
+            </form>
+        {% else %}
+            <p>Tous les décideurs ont été affectés !</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

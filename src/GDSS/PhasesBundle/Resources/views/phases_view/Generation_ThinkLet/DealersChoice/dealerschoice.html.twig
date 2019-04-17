@@ -1,0 +1,172 @@
+{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/generation.html.twig' %}
+
+{% block title %}DealersChoice{% endblock %}
+
+{% block customstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Génération : DealersChoice</h1>
+{% endblock %}
+
+{% block help %}
+    {% if admin %}
+        <p class="text-center">
+            Cliquer sur "créer une discussion" pour créer groupe de discussion.
+            Affecter ensuite les décideurs qui devront y participer.
+            Cliquer sur terminer pour rendre le groupe accessible aux décideurs affectés
+        </p>
+    {% else %}
+        <p class="text-center">Vous pouvez aux groupes de discussion auquels le facilitateur vous a affecté.</p>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <br/>
+        {% if admin %}
+            <p class="hidden-xs">
+                <a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une discussion</a>
+            </p>
+        {% endif %}
+
+        <ul class="nav nav-tabs" style="margin-right: 190px">
+            <li class="nav-item">
+                <a class="nav-link active show" data-toggle="tab" href="#subsubject">GROUPES DE DISCUSSION</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content" style="margin-right: 190px; margin-top: -35px">
+            <div class="error"></div>
+            <div class="tab-pane fade show active" id="subsubject">
+                <div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="">
+                                <th>Titre</th>
+                                <th></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                        {% for subject in subjectlist %}
+                            <tr>
+                                <td>{{ subject.name }}</td>
+                                {% if subject.allow == false %}
+                                    {% if admin %}
+                                        <td><a href="{{ path('Dealers_Choice_Assignment', {'id' : subject.id}) }}"
+                                               class="badge badge-info"> Affecter les décideurs
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('End_Delete_Subproblem', {'action' : 'end', 'id' : subject.id, 'thinklet' : 'dealerschoice', 'backid' : id}) }}" class="badge badge-warning">
+                                                Terminer
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a class="confirmModalLink" href="{{ path('End_Delete_Subproblem', {'action' : 'delete', 'id' : subject.id, 'thinklet' : 'dealerschoice', 'backid' : id}) }}" style="color: red;">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <span class="badge badge-warning"> En attente du facilitateur</span>
+                                        </td>
+                                    {% endif %}
+
+                                {% else %}
+                                    {% if admin %}
+                                        <td>
+                                            <a href="{{ path('leafhopper_subject', {'id' : subject.id, 'thinklet' : 'DealersChoice'}) }}"
+                                               class="badge badge-info"> Rejoindre
+                                            </a>
+                                        </td>
+                                    {% else %}
+
+                                        {% set alloww = 0 %}
+                                        {% for allow in allowsubsubject %}
+                                            {% if allow == subject %}
+                                                {% set alloww = 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if alloww == 1 %}
+                                            <td>
+                                                <a href="{{ path('leafhopper_subject', {'id' : subject.id, 'thinklet' : 'DealersChoice'}) }}"
+                                                   class="badge badge-info"> Rejoindre
+                                                </a>
+                                            </td>
+                                        {% else %}
+                                            <td>
+                                                <span class="badge badge-warning">Non affecté</span>
+                                            </td>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endif %}
+                                {% if admin %}
+
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="add_project" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header login-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">Créer une discussion</h4>
+                    </div>
+                    {{ form_start(form) }}
+
+                    <div style="margin-top: 5px; font-size: large">
+                        {{ form_label(form.Titre) }}
+                    </div>
+
+                    <div style="margin-left: 5px; margin-right: 5px">
+                        {{ form_widget(form.Titre, {'attr': {'class': 'modal-body'}}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
+                        {{ form_widget(form.Creer, {'attr': {'class': 'add-project'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="offcanvas"]').click(function(){
+                $("#navigation").toggleClass("hidden-xs");
+            });
+            {% if admin == false %}
+                setTimeout(function () {
+                    location.reload();
+                }, 60000);
+            {% endif %}
+        });
+        if('{{ error }}' !== '')
+        {
+            $(function() {
+                $(".error").notify("{{ error }}");
+            });
+        }
+    </script>
+{% endblock %}

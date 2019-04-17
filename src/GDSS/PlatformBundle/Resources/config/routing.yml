@@ -2,90 +2,125 @@ gdss_platform_homepage:
     path:     /
     defaults:
         _controller: fos_user.security.controller:loginAction
+    options:
+        expose: true
 
-gdss_platform_sujets:
-    path:     platform/sujets
+problem_list:
+    path:     platform/problem_list
     defaults:
-        _controller: GDSSPlatformBundle:View:sujet_panel
+        _controller: GDSSPlatformBundle:View:problemlist
+    options:
+        expose: true
 
-gdss_platform_add_sujets:
-    path:     platform/sujets/published
+add_edit_problem:
+    path:     platform/addproblem/ifejnfapkfazofzakfoezakffmePKCJZ5zazKOP41{id}kanzecibzai{action}50efA50
     defaults:
-        _controller:  GDSSPlatformBundle:add:addSujet
+        _controller:  GDSSPlatformBundle:add:addProblem
+    options:
+        expose: true
 
-edit_sujet:
-    path:     platform/sujets/edit/{id}
+add_criteria:
+    path:     platform/addproblem/options/dpqneh47e226cc25gmap{action}defejhldzhAFdfejojhznfz472047{id}ver1dbtablepos0tokene7
     defaults:
-        _controller:  GDSSPlatformBundle:edit:editSujet
+         _controller: GDSSPlatformBundle:add:addCriteria
+    options:
+        expose: true
 
-gdss_platform_contrainte:
-    path:     platform/sujets/pluished/options/{id}
+add_criteria_scrpit:
+    path:     add_criteria/{id}
     defaults:
-         _controller: GDSSPlatformBundle:add:addContraiteCritere
-
-add_critere:
-    path:     add_critere/{id}
-    defaults:
-        _controller: GDSSPlatformBundle:add:addcrtitere
+        _controller: GDSSPlatformBundle:add:addCriteriascrpit
     methods: [POST]
+    options:
+        expose: true
 
-critere_list:
-    path:     critere_list/{id}
+criteria_list:
+    path:     criteria_list/{id}
     defaults:
-        _controller: GDSSPlatformBundle:add:criterelist
+        _controller: GDSSPlatformBundle:add:criterialist
+    options:
+        expose: true
 
-add_contrainte:
-    path:     add_contrainte/{id}
+add_constraint:
+    path:     platform/addproblem/constraints/dpqneh47e226cc25gmapactiodefejhldzhAFdfejojhznfz472047{id}ver1dbtablepos0tokene7
     defaults:
-        _controller: GDSSPlatformBundle:add:addcontrainte
-    methods: [POST]
+        _controller: GDSSPlatformBundle:add:addconstraint
+    options:
+         expose: true
 
-contrainte_list:
-    path:     contrainte_list/{id}
+add_constaint2:
+    path:     platform/addproblem/constraints/dpqneh47e226cc25gmapactiodef{id}ejhldzhAFdfejojhznfz472047{action}ver1dbtablepos0tokene7
     defaults:
-        _controller: GDSSPlatformBundle:add:contraintelist
+        _controller: GDSSPlatformBundle:add:addconstraints2
+    options:
+        expose: true
 
-gdss_platform_process:
-    path:     platform/sujets/pluished/processus/{id}
+add_process:
+    path:     platform/addsubject/processus/returnmpdazhhADFAH480pmfzhcxcsfdprocsesff{id}gb714PmjzfgzfeAZ20gcfxwdhkm87820sacefzswxcdvgrm
     defaults:
          _controller: GDSSPlatformBundle:add:addprocessus
+    options:
+        expose: true
 
-gdss_platform_sujet_vue:
-    path:     platform/sujets_panel/sujet/{id}
+problem:
+    path:     platform/problem/AczzjfServerPmGG7750zfzhzapzhgadalfzompkcbveurp7204{id}203czGhuipprocgtrefmSubjectozurlspnhezds
     defaults:
-        _controller: GDSSPlatformBundle:View:sujet_vue
+        _controller: GDSSPlatformBundle:View:problem
+    options:
+        expose: true
 
-gdss_platform_sujet_details:
-    path:     platform/sujets_panel/sujet/details/{id}
+Scprit_Problem_view:
+    path:     platform/problem/Script/AczzjfServerPmGG7750zfzhzapzhgadalfzompkcbveurp7204{id}203czGhuipprocgtrefmSubjectozurlspnhezds
     defaults:
-        _controller: GDSSPlatformBundle:View:sujetdetails
+        _controller: GDSSPlatformBundle:View:scriptproblem
+    options:
+        expose: true
 
-gdss_platform_processus_details:
-    path:     platform/sujets_panel/sujet/processus_details/{id}
-    defaults:
-        _controller: GDSSPlatformBundle:View:processusdetails
-
-gdss_platform_add_phase:
-    path:     platform/defined/phase/{id}
+add_edit_phase:
+    path:     platform/addsubject/addphase/XcapitolProdmpoasj{phasename}gbcjyGf485050148506zfergref{id}zaPmkneb201{action}cececec4e50ea
     defaults:
         _controller:  GDSSPlatformBundle:add:addphases
+    options:
+        expose: true
 
 gdss_platform_inbox:
     path:     platform/inbox
     defaults:
        _controller: FOSMessageBundle:Message:inbox
+    options:
+       expose: true
 
 gdss_platform_repertoire:
     path:     platform/contact
     defaults:
        _controller: GDSSPlatformBundle:View:repertoire
-
-gdss_platform_send_invitation:
-    path:     platform/sujet_panel/sujet/invitation/{id}
-    defaults:
-      _controller: GDSSPlatformBundle:Request:sendInvitation
+    options:
+        expose: true
 
 gdss_accept_invite:
-    path:     platform/inbox/accept/{thread}
+    path:     platform/inbox/accept/zadmazcepejveavkevjevjevaz{thread}4100aadlPmz740MPP{user}zjkLProcessInvalid
     defaults:
        _controller: GDSSPlatformBundle:Request:invValid
+    options:
+        expose: true
+
+delete_problem:
+    path:     platform/deleteproblem/AehfeelSpomefjeveZerbonehemp{id}ehfveufjbefeue@cjehefie350
+    defaults:
+       _controller: GDSSPlatformBundle:delete:deleteproblem
+    options:
+        expose: true
+
+delete_criteria:
+    path:     delete_criteria/AehfeelSpomefjevAmpzd4100LpmHFAVWJopslap{id}zz500Pmzdz504
+    defaults:
+       _controller: GDSSPlatformBundle:delete:deletecriteria
+    options:
+        expose: true
+
+delete_contrainte:
+    path:     delete_contrainte/AehfeelSpomefjevAmpzd4100LpmHFAVWJopslap{id}zz500Pmzdz504
+    defaults:
+       _controller: GDSSPlatformBundle:delete:deleteconstraint
+    options:
+        expose: true

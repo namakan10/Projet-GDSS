@@ -1,0 +1,155 @@
+{% extends '@GDSSPlatform/layoutGDSS.html.twig' %}
+{% block title %}
+    {% if action == 'edit' %}
+        Modification des données du problème
+    {% else %}
+        Ajout de Problème
+    {% endif %}
+{% endblock %}
+{% block curentProblem %}active{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/mui.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/footers.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/datetimepicker.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/add_sujet.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/fontawesome/css/all.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% block helpcontent %}
+
+        <div class="fixed-action-btn">
+            <div class="dropdown">
+                <button class="mui-btn mui-btn--fab mui-btn--accent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ?
+                </button>
+                <div class="dropdown-menu help-toggle" aria-labelledby="dropdownMenuButton">
+                    <div style="margin-left: 10px; margin-right: 5px ">
+                        {% block help %}<p class="text-center">Renseignez les champs !</p>{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endblock %}
+
+    {% block contenu %}
+        {% if erreur is defined %}
+        <script type="text/javascript">
+            alert("{{ erreur }}");
+        </script>
+        {% endif %}
+        <div style="text-align: center">
+            {% if action =="edit" %}
+                <h1><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Modification des données du problème</h1>
+            {% elseif action =="create" %}
+                <h1>Définition du problème de décision</h1>
+            {% endif %}
+
+        </div>
+        <div class="container">
+            <br/><br/>
+            <div class="card border-secondary" style="width: 100%;">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                    <div class="form-group">
+                        {# Génération du label. #}
+                        {{ form_label(form.name, "Titre", {'label_attr': {'class': 'control-label'}}) }}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        {{ form_errors(form.name) }}
+                        <div class="">
+                            {{ form_widget(form.name) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {# Génération du label. #}
+                        {{ form_label(form.goal, "But", {'label_attr': {'class': 'control-label'}}) }}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        {{ form_errors(form.goal) }}
+                        <div class="">
+                            {{ form_widget(form.goal) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {# Génération du label. #}
+                        {{ form_label(form.domain, "Domaine", {'label_attr': {'class': 'control-label'}}) }}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        {{ form_errors(form.domain) }}
+                        <div class="">
+                            {{ form_widget(form.domain) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {# Génération du label. #}
+                        {{ form_label(form.context, "Contexte", {'label_attr': {'class': 'control-label'}}) }}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        {{ form_errors(form.context) }}
+                        <div class="">
+                            {{ form_widget(form.context) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {# Génération du label. #}
+                        {{ form_label(form.datestart, "Date de début", {'label_attr': {'class': 'control-label'}}) }}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        {{ form_errors(form.datestart) }}
+                        <div class="">
+                            {{ form_widget(form.datestart, { 'attr': {'data-field': 'datetime'} }) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {# Génération du label. #}
+                        {{ form_label(form.dateend, "Date de fin", {'label_attr': {'class': 'control-label'}}) }}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        {{ form_errors(form.dateend) }}
+                        <div class="">
+                            {{ form_widget(form.dateend, { 'attr': {'data-field': 'datetime'} }) }}
+                        </div>
+                    </div>
+
+                    <br/>
+                </div>
+            </div>
+
+            <br/>
+            <br/>
+            {% if action == "create" %}
+                {{ form_widget(form.Suivant, {'attr': {'class': 'btn linkstyle'}}) }}
+            {% else %}
+                {{ form_widget(form.Suivant, {'label' : "Modifier"}, {'attr': {'class': 'btn linkstyle'}}) }}
+            {% endif %}
+            <br/>
+            {{ form_end(form) }}
+            <br/>
+            <div id="dtBox"></div>
+
+
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/popper.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/datetimepicker.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/moment-with-locales.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/mui.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/materialize.min.js') }}"></script>
+    {% block customScrpit %}
+        <script type="text/javascript">
+            $(function() {
+                $('.fixed-action-btn').floatingActionButton();
+                $("#dtBox").DateTimePicker();
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

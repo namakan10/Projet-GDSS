@@ -40,10 +40,10 @@ class NegociationCategorieSelection
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="GDSS\PlatformBundle\Entity\Decideurs", inversedBy="selection_catego")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="GDSS\PlatformBundle\Entity\DecisionMakers", inversedBy="selection_catego")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
-    private $decideurs;
+    private $makers;
 
     /**
      * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\NegociationCategories", inversedBy="selection_catego")
@@ -75,29 +75,6 @@ class NegociationCategorieSelection
         return $this->selection;
     }
 
-    /**
-     * Set decideurs
-     *
-     * @param \GDSS\PlatformBundle\Entity\Decideurs $decideurs
-     *
-     * @return NegociationCategorieSelection
-     */
-    public function setDecideurs(\GDSS\PlatformBundle\Entity\Decideurs $decideurs)
-    {
-        $this->decideurs = $decideurs;
-
-        return $this;
-    }
-
-    /**
-     * Get decideurs
-     *
-     * @return \GDSS\PlatformBundle\Entity\Decideurs
-     */
-    public function getDecideurs()
-    {
-        return $this->decideurs;
-    }
 
     /**
      * Set categories
@@ -121,5 +98,29 @@ class NegociationCategorieSelection
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * Set makers
+     *
+     * @param \GDSS\PlatformBundle\Entity\DecisionMakers $makers
+     *
+     * @return NegociationCategorieSelection
+     */
+    public function setMakers(\GDSS\PlatformBundle\Entity\DecisionMakers $makers)
+    {
+        $this->makers = $makers;
+
+        return $this;
+    }
+
+    /**
+     * Get makers
+     *
+     * @return \GDSS\PlatformBundle\Entity\DecisionMakers
+     */
+    public function getMakers()
+    {
+        return $this->makers;
     }
 }

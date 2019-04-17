@@ -13,13 +13,7 @@ class PhasesType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('nom')
-                ->add('dureemin')
-                ->add('dureemax')
-                ->add('dateStart')
-                ->add('dateEnd')
-                ->add('periode')
-                ->add('processus');
+        $builder->add('nom')->add('selection')->add('periodemin')->add('expert')->add('periodemax')->add('dureemin')->add('dureemax')->add('dateDebut')->add('dateFin')->add('processus');
     }/**
      * {@inheritdoc}
      */

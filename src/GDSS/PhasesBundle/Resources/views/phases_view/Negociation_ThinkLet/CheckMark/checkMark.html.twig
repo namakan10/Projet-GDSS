@@ -65,7 +65,7 @@
                             {% endfor %}
                             <div class="form-inline">
                                 <div class="col-sm-11">
-                                    <input type="submit" value="Valider" class="btn btn-outline-primary">
+                                    <input type="submit" value="Valider" class="btn btn-outline-primary" id="checkBtn">
                                 </div>
 
                             </div>
@@ -159,6 +159,19 @@
 {% endblock %}
 
 {% block customscrpits %}
+    <script>
+        $(document).ready(function () {
+            $('#checkBtn').click(function() {
+                checked = $("input[type=checkbox]:checked").length;
+
+                if(!checked) {
+                    alert("Aucune contribution sélectionnée ! ");
+                    return false;
+                }
+
+            });
+        });
+    </script>
     {% if error is defined %}
         <script>
             alert("{{ error }}");

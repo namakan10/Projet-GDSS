@@ -10,6 +10,7 @@ namespace GDSS\PlatformBundle\Controller;
 
 
 use GDSS\PlatformBundle\Entity\Decideurs;
+use GDSS\PlatformBundle\Entity\DecisionMakers;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -17,51 +18,57 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestController extends Controller
 {
-    public function invValidAction($thread, Request $request){
+
+    public function invValidAction($thread, Request $request, $user){
+
         $repository = $this->getDoctrine()->getManager();
-        $em = $repository->getRepository('GDSSPlatformBundle:Sujet');
-        $sujet = $em->findOneBy(array(
-            'contexte' => $thread,
+        $user = $repository->getRepository('GDSSPlatformBundle:User')->findOneBy(array(
+            'username' => $user
+        ));
+        $problem = $repository->getRepository('GDSSPlatformBundle:Problem')->findOneBy(array(
+            'context' => $thread,
+            'user' => $user,
+        ));
+        $process = $repository->getRepository('GDSSPlatformBundle:Process')->findOneBy(array(
+            'problem'=>$problem
         ));
 
-        $compdecideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findBy(array(
-            'sujet' => $sujet
+        $compmakers = $repository->getRepository('GDSSPlatformBundle:DecisionMakers')->findBy(array(
+            'process' => $process
         ));
 
         $nbre = 1;
-        foreach ($compdecideurs as $comp){
+        foreach ($compmakers as $comp){
             $nbre++;
         }
 
 
 
-        $decideurs = new Decideurs();
-        $decideurs->setUser($this->getUser());
-        $decideurs->setSujet($sujet);
+        $maker = new DecisionMakers();
+        $maker->setUser($this->getUser());
+        $maker->setProcess($process);
 
-        $phase  = $sujet->getProcessus();
 
-        if($phase->getAnonyme()=='Non'){
-            $decideurs->setPseudodecideurs($this->getUser()->getUsername());
+        if($process->getAnonymous() == 0){
+            $maker->setPseudoMaker($this->getUser()->getUsername());
         }
         else{
-            $decideurs->setPseudodecideurs('Decideur '.$nbre);
+            $maker->setPseudoMaker('Decideur '.$nbre);
         }
 
 
-        $em = $repository->getRepository('GDSSPlatformBundle:Decideurs');
-        $search = $em->findBy(array(
-           'user' => $decideurs->getUser(),
-           'sujet' => $decideurs->getSujet(),
+        $search = $repository->getRepository('GDSSPlatformBundle:DecisionMakers')->findBy(array(
+           'user' => $maker->getUser(),
+           'process' => $maker->getProcess(),
         ));
 
-        $id = $sujet->getId();
+        $id = $problem->getId();
 
 
         if($search == null){
-            $repository->persist($decideurs);
+            $repository->persist($maker);
             $repository->flush();
-            return $this->redirectToRoute('gdss_platform_sujet_vue' ,array(
+            return $this->redirectToRoute('problem' ,array(
                 'id' => $id
             ));
         }
@@ -73,5 +80,6 @@ class RequestController extends Controller
             'id' => $id,
         ));
     }
+
 
 }

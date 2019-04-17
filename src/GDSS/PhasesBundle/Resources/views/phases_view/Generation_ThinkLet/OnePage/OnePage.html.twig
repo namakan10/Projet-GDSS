@@ -1,6 +1,10 @@
 {% extends '@GDSSPhases/phases_view/comprehension_collective.html.twig' %}
 {% block title %}OnePage{% endblock %}
 
+{% block help %}
+    <p>La page est unique et affichée en même temps chez les décideurs et le facilitateur. Vous pouvez y contribuer directement. Ces contributions seront visibles par les autres en temps réel</p>
+{% endblock %}
+
 {% block controller1 %}
     {{ render(controller('GDSSPhasesBundle:GenerationThinklet:onePageScript', {'id' : id} )) }}
 {% endblock %}
@@ -9,10 +13,15 @@
     {{ render(controller('GDSSPhasesBundle:GenerationThinklet:onePageScript', {'id' : id} )) }}
 {% endblock %}
 
+{% block subtitle %}
+    <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> OnePage</h1>
+{% endblock %}
 
- {% block customLoad %}
-     $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/OnePage/script/' +id)
- {% endblock %}
+
+{% block customLoad %}
+    $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/OnePage/script/' +id)
+{% endblock %}
+
 
 {% block customAjax %}
     $.ajax({

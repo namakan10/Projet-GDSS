@@ -1,0 +1,65 @@
+{% extends 'GDSSPhasesBundle:phases_view/Negociation_ThinkLet/Pin-the-Tail-on-the-Donkey:pin-the-tail-categorizer.html.twig' %}
+
+{% block title %}BucketBriefing Categorizer{% endblock %}
+
+{% block subtitle %}
+    <h1 style="text-decoration-style: double; margin-left: -15%"><a href="{{ path('BucketBriefing', {'id' : backid}) }}"><i class="fas fa-arrow-left"></i></a> BucketBriefing - Categorizer ({{ categorie.name }})</h1>
+{% endblock %}
+
+{% block help %}
+    <p class="text-center">
+        Déplacez les contributions dans cette catégorie. Une fois catégorisées elles n'appaîtront plus dans la liste de départ.
+        Ensuite affectez les décideurs à la catégorie, seul ceux qui seront affectés pourront accéder à la catégorie.
+        Les décideurs affectés travailleront ensemble pour donner une synthèse de l'ensemble des contributions qui sont dans cette catégorie.
+    </p>
+{% endblock %}
+
+{% block OtherCategoriesHeaders %}
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#makers">AFFECTATION DES DECIDEURS</a>
+    </li>
+{% endblock %}
+
+
+{% block OtherCategoriesContent %}
+    <div class="tab-pane fade" id="makers">
+        <br/>
+        <h4>Décideurs affectés</h4>
+        {% if allowmakers != null %}
+            <form  method="post" class="form-group">
+                {% for allow in allowmakers %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="{{ allow.id }}" id="makers{{ allow.id }}" value="{{ allow.id }}">
+                        <label class="form-check-label" for="makers{{ allow.id }}">
+                            {{ allow.pseudoMaker }}
+                        </label>
+                    </div>
+                {% endfor %}
+                <br/>
+                <input type="submit" value="Désaffecter" name="Désaffecter" class="btn linkstyle">
+            </form>
+        {% else %}
+            <p>Aucun décideur affecté !</p>
+        {% endif %}
+        <hr/>
+        <br/>
+        <h4>Décideurs non affectés</h4>
+        <hr/>
+        {% if notallowmakers != null %}
+            <form  method="post" class="form-group">
+                {% for notallow in notallowmakers %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="{{ notallow.id }}" id="makers{{ notallow.id }}" value="{{ notallow.id }}">
+                        <label class="form-check-label" for="makers{{ notallow.id }}">
+                            {{ notallow.pseudoMaker }}
+                        </label>
+                    </div>
+                {% endfor %}
+                <br/>
+                <input type="submit" value="Affecter" name="Affecter" class="btn linkstyle">
+            </form>
+        {% else %}
+            <p>Tous les décideurs ont été affectés !</p>
+        {% endif %}
+    </div>
+{% endblock %}

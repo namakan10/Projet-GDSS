@@ -1,0 +1,126 @@
+{% extends '@GDSSPlatform/layoutGDSS.html.twig' %}
+
+{% block title %}Problème{% endblock %}
+{% block curentProblem %}active{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h1 style="text-decoration-style: double"><img src="{{ asset('bundles/gdssplatform/icons/Bulleted List_50px.png') }}" style="height: 37px"/>  PROBLEME DE DECISION</h1>
+        <br/>
+        <nav class="nav">
+            <a href="{{ path('add_edit_problem', {'id' : 0, 'action' : "create"}) }}"><button style="background-color: darkorange; color: white" class="btn" type="submit">NOUVEAU PROBLEME DE DECISION</button></a>
+        </nav>
+
+        <br/>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active show" data-toggle="tab" href="#problem">MES PROBLEMES</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#makers">MES PARTICIPATIONS</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+
+            {#---------------------------------------MY SUBJECT--------------------------------------#}
+
+            <div class="tab-pane fade show active" id="problem">
+                <br/>
+                <div>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr class="">
+                            <th>Titre</th>
+                            <th>Statut</th>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for prob in problemlist %}
+                            <tr>
+                                <td>{{ prob.name }}</td>
+                                <td>
+                                    {% if prob.dateend < now1 %}
+                                        <span class="badge badge-danger">Terminer</span>
+                                    {% elseif prob.datestart < now1  %}
+                                        <span class="badge badge-success">En cours</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">Attente</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ prob.datestart|date('d/m/y H:i') }}</td>
+                                <td>{{ prob.dateend|date('d/m/y H:i') }}</td>
+                                <td>
+                                    <a href="{{ path('problem', {'id' : prob.id}) }}">
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="confirmModalLink" href="{{ path('delete_problem', {'id' : prob.id}) }}" style="color: red;">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+
+            </div>
+
+            {#---------------------------------------OTHER SUBJECT-----------------------------------#}
+            <div class="tab-pane fade" id="makers">
+                <br/>
+
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Statut</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Créateur</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for problem in problemmakers %}
+                        <tr>
+                            <td>{{ problem.name }}</td>
+                            <td>
+                                {% if problem.dateend < now1 %}
+                                    <span class="badge badge-danger">Terminer</span>
+                                {% elseif problem.datestart < now1  %}
+                                    <span class="badge badge-success">En cours</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Attente</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ problem.datestart|date('d/m/y H:i') }}</td>
+                            <td>{{ problem.dateend|date('d/m/y H:i') }}</td>
+                            <td>{{ problem.user }}</td>
+                            <td><a href="{{ path('problem', {'id' : problem.id}) }}"
+                                   > <i class="far fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+        <br/><br/>
+    </div>
+{% endblock %}
+
+{% block confirmmodal %}Etes-vous sûr de vouloir supprimer cet sujet ?{% endblock %}
+
+

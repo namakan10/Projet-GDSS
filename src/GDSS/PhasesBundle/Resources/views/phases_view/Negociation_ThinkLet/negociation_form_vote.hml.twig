@@ -1,0 +1,228 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+
+{% block title %}Negociation - Formulaire{% endblock %}
+
+
+{% block subtitle %}
+    <h1 style="text-decoration-style: double; margin-left: -250px" class="text-center"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Formulaire</h1>
+{% endblock %}
+
+{% block content %}
+    <div>
+        {% if phase == "phase1" %}
+            {% if admin %}
+                <div class="jumbotron">
+                    <form>
+                        <fieldset>
+                            <fieldset class="form-group">
+                                <legend>- Etes-vous d'accord avec la formulation et la signification des autres proposition ?</legend>
+                                <div style="margin-left: 5%">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="formulation" id="optionsRadios1" value=1 checked="checked" type="radio" disabled>
+                                            Oui
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="formulation" id="optionsRadios2" value=0 type="radio" disabled>
+                                            Non
+                                        </label>
+                                    </div>
+                                </div><br/>
+
+                                {% if criteria %}
+                                    <legend>- Voulez-vous établir une liste de propositons pernentes à partir des critères suivants : </legend>
+                                    <ul style="margin-left: 7%">
+                                        {% for crit in criteria %}
+                                            <li><h5>.{{ crit.description }}</h5></li>
+                                        {% endfor %}
+                                    </ul>
+
+                                    <div style="margin-left: 5%">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" name="revelant_list" id="optionsRadios1" value=1 checked="checked" type="radio" disabled>
+                                                Oui
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" name="revelant_list" id="optionsRadios2" value=0 type="radio" disabled>
+                                                Non
+                                            </label>
+                                        </div>
+                                    </div><br/>
+                                {% endif %}
+
+
+                                <legend>- Souhaitez-vous qu'un expert catégorise les propositions ?</legend>
+                                <div style="margin-left: 5%">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="expert" id="optionsRadios1" value=1 checked="checked" type="radio" disabled>
+                                            Oui
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="expert" id="optionsRadios2" value=0 type="radio" disabled>
+                                            Non
+                                        </label>
+                                    </div>
+                                </div><br/>
+
+
+                                <legend>- Pensez-vous qu'il y a trop de redondances et d'ambiguités dans les propositions ?</legend>
+                                <div style="margin-left: 5%">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="ambiguity" id="optionsRadios1" value=1 checked="checked" type="radio" disabled>
+                                            Oui
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="ambiguity" id="optionsRadios2" value=0 type="radio" disabled>
+                                            Non
+                                        </label>
+                                    </div>
+                                </div><br/>
+                            </fieldset>
+                            <br/>
+
+                        </fieldset>
+                    </form>
+                </div>
+            {% else %}
+                <div class="jumbotron">
+                    <form method="post">
+                        <fieldset>
+                            <fieldset class="form-group">
+                                <legend>- Etes-vous d'accord avec la formulation et la signification des autres proposition ?</legend>
+                                <div style="margin-left: 5%">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="formulation" id="optionsRadios1" value=1 checked="checked" type="radio">
+                                            Oui
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="formulation" id="optionsRadios2" value=0 type="radio">
+                                            Non
+                                        </label>
+                                    </div>
+                                </div><br/>
+
+                                {% if criteria %}
+                                    <legend>- Voulez-vous établir une liste de propositons pernentes à partir des critères suivants : </legend>
+                                    <ul style="margin-left: 7%">
+                                        {% for crit in criteria %}
+                                            <li><h5>.{{ crit.description }}</h5></li>
+                                        {% endfor %}
+                                    </ul>
+
+                                    <div style="margin-left: 5%">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" name="revelant_list" id="optionsRadios1" value=1 checked="checked" type="radio">
+                                                Oui
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" name="revelant_list" id="optionsRadios2" value=0 type="radio">
+                                                Non
+                                            </label>
+                                        </div>
+                                    </div><br/>
+                                {% endif %}
+
+
+                                <legend>- Souhaitez-vous qu'un expert catégorise les propositions ?</legend>
+                                <div style="margin-left: 5%">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="expert" id="optionsRadios1" value=1 checked="checked" type="radio">
+                                            Oui
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="expert" id="optionsRadios2" value=0 type="radio">
+                                            Non
+                                        </label>
+                                    </div>
+                                </div><br/>
+
+
+                                <legend>- Pensez-vous qu'il y a trop de redondances et d'ambiguités dans les propositions ?</legend>
+                                <div style="margin-left: 5%">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="ambiguity" id="optionsRadios1" value=1 checked="checked" type="radio">
+                                            Oui
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" name="ambiguity" id="optionsRadios2" value=0 type="radio">
+                                            Non
+                                        </label>
+                                    </div>
+                                </div><br/>
+                            </fieldset>
+
+                            <br/>
+                            <button type="submit" class="btn btn-primary">Soumettre</button>
+                        </fieldset>
+                    </form>
+                </div>
+            {% endif %}
+        {% elseif phase == "phase2" %}
+            <div class="jumbotron">
+                <form method="post">
+                    <fieldset>
+                        <fieldset class="form-group">
+                            <legend>- Catégorisation des contributions : </legend>
+                            <div style="margin-left: 5%">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" name="choice" id="optionsRadios1" value= "category" checked="checked" type="radio">
+                                        Voulez-vous dresser d'abord la liste des catégories avant de catégoriser les idées ?
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" name="choice" id="optionsRadios2" value= "categorizer" type="radio">
+                                        Voulez-vous créer les catégories au fur et à mseure que vous catégorisez les idées ?
+                                    </label>
+                                </div>
+                            </div><br/>
+                        </fieldset>
+
+                        <br/>
+                        <button type="submit" class="btn btn-primary">Soumettre</button>
+                    </fieldset>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block customscrpits %}
+    <script>
+       let step = "PreNego";
+       let id = {{ id }};
+    </script>
+{% endblock %}
+
+{% block help %}
+    {% if admin %}
+        <p>Ce formulaire doit être remplis par les décideurs</p>
+    {% else %}
+        <p>Veuillez remplir et soumettre le formulaire</p>
+    {% endif %}
+{% endblock %}

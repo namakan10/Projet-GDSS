@@ -155,7 +155,7 @@ ul {
 }
 
 .comment-head-reply {
-    background:silver;
+    background:antiquewhite;
     padding: 10px 12px;
     border-bottom: 1px solid #E5E5E5;
     overflow: hidden;
@@ -232,7 +232,7 @@ ul {
 /** =====================
  * Responsive
  ========================*/
-@media only screen and (max-width: 766px) {
+@media screen and (max-width: 1000px) {
     .comments-container {
         width: 480px;
     }
@@ -243,5 +243,19 @@ ul {
 
     .reply-list .comment-box {
         width: 320px;
+    }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1200px) {
+    .comments-container {
+        width: 680px;
+    }
+
+    .comments-list .comment-box {
+        width: 690px;
+    }
+
+    .reply-list .comment-box {
+        width: 620px;
     }
 }

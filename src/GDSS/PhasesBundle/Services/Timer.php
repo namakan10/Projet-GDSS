@@ -18,12 +18,9 @@ class Timer
     public function getime($obj){
 
         $now = new \DateTime('now');
-        $dateend = $obj->getDateFin();
+        $dateend = $obj->getDateend();
         $diff = $now->diff($dateend);
 
-
-        //var_dump($diff);
-        //die();
         if($diff->d > 0){
             if($diff->h == 0){
                 $hours = $diff->d * 24;

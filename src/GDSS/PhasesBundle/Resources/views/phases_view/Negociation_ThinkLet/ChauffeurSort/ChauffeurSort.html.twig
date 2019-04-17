@@ -1,0 +1,228 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/PopcornSort/popcornsort_layout.html.twig' %}
+
+
+{% block title %}ChauffeurSort{% endblock %}
+
+{% block customstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chat.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/comment2.css') }}" type="text/css">
+{% endblock %}
+
+
+
+{% block buttonhelp %}
+
+{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center">
+        <a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a>
+        Négociation : ChauffeurSort
+    </h1>
+{% endblock %}
+
+{% block content %}
+    <div class="col-sm-5">
+
+        {% if finish == false %}
+
+            <p>
+                <a class="btn btn-primary fa" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Aide</a>
+
+            </p>
+
+            <div class="col">
+                <div class="collapse multi-collapse" id="multiCollapseExample1">
+                    <div class="card card-body">
+                        <h3>Liste des catégories</h3>
+                        <ul class="timeline">
+                            {% for cat in categories %}
+                                <li style="margin-left: 40px">{{ cat.name }}</li>
+                            {% endfor %}
+                        </ul>
+                        <br/>
+                        {% if admin %}
+                            <p>
+                                Les contributions vont apparaître un à un.
+                                Discuter avec les décideurs pour placer la contribution dans la bonne catégorie.
+                                Une fois d'accord placez la contribution dans la catégorie indiquée.
+                                Cliquer alors sur suivant pour affiche la contribution suivante.
+                                Répeter l'opération jusqu'a la dernière contribution.
+                            </p>
+                        {% else %}
+                            <p>
+                                Les contributions vont apparaître un à un.
+                                Discuter entre vous pour placer la contribution dans la bonne catégorie.
+                                Une fois d'accord le facilitateur placera la contribtuion dans la catégorie indiquée.
+                                Répeter l'opération jusqu'a la dernière contribution.
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            {% if contribution != null %}
+                <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                    <li>
+                        <div class="comment-main-level">
+                            <div class="comment-box">
+                                <div class="comment-head">
+                                    <h6 class="comment-name by-author">{{ contribution.pseudo }}</h6>
+                                </div>
+                                <div class="comment-content">
+                                    <p>{{ contribution.contribution }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                {% if comment != null %}
+                    <a class="fa" style="margin-left: 20px" data-toggle="collapse" href="#list{{ contribution.id }}" role="button" aria-expanded="false" aria-controls="list{{ contribution.id }}"></a>
+                {% endif %}
+
+                <div class="collapse" id="list{{ contribution.id }}">
+                    <ul class="timeline">
+                        {% for cmt in comment %}
+                            <li>
+                                <ul class="comments-list reply-list">
+                                    <li>
+                                        <!-- Contenedor del Comentario -->
+                                        <div class="comment-box">
+                                            <div class="comment-head">
+                                                <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                            </div>
+                                            <div class="comment-content">
+                                                {{ cmt.comment }}
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p>Toutes les contributions ont été catégorisées</p>
+            {% endif %}
+            <br/><br/>
+
+            {% if admin %}
+                <form method="post" class="form-inline">
+                    <select class="form-control col-sm-4" name="categorie">
+                        {% for cat in categories %}
+                            <option value={{ cat.id }}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" class="btn btn-primary" value="Catégoriser" name="categorizer" />
+                </form>
+            {% else %}
+                <button class="btn btn-primary" id="reloadpage" onclick="window.location = window.location.pathname;">Suivant</button>
+            {% endif %}
+
+            <br/><br/>
+
+        {% else %}
+
+        {% endif %}
+
+    </div>
+
+    <div class="row chat-window col-xs-5 col-md-4" id="chat_window_1" style="margin-left:48%;">
+        <div class="col-xs-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading top-bar">
+                    <div class="col-md-8 col-xs-8">
+                        <h3 class="panel-title">Chat - Box</h3>
+                    </div>
+                </div>
+                <div class="panel-body msg_container_base chat_block" id="chat_block_id">
+                    {% for ct in chat %}
+                        {% if ct.users == user %}
+                            <div class="row msg_container base_sent">
+                                <div class="col-md-9 col-xs-9">
+                                    <div class="messages msg_sent">
+                                        <p>{{ ct.message }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-xs-3 avatar">
+                                    <img src="{{ asset('bundles/gdssplatform/icons/users_icon.svg') }}" alt="" class="img-circle">
+                                    <span style="font-size: small">{{ ct.pseudo }}</span>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="row msg_container base_receive">
+                                <div class="col-md-3 col-xs-3 avatar">
+                                    <img src="{{ asset('bundles/gdssplatform/icons/users_icon.svg') }}" alt="" class="img-circle">
+                                    <span style="font-size: small">{{ ct.pseudo }}</span>
+                                </div>
+                                <div class="col-md-9 col-xs-9">
+                                    <div class="messages msg_receive">
+                                        <p>{{ ct.message }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+
+                </div>
+                <div class="panel-footer">
+                    <form method="post" id="chat_form">
+                        <div class="input-group">
+                            <input id="btn-input" type="text" class="form-control" name="prop" placeholder="" required />
+                            <span class="input-group-btn">
+                                <input type="submit" class="btn btn-primary btn-sm" id="btn-chat" name="Envoyer" value="Envoyer">
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script type="text/javascript">
+        let id = {{ id }};
+        let pseudo =  "{{ pseudo }}";
+        $("document").ready(function () {
+            element_b = document.getElementById('chat_block_id');
+            element_b.scrollTop = element_b.scrollHeight;
+            let aut = false;
+            /*
+            setInterval(function () {
+                if(aut === true){
+                    element.scrollTop = element.scrollHeight;
+                    aut = false;
+                }
+                setTimeout(function(){
+                    element = document.getElementById('chat_block_id');
+                    if(element.scrollHeight - element.scrollTop === element.clientHeight){
+                        aut = true;
+                    }
+                }, 1000);
+                $(".chat_block").load(Routing.generate('Chat_lis_msg', {'id' : id, 'phase' : "Nego2"}),);
+            }, 5000);*/
+            $('#chat_form').on('submit', function (event) {
+                event.preventDefault();
+                //setTimeout(y, 5000);
+                let form_data = document.getElementById('btn-input').value;
+                $.ajax({
+                    url: Routing.generate('Chat_add_msg', {'id' : id, 'phase' : "Nego2", }),
+                    type:"POST",
+                    data: {msg : form_data, phase : "Nego2", pseudo : pseudo},
+                    dataType: 'JSON',
+                    success:function (data) {
+
+                    }
+                });
+                document.getElementById('btn-input').value = "";
+                element.scrollTop = element.scrollHeight;
+            });
+        })
+    </script>
+{% endblock %}

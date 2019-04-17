@@ -22,14 +22,29 @@ class User extends BaseUser implements ParticipantInterface
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="GDSS\PlatformBundle\Entity\Decideurs", mappedBy="user", cascade={"remove"})
+     * Date/Time of the last activity
+     *
+     * @var \Datetime
+     * @ORM\Column(name="last_activity_at", type="datetime", nullable=true)
      */
-    private $decideurs;
+    protected $lastActivityAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GDSS\PlatformBundle\Entity\DecisionMakers", mappedBy="user", cascade={"remove"})
+     */
+    private $makers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\Chat", mappedBy="users", cascade={"remove"})
+     */
+    private $chat;
 
     /**
      * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\Reaction", mappedBy="user", cascade={"remove"})
      */
     private $reac;
+
+
 
     public function __construct()
     {
@@ -38,38 +53,32 @@ class User extends BaseUser implements ParticipantInterface
     }
 
     /**
-     * Add decideur
-     *
-     * @param \GDSS\PlatformBundle\Entity\Decideurs $decideur
-     *
-     * @return User
+     * @param \Datetime $lastActivityAt
      */
-    public function addDecideur(\GDSS\PlatformBundle\Entity\Decideurs $decideur)
+    public function setLastActivityAt($lastActivityAt)
     {
-        $this->decideurs[] = $decideur;
-
-        return $this;
+        $this->lastActivityAt = $lastActivityAt;
     }
 
     /**
-     * Remove decideur
-     *
-     * @param \GDSS\PlatformBundle\Entity\Decideurs $decideur
+     * @return \Datetime
      */
-    public function removeDecideur(\GDSS\PlatformBundle\Entity\Decideurs $decideur)
+    public function getLastActivityAt()
     {
-        $this->decideurs->removeElement($decideur);
+        return $this->lastActivityAt;
     }
 
     /**
-     * Get decideurs
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Bool Whether the user is active or not
      */
-    public function getDecideurs()
+    public function isActiveNow()
     {
-        return $this->decideurs;
+        // Delay during wich the user will be considered as still active
+        $delay = new \DateTime('5 minutes ago');
+
+        return ( $this->getLastActivityAt() > $delay );
     }
+
 
     /**
      * Add reac
@@ -103,5 +112,73 @@ class User extends BaseUser implements ParticipantInterface
     public function getReac()
     {
         return $this->reac;
+    }
+
+    /**
+     * Add maker
+     *
+     * @param \GDSS\PlatformBundle\Entity\DecisionMakers $maker
+     *
+     * @return User
+     */
+    public function addMaker(\GDSS\PlatformBundle\Entity\DecisionMakers $maker)
+    {
+        $this->makers[] = $maker;
+
+        return $this;
+    }
+
+    /**
+     * Remove maker
+     *
+     * @param \GDSS\PlatformBundle\Entity\DecisionMakers $maker
+     */
+    public function removeMaker(\GDSS\PlatformBundle\Entity\DecisionMakers $maker)
+    {
+        $this->makers->removeElement($maker);
+    }
+
+    /**
+     * Get makers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMakers()
+    {
+        return $this->makers;
+    }
+
+    /**
+     * Add chat
+     *
+     * @param \GDSS\PhasesBundle\Entity\Chat $chat
+     *
+     * @return User
+     */
+    public function addChat(\GDSS\PhasesBundle\Entity\Chat $chat)
+    {
+        $this->chat[] = $chat;
+
+        return $this;
+    }
+
+    /**
+     * Remove chat
+     *
+     * @param \GDSS\PhasesBundle\Entity\Chat $chat
+     */
+    public function removeChat(\GDSS\PhasesBundle\Entity\Chat $chat)
+    {
+        $this->chat->removeElement($chat);
+    }
+
+    /**
+     * Get chat
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChat()
+    {
+        return $this->chat;
     }
 }

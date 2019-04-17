@@ -1,8 +1,25 @@
-{% extends '@GDSSPhases/phases_view/comprehension_collective.html.twig' %}
+{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/PlusMinusInteresting/plusminusinteresting.html.twig' %}
 {% block title %}Branchbuilder{% endblock %}
 
-{% block customstylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chatline.css') }}" type="text/css">
+
+{% block help %}
+    {% if definied %}
+        {% if admin %}
+        {% else %}
+            <p>Donnez un vote au proposition faites par le facilateur. Et vous pouvez argumentez votre choix</p>
+        {% endif %}
+    {% else %}
+        {% if admin %}
+            <p>Générer des idées qui seront évaluer par les décideurs. Si vous avez fini la génération cliquer sur soumettre pour commencer l'evaluation.</p>
+        {% else %}
+            <p>Le facilitateur n'a pas encore soumit ses idées !  Ré-actuliser dans quelques instants !</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+
+{% block subtitle %}
+    <h1 style="text-decoration-style: double; margin-left: -250px"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}" id="stop"> </a> Branchbuilder</h1>
 {% endblock %}
 
 {% block controller1 %}
@@ -20,14 +37,21 @@
 
 {% block customAjax %}
     $.ajax({
-    url:"http://www.projetgdss.com/app_dev.php/add_propo/"+id,
-    type:"POST",
-    data: {proposition : form_data},
-    dataType: 'JSON',
-    success:function (data) {
+        url:"http://www.projetgdss.com/app_dev.php/add_propo/"+id,
+        type:"POST",
+        data: {proposition : form_data, status: 'Non Posté'},
+        dataType: 'JSON',
+        success:function (data) {
 
-    }
-    })
+        }
+    });
+    setTimeout(function(){
+        $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/branchbuilder/script/' +id, function () {
+        let sneaky = new ScrollSneak(location.hostname);
+        document.getElementById('sneakytest').onload = sneaky.sneak;
+        });
+    }, 2000);
 {% endblock %}
 
-{% block interval %}60000{% endblock %}
+{% block interval %}15000{% endblock %}
+

@@ -2,20 +2,24 @@
 
 {% block title %}LeafHopper{% endblock %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/comment.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/timer.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/circle_progress_bar.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/fontawesome/css/all.css') }}" type="text/css">
+{% block customstylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Génération : LeafHopper</h1>
+{% endblock %}
+
+{% block help %}
+    {% if admin %}
+        <p>Cliquer sur "créer une discussion" pour créer groupe de discussion.</p>
+    {% else %}
+        <p>Vous pouvez participer librement aux groupes de discussion créer par le facilitateur.</p>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
     <div class="container">
-
-        <h1 style="text-decoration-style: double; margin-left: -170px">LEAFHOPPER</h1>
 
         {% if admin %}
             <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une discussion</a></p>
@@ -39,7 +43,7 @@
                             {% for subject in subjectlist %}
                                 <tr>
                                     <td>{{ subject.name }}</td>
-                                    <td><a href="{{ path('leafhopper_subject', {'id' : subject.id}) }}"
+                                    <td><a href="{{ path('leafhopper_subject', {'id' : subject.id, 'thinklet' : 'LeafHopper'}) }}"
                                            class="badge badge-info"> Rejoindre
                                         </a>
                                     </td>
@@ -86,9 +90,6 @@
 {% endblock %}
 
 {% block customscrpits %}
-    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
-
     <script type="text/javascript">
         $(document).ready(function(){
             $('[data-toggle="offcanvas"]').click(function(){

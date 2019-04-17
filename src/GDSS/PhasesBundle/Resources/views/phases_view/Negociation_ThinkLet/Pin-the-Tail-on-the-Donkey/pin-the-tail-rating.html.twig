@@ -2,112 +2,146 @@
 
 {% block title %}PinTheTailOnTheDonkey - Annoter{% endblock %}
 
-{% block customstyle %}
+{% block customstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/rating.css') }}" type="text/css">
 {% endblock %}
 
+{% block subtitle %}
+    <h1 style="text-decoration-style: double; margin-left: -15%"><a href="{{ path('PinTheTailOntheDonkey', {'id' : backid}) }}"><i class="fas fa-arrow-left"></i></a> PTTOTDonkey - Vote ({{ categorie.name }})</h1>
+{% endblock %}
+
+{% block help %}
+    {% if admin %}
+        <p class="text-center">Les décideurs annotent les contributions ! </p>
+    {% else %}
+       {% if alreadyselect == false %}
+           <p class="text-center">Veuillez annoter les contributions !</p>
+       {% else %}
+           <p class="text-center">Vous avez déjà annoter les contributions !</p>
+       {% endif %}
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 
     <div style="margin-right: 25%; margin-left: 5%">
-        <h1 style="text-decoration-style: double; margin-left: -15%"><a href="{{ path('PinTheTailOntheDonkey', {'id' : backid}) }}"><i class="fas fa-arrow-left"></i></a> PTTOTDonkey - Annotation ({{ categorie.name }})</h1>
 
         <ul class="nav nav-tabs">
-            {% if alreadyselect != true %}
-            <li class="nav-item">
-                <a class="nav-link active show" data-toggle="tab" href="#annoter">ANNOTER</a>
-            </li>
+            {% if maker %}
+                {% if alreadyselect != true %}
+                <li class="nav-item">
+                    <a class="nav-link active show" data-toggle="tab" href="#annoter">ANNOTER</a>
+                </li>
+                {% endif %}
             {% endif %}
             <li class="nav-item">
-                <a class="nav-link {% if alreadyselect %}active show{% endif %}" data-toggle="tab" href="#annotationlist">VOTE</a>
+                <a class="nav-link {% if alreadyselect %}active show{% elseif admin %}active show{% endif %}" data-toggle="tab" href="#annotationlist">VOTE</a>
             </li>
         </ul>
         <div id="myTabContent" class="tab-content">
-            {% if alreadyselect != true %}
-            <div class="tab-pane fade show active" id="annoter">
-                <br/>
-
-                <form method="post" href="#">
-                    <div class="form-group">
-                        {% for ctcat in contributioncat %}
-                            <div class="form-group col-sm-12">
-                                <div>
-                                    <i class="outgoing_msg">
-                                        <i class="sent_msg" style="float: none">
-                                            <p><span>{{ ctcat.pseudo }}<br/></span> {{ ctcat.contribution }} </p>
-                                        </i>
-                                    </i>
-                                    {% set coll = false %}
-                                    {% for cmt in comment %}
-                                        {% if cmt.contribution == ctcat %}
-                                            {% set coll = true %}
-                                        {% endif %}
-                                    {% endfor %}
-                                    {% if coll == true %}
-                                        <a class="fas fa-plus-circle" data-toggle="collapse" href="#collanot{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
-                                    {% endif %}
-                                    <div class="collapse" id="collanot{{ ctcat.id }}">
-                                        {% for cmt in comment %}
-                                            {% if cmt.contribution == ctcat %}
-                                                <i class="incoming_msg" style="margin-left: 50px">
-                                                    <i class="received_msg">
-                                                        <i class="received_withd_msg">
-                                                            <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
-                                                        </i>
-                                                    </i>
-                                                </i>
+            {% if maker %}
+                {% if alreadyselect != true %}
+                    <div class="tab-pane fade show active" id="annoter" style="margin-top: -8%">
+                        <form method="post" href="#">
+                            <div class="form-group">
+                                {% for ctcat in contributioncat %}
+                                    <div class="form-group col-sm-12">
+                                        <div>
+                                            <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                                                <li>
+                                                    <div class="comment-main-level">
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{ ctcat.pseudo }}</h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                <p>{{ ctcat.contribution }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            {% set coll = false %}
+                                            {% for cmt in comment %}
+                                                {% if cmt.contribution == ctcat %}
+                                                    {% set coll = true %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if coll == true %}
+                                                <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#collanot{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
                                             {% endif %}
-                                        {% endfor %}
+                                            <div class="collapse" id="collanot{{ ctcat.id }}">
+                                                {% for cmt in comment %}
+                                                    {% if cmt.contribution == ctcat %}
+                                                        <li>
+                                                            <ul class="comments-list reply-list">
+                                                                <li>
+                                                                    <!-- Contenedor del Comentario -->
+                                                                    <div class="comment-box">
+                                                                        <div class="comment-head">
+                                                                            <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                                        </div>
+                                                                        <div class="comment-content">
+                                                                            {{ cmt.comment }}
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="rating" style="margin-left: 20px">
+                                            <input type="radio" name="star{{ ctcat.id }}" id="star1{{ ctcat.id }}" value="5">
+                                            <label for="star1{{ ctcat.id }}"></label>
+                                            <input type="radio" name="star{{ ctcat.id }}" id="star2{{ ctcat.id }}" value="4">
+                                            <label for="star2{{ ctcat.id }}"></label>
+                                            <input type="radio" name="star{{ ctcat.id }}" id="star3{{ ctcat.id }}" value="3">
+                                            <label for="star3{{ ctcat.id }}"></label>
+                                            <input type="radio" name="star{{ ctcat.id }}" id="star4{{ ctcat.id }}" value="2">
+                                            <label for="star4{{ ctcat.id }}"></label>
+                                            <input type="radio" name="star{{ ctcat.id }}" id="star5{{ ctcat.id }}" value="1">
+                                            <label for="star5{{ ctcat.id }}"></label>
+                                        </div>
+                                        <br/>
+                                    </div>
+                                {% endfor %}
+                                <br/>
+                                <div class="form-inline">
+                                    <div class="col-sm-11">
+                                        {% if contributioncat %}
+                                            <input type="submit" value="Votez" class="btn btn-warning" name="Votez" id="checkBtn">
+                                        {% endif %}
                                     </div>
                                 </div>
-                                <div class="rating">
-                                    <input type="radio" name="star{{ ctcat.id }}" id="star1{{ ctcat.id }}" value="5">
-                                    <label for="star1{{ ctcat.id }}"></label>
-                                    <input type="radio" name="star{{ ctcat.id }}" id="star2{{ ctcat.id }}" value="4">
-                                    <label for="star2{{ ctcat.id }}"></label>
-                                    <input type="radio" name="star{{ ctcat.id }}" id="star3{{ ctcat.id }}" value="3">
-                                    <label for="star3{{ ctcat.id }}"></label>
-                                    <input type="radio" name="star{{ ctcat.id }}" id="star4{{ ctcat.id }}" value="2">
-                                    <label for="star4{{ ctcat.id }}"></label>
-                                    <input type="radio" name="star{{ ctcat.id }}" id="star5{{ ctcat.id }}" value="1">
-                                    <label for="star5{{ ctcat.id }}"></label>
-
-                                </div>
-
-                                <br/>
                             </div>
-                            {#
-                                <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="customCheck{{ ctcat.id }}" name="{{ ctcat.id }}" value="{{ ctcat.id }}">
-                                <label class="custom-control-label" for="">
-
-                                </label>
-                            </div>
-                            #}
-
-                        {% endfor %}
-                        <div class="form-inline">
-                            <div class="col-sm-11">
-                                {% if contributioncat %}
-                                    <input type="submit" value="Votez" class="btn btn-warning" name="Votez">
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-                <br/><br/>
-            </div>
+                        </form>
+                        <div class="alert0"></div>
+                    <br/>
+                </div>
+                {% endif %}
             {% endif %}
-            <div class="tab-pane fade {% if alreadyselect == true %}show active{% endif %}" id="annotationlist">
-                <br/>
+
+
+            <div class="tab-pane fade {% if alreadyselect == true %}show active{% elseif admin %}show active{% endif %}" id="annotationlist" style="margin-top: -8%">
                 {% for ctcat in contributioncat %}
                     <div>
-                        <i class="outgoing_msg">
-                            <i class="sent_msg" style="float: none">
-                                <p><span>{{ ctcat.pseudo }}<br/></span> {{ ctcat.contribution }} </p>
-                            </i>
-                        </i>
+                        <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                            <li>
+                                <div class="comment-main-level">
+                                    <div class="comment-box">
+                                        <div class="comment-head">
+                                            <h6 class="comment-name by-author">{{ ctcat.pseudo }}</h6>
+                                        </div>
+                                        <div class="comment-content">
+                                            <p>{{ ctcat.contribution }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                         {% set coll = false %}
                         {% for cmt in comment %}
                             {% if cmt.contribution == ctcat %}
@@ -115,23 +149,31 @@
                             {% endif %}
                         {% endfor %}
                         {% if coll == true %}
-                            <a class="fas fa-plus-circle" data-toggle="collapse" href="#coll{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
+                            <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#coll{{ ctcat.id }}" role="button" aria-expanded="false" aria-controls="like{{ ctcat.id }}"></a>
                         {% endif %}
 
                         <div class="collapse" id="coll{{ ctcat.id }}">
                             {% for cmt in comment %}
                                 {% if cmt.contribution == ctcat %}
-                                    <i class="incoming_msg" style="margin-left: 50px">
-                                        <i class="received_msg">
-                                            <i class="received_withd_msg">
-                                                <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
-                                            </i>
-                                        </i>
-                                    </i>
+                                    <li>
+                                        <ul class="comments-list reply-list">
+                                            <li>
+                                                <!-- Contenedor del Comentario -->
+                                                <div class="comment-box">
+                                                    <div class="comment-head">
+                                                        <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                    </div>
+                                                    <div class="comment-content">
+                                                        {{ cmt.comment }}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
                                 {% endif %}
                             {% endfor %}
                         </div>
-                        <p>Vote ({{ ctcat.liked }})</p>
+                        <p style="margin-left: 20px">Vote ({{ ctcat.liked }})</p>
                     </div>
 
                 {% endfor %}
@@ -144,9 +186,19 @@
 {% endblock %}
 
 {% block customscrpits %}
-    {% if error is defined %}
-        <script>
-            alert("{{ error }}");
-        </script>
-    {% endif %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#checkBtn').click(function() {
+                checked = $("input[type=radio]:checked").length;
+
+                if(!checked) {
+                    $(function() {
+                        $(".alert0").notify("Aucune contribution notée !");
+                    });
+                    return false;
+                }
+
+            });
+        });
+    </script>
 {% endblock %}

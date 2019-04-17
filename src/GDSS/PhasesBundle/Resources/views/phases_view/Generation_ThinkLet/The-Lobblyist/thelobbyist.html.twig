@@ -1,6 +1,10 @@
 {% extends '@GDSSPhases/phases_view/comprehension_collective.html.twig' %}
 {% block title %}TheLobbyist{% endblock %}
 
+
+{% block subtitle %}
+    <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> The LOBBYIST</h1>
+{% endblock %}
 {% block customstylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chatline.css') }}" type="text/css">
 {% endblock %}
@@ -8,6 +12,8 @@
 {% block controller1 %}
     {{ render(controller('GDSSPhasesBundle:GenerationScript:thelobbyistscprit', {'id' : id} )) }}
 {% endblock %}
+
+{% block subtittle %} <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('generation', {'id' : id}) }}"> </a> Thelobbyist</h1> {% endblock %}
 
 {% block controller2 %}
     {{ render(controller('GDSSPhasesBundle:GenerationScript:thelobbyistscprit', {'id' : id} )) }}
@@ -25,7 +31,7 @@
     })
 {% endblock %}
 
-{% block interval %}60000{% endblock %}
+{% block interval %}15000{% endblock %}
 
  {% block customLoad %}
      $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/thelobbyist/script/' +id)

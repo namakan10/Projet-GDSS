@@ -1,39 +1,156 @@
-{% extends 'GDSSPhasesBundle:phases_view:comprehension_collective.html.twig' %}
+{% extends 'GDSSPhasesBundle:phases_view/Generation_ThinkLet:generation.html.twig' %}
 
-{% block customstylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chatline.css') }}" type="text/css">
+{% block help %}
+    {% if definied %}
+        {% if admin %}
+        {% else %}
+            <p>Donnez un vote au proposition faites par le facilateur. Et vous pouvez argumentez votre choix</p>
+        {% endif %}
+    {% else %}
+        {% if admin %}
+            <p>Générer des idées qui seront évaluer par les décideurs. Si vous avez fini la génération cliquer sur soumettre pour commencer l'evaluation.</p>
+        {% else %}
+            <p>Le facilitateur n'a pas encore soumit ses idées !  Ré-actuliser dans quelques instants !</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block subtitle %}
+    <h1 style="text-decoration-style: double; margin-left: -250px"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}" id="stop"> </a> Plus-Minus-Ineresting</h1>
 {% endblock %}
 
 {% block title %}PlusMinusInteresting{% endblock %}
 
-{% block controller1 %}
-    {{ render(controller('GDSSPhasesBundle:GenerationThinklet:plusminusScript', {'id' : id} )) }}
+{% block content %}
+
+    <div class="container">
+        {% if finish %}
+            {% block controller1 %}
+                {{ render(controller('GDSSPhasesBundle:GenerationThinklet:plusminusScript', {'id' : id} )) }}
+            {% endblock %}
+        {% else %}
+            {% if definied %}
+                <div class="divscript" id="sneakytest">
+                    {% block controller2 %}
+                        {{ render(controller('GDSSPhasesBundle:GenerationThinklet:plusminusScript', {'id' : id} )) }}
+                    {% endblock %}
+                </div>
+            {% else %}
+                {% if admin %}
+                    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id':'propo_form'}}) }}
+                    <div class="form-group">
+                        {{ form_label(form.Proposition, "Message", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+                        {{ form_errors(form.Proposition) }}
+                        {{ form_widget(form.Proposition, {'attr' : {'class' : 'col-sm-10'}}) }}
+                    </div>
+                    <div class="form-inline">
+                        <div class="col-sm-11">
+                            {{ form_widget(form.Envoyer, {'attr': {'class': 'btn btn-primary'}}) }}
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                    <div class="divscript" id="sneakytest">
+                        {{ render(controller('GDSSPhasesBundle:GenerationThinklet:plusminusScript', {'id' : id} )) }}
+                    </div>
+                    <br/>
+                    <form method="post">
+                        <input class="btn linkstyle" value="SOUMETTRE" name="submit" type="submit"/>
+                    </form>
+
+                {% else %}
+                    <p>Le faciltateur n'as pas encore soumit ses idées</p>
+                {% endif %}
+            {% endif %}
+
+        {% endif %}
+    </div>
+
+
 {% endblock %}
 
-{% block controller2 %}
-    {{ render(controller('GDSSPhasesBundle:GenerationThinklet:plusminusScript', {'id' : id} )) }}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssphases/js/popper.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/mui.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/materialize.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssphases/js/TweenMax.min.js') }}"></script>
+    <script src="{{ asset('bundles/gdssphases/js/scroll-sneak.js') }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script>
+        let hr = {{ hours }};
+        let minu = {{ minutes }};
+        let sec = {{ seconds }};
+        let autorise = true;
+    </script>
+    <script src="{{ asset('bundles/gdssphases/js/timer.js') }}"></script>
+    <script>
+        {% if finish %}
+        {% else %}
+
+        $("document").ready(function () {
+
+            $(function() {
+                $('.fixed-action-btn').floatingActionButton();
+            });
+
+            let id = {{ id }};
+                $('#propo_form').on('submit', function (event) {
+                    event.preventDefault();
+                    let form_data = document.getElementById('form_Proposition').value;
+                    {% block customAjax %}
+                        $.ajax({
+                            url: Routing.generate('add_propo_gene', {'id' : id}),
+                            type:"POST",
+                            data: {proposition : form_data, status: 'Non Posté'},
+                            dataType: 'JSON',
+                            success:function (data) {
+
+                            }
+                        });
+                    setTimeout(function(){
+                        $(".divscript").load(Routing.generate('plusminus_scrpit', {'id' : id}), function () {
+                            let sneaky = new ScrollSneak(location.hostname);
+                            document.getElementById('sneakytest').onload = sneaky.sneak;
+                        });
+                    }, 2000);
+                    {% endblock %}
+                    document.getElementById('form_Proposition').value = null;
+                });
+
+
+
+            {% if definied %}
+                let y = setInterval(function(){
+                {% block customLoad %}
+                    $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/plusminus/script/' +id, function () {
+                        let sneaky = new ScrollSneak(location.hostname);
+                        document.getElementById('sneakytest').onload = sneaky.sneak;
+                    });
+                {% endblock %}
+
+                }, {% block interval %}5000{% endblock %});
+            $('#stop').click(function () {
+                clearInterval(y);
+            });
+            {% endif %}
+
+
+
+
+
+
+            {% block customScrpit2 %}{% endblock %}
+
+
+
+
+
+
+        });
+        {% endif %}
+    </script>
 {% endblock %}
 
-
-{% block customAjax %}
-    $.ajax({
-    url:"http://www.projetgdss.com/app_dev.php/add_propo/"+id,
-    type:"POST",
-    data: {proposition : form_data},
-    dataType: 'JSON',
-    success:function (data) {
-
-    }
-    })
-{% endblock %}
-
-{% block interval %}20000{% endblock %}
-
-{% block customScrpit %}
-
-{% endblock %}
-
-
- {% block customLoad %}
-     $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/plusminus/script/' +id)
- {% endblock %}

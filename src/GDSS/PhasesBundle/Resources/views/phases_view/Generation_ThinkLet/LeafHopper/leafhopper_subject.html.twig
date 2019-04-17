@@ -1,30 +1,52 @@
 {% extends '@GDSSPhases/phases_view/comprehension_collective.html.twig' %}
-{% block title %}LeafHopper{% endblock %}
+{% block title %}{{ thinklet }}{% endblock %}
+
+{% block subtitle %}
+    {% if thinklet == "LeafHopper"  %}
+        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('leafhopper', {'id' : backid}) }}"> </a> Génération : {{ thinklet }} - {{ subproblem.name }}</h1>
+    {% elseif thinklet == "DealersChoice" %}
+        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('dealerschoice', {'id' : backid}) }}"> </a> Génération : {{ thinklet }} - {{ subproblem.name }}</h1>
+    {% endif %}
+{% endblock %}
+
+
+{% block help %}
+    <p class="text-center">Contribuez librément autour du sous-problème.</p>
+{% endblock %}
+
 
 {% block controller1 %}
     {{ render(controller('GDSSPhasesBundle:GenerationThinklet:leafhopperScript', {'id' : id} )) }}
 {% endblock %}
 
-{% block backpath %}{{ path('leafhopper', {'id':sujet.id}) }}{% endblock %}
+{% block subtittle %} <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('leafhopper', {'id' : sujet.id}) }}"> </a> LeafHopper - {{ categorie.name }}</h1> {% endblock %}
 
 {% block controller2 %}
     {{ render(controller('GDSSPhasesBundle:GenerationThinklet:leafhopperScript', {'id' : id} )) }}
 {% endblock %}
 
 {% block customLoad %}
-    $(".divscript").load('http://www.projetgdss.com/app_dev.php/sujet_vue/LeafHopper/script/' +id)
+    $(".divscript").load(Routing.generate('leafhopper_script', {'id' : id}))
+{% endblock %}
+
+{% block customscript %}
+    {% if thinklet == "LeafHopper"  %}
+        <script>let step = "LeafHopper";</script>
+    {% elseif thinklet == "DealersChoice" %}
+        <script>let step = "DealersChoice";</script>
+    {% endif %}
 {% endblock %}
 
 {% block customAjax %}
 
-        $.ajax({
-            url:"http://www.projetgdss.com/app_dev.php/add_propo/"+id,
-            type:"POST",
-            data: {proposition : form_data, leaf: 'leaf'},
-            dataType: 'JSON',
-            success:function (data) {
+    $.ajax({
+    url: Routing.generate('add_propo_gene', {'id' : id}),
+    type:"POST",
+    data: {proposition : form_data, leaf: 'leaf'},
+    dataType: 'JSON',
+    success:function (data) {
 
-            }
-        })
+    }
+    })
 
 {% endblock %}

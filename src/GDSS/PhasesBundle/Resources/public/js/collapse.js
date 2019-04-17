@@ -1,4 +1,4 @@
-import $ from 'public/js/jquery'
+import $ from 'jquery'
 import Util from './util'
 
 /**

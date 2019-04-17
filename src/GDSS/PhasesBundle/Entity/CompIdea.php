@@ -35,7 +35,7 @@ class CompIdea
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GDSS\PlatformBundle\Entity\Phases", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\Phase", inversedBy="compidea")
      * @ORM\JoinColumn(nullable=false)
      */
     private $phases;
@@ -105,29 +105,6 @@ class CompIdea
         return $this->user;
     }
 
-    /**
-     * Set phases
-     *
-     * @param \GDSS\PlatformBundle\Entity\Phases $phases
-     *
-     * @return CompIdea
-     */
-    public function setPhases(\GDSS\PlatformBundle\Entity\Phases $phases)
-    {
-        $this->phases = $phases;
-
-        return $this;
-    }
-
-    /**
-     * Get phases
-     *
-     * @return \GDSS\PlatformBundle\Entity\Phases
-     */
-    public function getPhases()
-    {
-        return $this->phases;
-    }
 
     /**
      * Set pseudo
@@ -151,5 +128,29 @@ class CompIdea
     public function getPseudo()
     {
         return $this->pseudo;
+    }
+
+    /**
+     * Set phases
+     *
+     * @param \GDSS\PhasesBundle\Entity\Phase $phases
+     *
+     * @return CompIdea
+     */
+    public function setPhases(\GDSS\PhasesBundle\Entity\Phase $phases)
+    {
+        $this->phases = $phases;
+
+        return $this;
+    }
+
+    /**
+     * Get phases
+     *
+     * @return \GDSS\PhasesBundle\Entity\Phase
+     */
+    public function getPhases()
+    {
+        return $this->phases;
     }
 }

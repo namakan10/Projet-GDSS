@@ -27,11 +27,11 @@ class SendMessage
 
     /**
      * @param $form
-     * @param $subjectView
+     * @param $problem
      * @param $user
      * @return string
      */
-    public function sendInvitation($form, $subjectView, $user){
+    public function sendInvitation($form, $problem, $user){
         $guest = $form["Contact"]->getData();
         $em = $this->em->getRepository('GDSSPlatformBundle:User');
 
@@ -44,9 +44,9 @@ class SendMessage
             $threadBuilder = $this->composer->newThread();
             $threadBuilder
                 ->addRecipient($recipient)
-                ->setSubject($subjectView->getTitre())
+                ->setSubject($problem->getName())
                 ->setSender($sender)
-                ->setBody($subjectView->getContexte());
+                ->setBody($problem->getContext());
             $this ->send->send($threadBuilder->getMessage());
 
         }

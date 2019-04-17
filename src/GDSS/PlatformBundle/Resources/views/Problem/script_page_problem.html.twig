@@ -1,0 +1,155 @@
+{% set start = true %}
+        {% set end = false %}
+
+        {#---------------------------------------------------------------PROBLEM INFORMTION----------------------------------------------------------------------#}
+
+<div style="border: 1px solid ; border-radius: 10px; background-color: white; min-height: 375px">
+    <div style="margin: 10px">
+
+        <div class="row">
+            <h2 class="col-sm-11">{{ problem.name }}   {% if problem.dateend < now %}
+                    <span class="badge badge-success">Terminer</span>
+                    {% set end = true %}
+                {% elseif problem.datestart < now  %}
+                    <span class="badge badge-primary">En cours</span>
+                {% else %}
+                    {% set start = false %}
+                    <span class="badge badge-warning">Attente</span>
+                {% endif %}
+            </h2>
+            {% if admin %}
+                <h2><a class="col-sm-1" href="{{ path('add_edit_problem', {'id' : problem.id, 'action' : "edit"}) }}"><i class="fas fa-edit"></i></a></h2>
+            {% endif %}
+        </div>
+
+
+        <hr/>
+        <h4>But : {{ problem.goal }}</h4>
+        <br/>
+        <h4>Contexte :</h4>
+        <div class="progress-bar1" data-percent="{{ progress }}" data-duration="1000" data-color="#ced4da,#049dff" style="float: right; margin-right: 250px; margin-top: -40px"></div>
+        <p style="margin-right: 400px ">{{ problem.context }}</p>
+
+
+        <br/>
+        <h4>Critères
+            {% if admin %}
+                {% if problem.dateend > now %}
+                    <a class="col-sm-1" href="{{ path('add_criteria', {'id' : id, 'action' : "edit"}) }}"><i class="fas fa-edit"></i></a>
+                {% endif %}
+            {% endif %}
+        </h4>
+        {% for list in criteria %}
+            <h6 style="margin-left: 10px;">
+                <img style="width: 24px" src="{{ asset('bundles/gdssplatform/icons/ic_my_location_24px.svg') }}"> {{ list.description }}
+            </h6>
+        {% endfor %}
+
+        {% if constraints %}
+            <br/>
+            <h4>Contrainte :</h4>
+            {% for list1 in constraints %}
+                <h6 style="margin-left: 10px;">
+                    <img style="width: 24px" src="{{ asset('bundles/gdssplatform/icons/ic_my_location_24px.svg') }}"> {{ list1 }}
+                </h6>
+            {% endfor %}
+        {% endif %}
+        <br/>
+
+    </div>
+
+
+</div>
+
+{# FIN DE DES INFORMATIONS#}
+
+<br/><br/>
+
+{# NAVIGATION TOGGLE #}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active show" data-toggle="tab" href="#phase">PHASES</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#decideurs">DECIDEURS</a>
+    </li>
+</ul>
+
+<div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade show active" id="phase">
+        <br/>
+        <div>
+
+            {# AFFICHAGE DES PHASES SI LE PROCESSUS EST DEFINIES #}
+
+            {% if definedprocess %}
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="">
+                        <th>Nom</th>
+                        <th>Durée</th>
+                        <th>Date de début</th>
+                        <th>Statut</th>
+                        <th>Progression</th>
+                        <th></th>
+                        {% if problem.dateend > now %}
+                            <th></th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% include '@GDSSPlatform/Problem/comprehension.html.twig' %}
+
+                    {% include '@GDSSPlatform/Problem/generation.html.twig' %}
+
+                    {% include '@GDSSPlatform/Problem/negociation.html.twig' %}
+
+                    {% include '@GDSSPlatform/Problem/decision.html.twig' %}
+
+                    </tbody>
+                </table>
+
+                {# FIN POUR LA VUE DES PHASES SI DEFINIES #}
+
+                {# SI LES PHASES NE SONT PAS DEFINIES #}
+            {% else %}
+
+                <a href ="{{ path('add_process', {'id' : id}) }}" ><button type="button" class="btn btn-warning">Définir le processus</button></a>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="tab-pane fade" id="decideurs">
+        <br/>
+        {% if definedprocess %}
+            {% if admin %}
+                <a href ="#" class="send-invitation" data-toggle="modal" data-target="#send-invitation"><button type="button" class="btn btn-warning">Inviter des decideurs</button></a>
+            {% endif %}
+            <br/>
+            <table class="table table-hover">
+                <thead>
+                <tr class="">
+                    <th>Decideurs</th>
+                    {% if admin %}
+                        <th></th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for mak in makers %}
+                    <tr>
+                        <td><i class="fas fa-user-alt"></i> {{ mak.pseudoMaker }}</td>
+                        {% if admin %}
+                            <td> <i class="fas fa-trash-alt" style="color:red;"></i></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        {% endif %}
+        <br/>
+        <br/>
+    </div>
+</div>

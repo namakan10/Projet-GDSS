@@ -7,90 +7,49 @@
     <div class="container">
         <h1 style="text-align: center">Modifications des phases</h1>
         <hr>
-        <div class="well">
+        <div class="well" style="margin-left: 25%">
             {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-            <h3>Phase de comprehension collective du probème</h3>
+            <h3></h3>
             <div class="form-group">
-                {# Génération du label. #}
-                {{ form_label(form.DateDebut1, "Date de debut", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {# Affichage des erreurs pour ce champ précis. #}
-                {{ form_errors(form.DateDebut1) }}
-                <div class="col-sm-10">
-                    {{ form_widget(form.DateDebut1) }}
-                </div>
-            </div>
-            {# Idem pour un autre champ. #}
-            <div class="form-group">
-                {{ form_label(form.Duree1, "Durée", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.Duree1) }}
-                <div class="row" style="margin-left: 0px">
-                    <div class="col-sm-1 col">
-                        {{ form_widget(form.Duree1) }}
-                    </div>
-                    <div class="col-sm-2 col">
-                        {{ form_widget(form.Periode1) }}
-                    </div>
-                </div>
-            </div>
 
-            <br/>
-
-            <h3>Phase de génération</h3>
-            <div class="form-group">
-                {{ form_label(form.DateDebut2, "Date de debut", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.DateDebut2) }}
-                <div class="col-sm-10">
-                    {{ form_widget(form.DateDebut2) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.Duree2, "Durée", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.Duree2) }}
-                <div class="row" style="margin-left: 0px">
-                    <div class="col-sm-1 col">
-                        {{ form_widget(form.Duree2) }}
+                <div class="">
+                    <div class="form-group">
+                        {{ form_label(form.DateDebut, "Date de début", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                        {{ form_errors(form.DateDebut) }}
+                        <div class="col-sm-7">
+                            {{ form_widget(form.DateDebut, { 'attr': {'data-field': 'datetime'} }) }}
+                        </div>
                     </div>
-                    <div class="col-sm-2 col">
-                        {{ form_widget(form.Periode2) }}
+                    <div class="form-group">
+                        {{ form_label(form.Dureemin, "Durée minimale", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                        {{ form_errors(form.Dureemin) }}
+                        <div class="row" style="margin-left: 0px">
+                            <div class="col-sm-3 col">
+                                {{ form_widget(form.Dureemin) }}
+                            </div>
+                            <div class="col-sm-4 col">
+                                {{ form_widget(form.Periodemin) }}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <br/>
-
-            <h3>Phase de négociation</h3>
-            <div class="form-group">
-                {{ form_label(form.DateDebut3, "Date de debut", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.DateDebut3) }}
-                <div class="col-sm-10">
-                    {{ form_widget(form.DateDebut3) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.Duree3, "Durée", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.Duree3) }}
-                <div class="row" style="margin-left: 0px">
-                    <div class="col-sm-1 col">
-                        {{ form_widget(form.Duree3) }}
+                    <div class="form-group">
+                        {{ form_label(form.Dureemax, "Durée maximale", {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                        {{ form_errors(form.Dureemax) }}
+                        <div class="row" style="margin-left: 0px">
+                            <div class="col-sm-3 col">
+                                {{ form_widget(form.Dureemax) }}
+                            </div>
+                            <div class="col-sm-4 col">
+                                {{ form_widget(form.Periodemax) }}
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-sm-2 col">
-                        {{ form_widget(form.Periode3) }}
-                    </div>
-                </div>
-            </div>
-
-            <br/>
-
-            <h3>Prise de decision</h3>
-            <div class="form-group">
-                {{ form_label(form.DateDecision, "Date", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-                {{ form_errors(form.DateDecision) }}
-                <div class="col-sm-10">
-                    {{ form_widget(form.DateDecision) }}
                 </div>
             </div>
 
             <br/>
             {{ form_widget(form.Terminer, {'attr': {'class': 'btn btn-primary'}}) }}
+
             {{ form_end(form) }}
         </div>
     </div>

@@ -34,6 +34,13 @@ class GenerationCommentReply
     private $comment;
 
     /**
+     * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\Phase")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $phase;
+
+
+    /**
      * @var string
      *
      * @ORM\Column(name="reply", type="text")
@@ -152,5 +159,29 @@ class GenerationCommentReply
     public function getComment()
     {
         return $this->comment;
+    }
+
+    /**
+     * Set phase
+     *
+     * @param \GDSS\PhasesBundle\Entity\Phase $phase
+     *
+     * @return GenerationCommentReply
+     */
+    public function setPhase(\GDSS\PhasesBundle\Entity\Phase $phase)
+    {
+        $this->phase = $phase;
+
+        return $this;
+    }
+
+    /**
+     * Get phase
+     *
+     * @return \GDSS\PhasesBundle\Entity\Phase
+     */
+    public function getPhase()
+    {
+        return $this->phase;
     }
 }

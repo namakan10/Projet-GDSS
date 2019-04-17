@@ -1,0 +1,64 @@
+<tr>
+    <td><strong>Compréhension collective du probème</strong></td>
+    {% if Comp %}
+        <td>{{ Comp.durationmin }} min - {{ Comp.durationmax }} min</td>
+        <td>{{ Comp.datestart|date('d/m/y H:i') }}</td>
+        <td><span
+                    {% if now > Comp.dateend%}
+                    class="badge badge-danger">Terminer
+                {% elseif now > Comp.datestart%}
+                    class="badge badge-success">En cours
+                {% else %}
+                    class="badge badge-warning">En attente
+                {% endif %}
+                                         </span></td>
+        <td><div class="progress"><div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{ progressComp }}%" aria-valuenow="{{ progressComp }}" aria-valuemin="0" aria-valuemax="100"></div></div></td>
+
+        {% if now > Comp.datestart %}
+            <td>
+                <a href="{{ path('phase_comprehension_vue', {'id':id}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% elseif now > Comp.dateend %}
+            <td>
+                <a href="{{ path('phase_comprehension_vue', {'id':id}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% endif %}
+
+        {% if admin %}
+            {% if Gene %}
+                <td></td>
+            {% else %}
+                {% if Comp.dateend <= now %}
+                    {% if end == false %}
+                        <td>
+                            <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Comp", 'action' : 'edit'}) }}">
+                                <i class="fas fa-sync"></i>
+                            </a>
+                        </td>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+
+    {% else %}
+        <td></td>
+        <td></td>
+        <td><span class="badge badge-warning">En attente</span></td>
+        <td></td>
+        {% if admin %}
+            {% if start == true %}
+                <td>
+                    <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Comp", 'action' : 'create'}) }}">
+                        <span class="badge badge-primary">Démarrer</span>
+                    </a>
+                </td>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+</tr>

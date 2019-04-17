@@ -1,0 +1,296 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+
+{% block title %}{{ thinklet }}{% endblock %}
+
+{% block customstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block help %}
+    {% if finish == false %}
+        {% if thinklet == "GoldMiner" %}
+            {% if admin %}
+                <p class="text-center">Les decideurs choissent les contributions qu'ils jugent pertimentes. Elles apparaissent dans le Fort Knox.</p>
+            {% else %}
+                {% if maker.selection == false %}
+                {% else %}
+                {% endif %}
+                <p class="text-center">Veuillez cochez les contributions dans le Gold Mine qui méritent d'être retenues. Elles apparaîtrons dans le Fort Knox</p>
+            {% endif %}
+        {% elseif thinklet == "FastFocus" %}
+            {% if admin %}
+                <p class="text-center">Les decideurs choissent les contributions qu'ils jugent pertimentes. Elles apparaissent dans la liste publique.</p>
+            {% else %}
+                {% if maker.selection == false %}
+                    <p class="text-center">Veuillez cochez les contributions qui méritent d'être retenues. Elles apparaîtrons dans la liste publique</p>
+                {% else %}
+                    <p class="text-center"></p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <p>
+            La phase une de la négociation et de confrontation des points de vue est terminée.
+            Les contributions retenuent sont affichées sur cette page.
+            Retournez à la page de présentation du problème pour passer à l'étape suivante.
+        </p>
+    {% endif %}
+{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Négociation : {{ thinklet }}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <ul class="nav nav-tabs" style="margin-right: 190px">
+            {% set show = false %}
+            {% if admin == false %}
+                {% if maker.selection == 0 %}
+                    {% set show = true %}
+                {% endif %}
+            {% endif %}
+
+            {% if show %}
+                {% if finish == false %}
+                    {% if thinklet == "GoldMiner"%}
+                        <li class="nav-item">
+                        <a class="nav-link active show" data-toggle="tab" href="#contrib">Gold Mine</a>
+                        </li>
+                    {% elseif thinklet == "FastFocus" %}
+                        <li class="nav-item">
+                            <a class="nav-link active show" data-toggle="tab" href="#contrib">CONTRIBUTIONS</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+
+            {% if thinklet == "GoldMiner"%}
+                <li class="nav-item">
+                    <a class="nav-link {% if show == false %}active show{% endif %}" data-toggle="tab" href="#list">Fort Knox</a>
+                </li>
+            {% elseif thinklet == "FastFocus" %}
+                <li class="nav-item">
+                    <a class="nav-link {% if show == false %}active show{% endif %}" data-toggle="tab" href="#list">LISTE PUBLIQUE</a>
+                </li>
+            {% endif %}
+        </ul>
+        <div id="myTabContent" class="tab-content">
+
+            {% if finish == false %}
+                {% if show %}
+                    <div class="tab-pane fade show active" id="contrib">
+                        <form method="post" href="#">
+                            <div class="form-group">
+                                {% for ct in contribution %}
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck{{ ct.id }}" name="{{ ct.id }}" value="{{ ct.id }}">
+                                        <label class="custom-control-label" for="customCheck{{ ct.id }}">
+                                            <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                                                <li>
+                                                    <div class="comment-main-level">
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{ ct.pseudo }}</h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                <p>{{ ct.contribution }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            {% set coll = false %}
+                                            {% for cmt in comment %}
+                                                {% if cmt.contribution == ct %}
+                                                    {% set coll = true %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if coll == true %}
+                                                <a class="fa" style="margin-left: 20px" data-toggle="collapse" href="#noncatego{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+                                            {% endif %}
+
+                                            <div class="collapse" id="noncatego{{ ct.id }}">
+                                                <ul class="timeline">
+                                                    {% for cmt in comment %}
+                                                        {% if cmt.contribution == ct %}
+                                                            <li>
+                                                                <ul class="comments-list reply-list">
+                                                                    <li>
+                                                                        <!-- Contenedor del Comentario -->
+                                                                        <div class="comment-box">
+                                                                            <div class="comment-head">
+                                                                                <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                                            </div>
+                                                                            <div class="comment-content">
+                                                                                {{ cmt.comment }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                            <br/><br/>
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                <div class="form-inline">
+                                    <div class="col-sm-11">
+                                        <input type="submit" value="Valider" class="btn btn-outline-primary" id="checkBtn">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                        <div class="alert0"></div>
+                    </div>
+                {% endif %}
+
+
+                <div class="tab-pane fade {% if show == false %}active show{% endif %} fordknox" id="list">
+                    {% for ct in contributionselect %}
+                        <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                        <li>
+                            <div class="comment-main-level">
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author">{{ ct.pseudo }}</h6>
+                                    </div>
+                                    <div class="comment-content">
+                                        <p>{{ ct.contribution }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                        {% set coll = false %}
+                        {% for cmt in comment %}
+                            {% if cmt.contribution == ct %}
+                                {% set coll = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if coll == true %}
+                            <a class="fa" style="margin-left: 20px" data-toggle="collapse" href="#list{{ ct.id }}" role="button" aria-expanded="false" aria-controls="list{{ ct.id }}"></a>
+                        {% endif %}
+
+                        <div class="collapse" id="list{{ ct.id }}">
+                                <ul class="timeline">
+                                    {% for cmt in comment %}
+                                        {% if cmt.contribution == ct %}
+                                            <li>
+                                                <ul class="comments-list reply-list">
+                                                    <li>
+                                                        <!-- Contenedor del Comentario -->
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                {{ cmt.comment }}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        <br/><br/>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="tab-pane fade active show" id="list">
+                    {% for ct in contributionselect %}
+
+                        <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                                <li>
+                                    <div class="comment-main-level">
+                                        <div class="comment-box">
+                                            <div class="comment-head">
+                                                <h6 class="comment-name by-author">{{ ct.pseudo }}</h6>
+                                            </div>
+                                            <div class="comment-content">
+                                                <p>{{ ct.contribution }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        {% set coll = false %}
+                        {% for cmt in comment %}
+                            {% if cmt.contribution == ct %}
+                                {% set coll = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if coll == true %}
+                            <a class="fa" style="margin-left: 20px" data-toggle="collapse" href="#list{{ ct.id }}" role="button" aria-expanded="false" aria-controls="list{{ ct.id }}"></a>
+                        {% endif %}
+
+                        <div class="collapse" id="list{{ ct.id }}">
+                                <ul class="timeline">
+                                    {% for cmt in comment %}
+                                        {% if cmt.contribution == ct %}
+                                            <li>
+                                                <ul class="comments-list reply-list">
+                                                    <li>
+                                                        <!-- Contenedor del Comentario -->
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                {{ cmt.comment }}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        <br/><br/>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script type="text/javascript">
+        let id = {{ id }};
+        let step = "FastFocus - GoldMiner";
+        $(document).ready(function () {
+            $('#checkBtn').click(function() {
+                checked = $("input[type=checkbox]:checked").length;
+
+                if(!checked) {
+                    $(function() {
+                        $(".alert0").notify("Aucune contribution sélectionnée !");
+                    });
+                    return false;
+                }
+
+            });
+            {% if finish == false %}
+                setInterval(function () {
+                    $(".fordknox").load(Routing.generate('FastFocus_Public_list_Fort_Knox', {'id' : id}), function () {
+                        let sneaky = new ScrollSneak(location.hostname);
+                        document.getElementById('list').onload = sneaky.sneak;
+                    });
+                }, 10000);
+            {% endif %}
+        });
+    </script>
+{% endblock %}

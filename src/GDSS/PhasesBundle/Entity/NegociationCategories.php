@@ -28,6 +28,13 @@ class NegociationCategories
      */
     private $name;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="allow", type="boolean")
+     */
+    private $allow = false;
+
 
     /**
      * @var string
@@ -37,7 +44,7 @@ class NegociationCategories
     private $priority;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GDSS\PlatformBundle\Entity\Phases", inversedBy="categorie")
+     * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\Phase", inversedBy="categorie")
      */
     private $phase;
 
@@ -46,6 +53,12 @@ class NegociationCategories
      * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\NegociationCategorieSelection", mappedBy="categories", cascade={"remove"})
      */
     private $selection_catego;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\MakersGroup", mappedBy="categorie", cascade={"remove"})
+     */
+    private $group;
 
 
     /**
@@ -82,29 +95,7 @@ class NegociationCategories
         return $this->name;
     }
 
-    /**
-     * Set phase
-     *
-     * @param \GDSS\PlatformBundle\Entity\Phases $phase
-     *
-     * @return NegociationCategories
-     */
-    public function setPhase(\GDSS\PlatformBundle\Entity\Phases $phase = null)
-    {
-        $this->phase = $phase;
 
-        return $this;
-    }
-
-    /**
-     * Get phase
-     *
-     * @return \GDSS\PlatformBundle\Entity\Phases
-     */
-    public function getPhase()
-    {
-        return $this->phase;
-    }
     /**
      * Constructor
      */
@@ -169,5 +160,87 @@ class NegociationCategories
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * Set phase
+     *
+     * @param \GDSS\PhasesBundle\Entity\Phase $phase
+     *
+     * @return NegociationCategories
+     */
+    public function setPhase(\GDSS\PhasesBundle\Entity\Phase $phase = null)
+    {
+        $this->phase = $phase;
+
+        return $this;
+    }
+
+    /**
+     * Get phase
+     *
+     * @return \GDSS\PhasesBundle\Entity\Phase
+     */
+    public function getPhase()
+    {
+        return $this->phase;
+    }
+
+    /**
+     * Set allow
+     *
+     * @param boolean $allow
+     *
+     * @return NegociationCategories
+     */
+    public function setAllow($allow)
+    {
+        $this->allow = $allow;
+
+        return $this;
+    }
+
+    /**
+     * Get allow
+     *
+     * @return boolean
+     */
+    public function getAllow()
+    {
+        return $this->allow;
+    }
+
+    /**
+     * Add group
+     *
+     * @param \GDSS\PhasesBundle\Entity\MakersGroup $group
+     *
+     * @return NegociationCategories
+     */
+    public function addGroup(\GDSS\PhasesBundle\Entity\MakersGroup $group)
+    {
+        $this->group[] = $group;
+
+        return $this;
+    }
+
+    /**
+     * Remove group
+     *
+     * @param \GDSS\PhasesBundle\Entity\MakersGroup $group
+     */
+    public function removeGroup(\GDSS\PhasesBundle\Entity\MakersGroup $group)
+    {
+        $this->group->removeElement($group);
+    }
+
+    /**
+     * Get group
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGroup()
+    {
+        return $this->group;
     }
 }

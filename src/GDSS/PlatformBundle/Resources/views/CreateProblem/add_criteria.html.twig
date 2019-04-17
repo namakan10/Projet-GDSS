@@ -1,0 +1,150 @@
+{% extends '@GDSSPlatform/CreateProblem/addproblem.html.twig' %}
+{% block title %}Critères{% endblock %}
+{% block curentProblem %}active{% endblock %}
+
+
+{% block active0 %}disabled{% endblock %}
+{% block active1 %}active{% endblock %}
+
+{% block modiftext %} Défintion critères{% endblock %}
+
+{% block help %}
+    {% if action == "edit" %}
+        <p class="text-center">Définissez les critères que doivent respecter les décideurs. Ils sont optionnels</p>
+    {% else %}
+        <p class="text-center">Définissez les critères que doivent respecter les décideurs. Ils sont optionnels, cliquer sur suivant pour les ignorer</p>
+    {% endif %}
+{% endblock %}
+
+{% block contenu %}
+
+    <div style="text-align: center">
+        {% if action == "edit" %}
+            <h2><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Modification des critères</h2>
+        {% else %}
+            <h2>Définition des critères</h2>
+        {% endif %}
+    </div>
+    <br/>
+
+    <div class="container">
+        <div class="" style="margin-left: 45px">
+
+            <div class="card border-secondary" style="width: 100%;">
+                <div class="card-header">Critères</div>
+                <div class="card-body">
+                    <div class="criteria_list">
+
+                        <table class="">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            {% for list in criterialist %}
+                                <tr>
+                                    <td>
+                                        <img style="width: 24px" src="{{ asset('bundles/gdssplatform/icons/ic_my_location_24px.svg') }}">{{  list.description }}
+                                    </td>
+                                    <td>
+                                        <a href="#" onclick="deletecriteria( {{ list.id }} )">
+                                            <i class="fas fa-trash-alt" style="color: red"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                        <br/>
+                    </div>
+
+                    <div>
+                        {{ form_start(formCriteria, {'attr': {'class': 'form-horizontal', 'id':'form_criteria'}}) }}
+
+
+                        <div class="form-group">
+                            {# Génération du label. #}
+                            {{ form_label(formCriteria.description, "Description", {'label_attr': {'class': 'control-label'}}) }}
+
+                            {{ form_errors(formCriteria.description) }}
+                            <div class="">
+                                {{ form_widget(formCriteria.description)}}
+                            </div>
+                        </div>
+                        {{ form_widget(formCriteria.Ajouter) }}
+                        {{ form_end(formCriteria) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+
+
+
+        {% if action == "create" %}
+            <a href ="{{ path('add_constraint', {'id':id}) }}" >
+                <button type="submit" class="btn linkstyle" style="color: white">
+                    Suivant
+                </button>
+            </a>
+        {% endif %}
+    </div>
+
+
+
+    <br/>
+    <br/>
+{% endblock %}
+
+{% block customScrpit %}
+    <script>
+        let id = {{ id }}
+
+            $('#form_criteria').on('submit', function (event) {
+                event.preventDefault();
+                let form_data = document.getElementById('gdss_platformbundle_criteria_description').value;
+                $.ajax({
+                    url:"http://www.projetgdss.com/app_dev.php/add_criteria/"+id,
+                    type:"POST",
+                    data: {description : form_data},
+                    dataType: 'JSON',
+                    success:function (data) {
+
+                    }
+                });
+
+                setTimeout(function () {
+                    $(".criteria_list").load('http://www.projetgdss.com/app_dev.php/criteria_list/' +id);
+                }, 2000);
+                document.getElementById('gdss_platformbundle_criteria_description').value = '';
+                element.scrollTop = element.scrollHeight;
+            });
+
+
+        function deletecriteria(critereid){
+
+            $.ajax({
+                url:"http://www.projetgdss.com/app_dev.php/delete_criteria/AehfeelSpomefjevAmpzd4100LpmHFAVWJopslap"+critereid+"zz500Pmzdz504",
+                type:"POST",
+                data: {critereid : critereid},
+                dataType: 'JSON',
+            });
+            setTimeout(function () {
+                $(".criteria_list").load('http://www.projetgdss.com/app_dev.php/criteria_list/' +id);
+            }, 1000);
+
+            element.scrollTop = element.scrollHeight;
+        }
+
+
+
+    </script>
+{% endblock %}
+

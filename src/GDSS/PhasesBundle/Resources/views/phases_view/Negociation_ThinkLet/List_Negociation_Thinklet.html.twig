@@ -1,0 +1,28 @@
+{% extends '@GDSSPlatform/layoutGDSS.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/mui.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/fontawesome/css/all.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/general.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/comment.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/chatline.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/collapse.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('bundles/gdssphases/css/timer.css') }}" type="text/css">
+    {% block customstylesheets %}{% endblock %}
+{% endblock %}
+
+{% block title %}Negociation{% endblock %}
+{% block curentProblem %}active{% endblock %}
+
+{% block body %}
+    {% block subtitle %}
+        <h1 class="text-center"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Négociation</h1>
+    {% endblock %}
+    <a href="{{ path('BucketBriefing', {'id': id}) }}"><button>BucketBriefing</button></a>
+
+
+    <br/>
+
+{% endblock %}
+

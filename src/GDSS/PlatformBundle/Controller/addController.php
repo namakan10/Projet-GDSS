@@ -8,39 +8,46 @@
 
 namespace GDSS\PlatformBundle\Controller;
 
-use GDSS\PlatformBundle\Entity\Contraintes;
-use GDSS\PlatformBundle\Entity\Criteres;
-use GDSS\PlatformBundle\Entity\Phases;
-use GDSS\PlatformBundle\Entity\Processus;
-use GDSS\PlatformBundle\Entity\Repertoire;
-use GDSS\PlatformBundle\Entity\Sujet;
-use GDSS\PlatformBundle\Form\ContraintesType;
-use GDSS\PlatformBundle\Form\CriteresType;
-use GDSS\PlatformBundle\Form\ProcessusType;
-use GDSS\PlatformBundle\Form\SujetType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
+use GDSS\PhasesBundle\Entity\Phase;
+use GDSS\PlatformBundle\Entity\Constraints;
+use GDSS\PlatformBundle\Entity\Criteria;
+use GDSS\PlatformBundle\Entity\Problem;
+use GDSS\PlatformBundle\Entity\Process;
+use GDSS\PlatformBundle\Form\CriteriaType;
+use GDSS\PlatformBundle\Form\ProblemType;
+use GDSS\PlatformBundle\Form\ProcessType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 
 class addController extends Controller
 {
-    public function addSujetAction(Request $request){
-        $sujet = new Sujet();
+    /**
+     * @param $id
+     * @param $action
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function addProblemAction($id, $action, Request $request){
+
+        $problem = null;
+        if($action == "create"){
+            $problem = new Problem();
+        }
+        elseif ($action == "edit"){
+            $problem = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Problem')->find($id);
+        }
+
+
         $user = $this->getUser();
 
         //Creation du formulaire
-        $form = $this->createForm(SujetType::class, $sujet);
+        $form = $this->createForm(ProblemType::class, $problem);
 
         //Si la requete est en post
         if($request->isMethod('POST')){
@@ -49,524 +56,498 @@ class addController extends Controller
             //On verifie si les donneées entrée sont bonnes
             if($form->isValid()){
 
-                $datemin = $form["DateDebut"]->getData();
-                $datemax = $form["DateFin"]->getData();
+                $datemin = $form["datestart"]->getData();
+                $datemax = $form["dateend"]->getData();
+
+                $diff = $datemax->diff($datemin);
+                if($diff->d > 0){
+                    if($diff->h == 0){
+                        $hours = $diff->d * 24;
+                    }
+                    else{
+                        $hours = ($diff->d * 24) + $diff->h;
+                    }
+                }
+                else{
+                    $hours = $diff->h;
+                }
+                $delay = array(
+                    "month" => $diff->m,
+                    "days" => $diff->d,
+                    "hours" => $hours,
+                    "minutes" => $diff->i,
+                    "seconds" => $diff->s
+                );
+                if($delay["month"] == 0){
+                    if($delay["days"] == 0){
+                        if($delay["hours"] < 2){
+                            $error = "La durée minimale de la reunion est de 2 heures";
+                        }
+                    }
+                }
 
                 $now1 = new \DateTime('now');
 
-                if($datemin<$now1 OR $datemin>$datemax OR $datemin==$datemax){
+                if($datemin>$datemax OR $datemin==$datemax){
                     $erreur = "Les dates ne sont pas conformes ! ";
-                    return $this->render('@GDSSPlatform/Sujets_Basic_View/addSujet.html.twig', array(
+                    return $this->render('@GDSSPlatform/CreateProblem/addproblem.html.twig', array(
                         'form' => $form->createView(),
-                        'erreur' => $erreur
+                        'erreur' => $erreur,
+                        'action' => $action,
+                        'id' => $id,
+                    ));
+                }
+                elseif (isset($error)){
+                    return $this->render('@GDSSPlatform/CreateProblem/addproblem.html.twig', array(
+                        'form' => $form->createView(),
+                        'erreur' => $error,
+                        'action' => $action,
+                        'id' => $id,
                     ));
                 }
 
                 else{
-                    $sujet->setUser($user);
                     $em = $this->getDoctrine()->getManager();
-                    $em->persist($sujet);
-                    $em->flush();
-                    $id=$sujet->getId();
-                    return $this->redirectToRoute('gdss_platform_contrainte', array('id'=> $id));
+                    if($action == "create"){
+                        $problem->setUser($user);
+
+                        $em->persist($problem);
+                        $em->flush();
+
+                        $id=$problem->getId();
+                        return $this->redirectToRoute('add_criteria', array('id'=> $id, 'action' => "create"));
+                    }
+                    elseif ($action == "edit"){
+                        $em->persist($problem);
+                        $em->flush();
+
+                        return $this->redirectToRoute('problem', array('id' => $id));
+                    }
+
+
                 }
             }
         }
 
-        return $this->render('@GDSSPlatform/Sujets_Basic_View/addSujet.html.twig', array('form'=>$form->createView()));
+        return $this->render('@GDSSPlatform/CreateProblem/addproblem.html.twig', array('form'=>$form->createView(), 'action' => $action, 'id' => $id));
     }
 
-    public function addContraiteCritereAction(Request $request, $id){
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function addprocessusAction(Request $request, $id)
+    {
+        $repository = $this->getDoctrine()->getManager();
+        $process = new Process();
+        $problem = $repository->getRepository('GDSSPlatformBundle:Problem')->find($id);
+        if($this->getUser() != $problem->getUser()){
+            return $this->redirectToRoute('problem_list');
+        }
+
+        $data = $this->container->get('getconstraintsthinklets')->nbreparticipduration($id);
+
+        $process->setName($problem->getName());
+        $process->setDescription($problem->getContext());
+        $process->setParticipantMax($data["nbremax"]);
+        $process->setParticipantMin($data["nbremin"]);
+
+        $form = $this->createForm(ProcessType::class, $process);
+
+            //Creation du formulaire
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+                //On verifie si les donneées entrée sont bonnes
+            if ($form->isValid()) {
+
+
+                if($process->getParticipantMax() == null){
+                    $process->setParticipantMax($data["nbremax"]);
+                }
+                $process->setName($problem->getName());
+                $process->setDescription($problem->getContext());
+                $process->setParticipantMin($data["nbremin"]);
+                $process->setProblem($problem);
+                $repository->persist($process);
+                $problem->setProcess($process);
+                $repository->persist($problem);
+                $repository->flush();
+                return $this->redirectToRoute('problem', array(
+                    'id'=>$id,
+                ));
+            }
+        }
+
+
+        return $this->render('@GDSSPlatform/CreateProblem/addprocess.html.twig', array('form'=>$form->createView(), 'action' => 'create', 'process' => $process ));
+    }
+
+    /**
+     * @param $id
+     * @param $action
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function addCriteriaAction($id, $action){
 
         $user = $this->getUser();
-        $critere = new Criteres();
-        $contrainte = new Contraintes();
+        $critere = new Criteria();
 
         //Pour casté la chaine en entier
-        $id2 = intval($id);
+        $id = intval($id);
 
         //On cherche l'entité correspondant à l'id envoyé
-        $repository = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Sujet');
-        $sujet = $repository->find($id2);
+        $repository = $this->getDoctrine()->getManager();
+        $problem =  $repository->getRepository('GDSSPlatformBundle:Problem')->find($id);
 
         /*
          * CREATOR TEST
          */
-        if($user != $sujet->getUser()){
-            return $this->redirectToRoute('gdss_platform_sujets');
+        if($user != $problem->getUser()){
+            return $this->redirectToRoute('problem_list');
         }
-
 
 
         //Creation des deux formulaires
-        $formContraintes = $this->createForm(ContraintesType::class, $contrainte);
-        $formCriteres = $this->createForm(CriteresType::class, $critere);
+        $formCriteria = $this->createForm(CriteriaType::class, $critere);
 
         //On recupère le sujet correspondant aux contraintes et aux critères
-        $em = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Criteres');
-        $criterelist = $em->findBy(array(
-            'sujet' => $sujet,
-        ));
 
-        $em1 = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Contraintes');
-        $contraintelist = $em1->findBy(array(
-            'sujet' => $sujet
+
+        $criterialist = $repository->getRepository('GDSSPlatformBundle:Criteria')->findBy(array(
+            'problem' => $problem,
         ));
 
 
-        //Si un des deux formulaire est envoyé
-        if($request->isMethod('POST')){
-            $formCriteres->handleRequest($request);
-            $formContraintes->handleRequest($request);
-
-            //On verifie si les donneées entrée sont bonnes
-            if($formContraintes->isValid()) {
-                $contrainte->setSujet($sujet);
-                $em1 = $this->getDoctrine()->getManager();
-                $em1->persist($contrainte);
-                $em1->flush();
-
-                $em1 = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Contraintes');
-                $contraintelist = $em1->findBy(array(
-                    'sujet' => $sujet
-                ));
-
-                //Creation des deux formulaires
-                $formContraintes = $this->createForm(ContraintesType::class, $contrainte);
-                $formCriteres = $this->createForm(CriteresType::class, $critere);
-
-                return $this->render('@GDSSPlatform/Sujets_Basic_View/addContrainteCritere.html.twig', array(
-                    'formCritere' => $formCriteres->createView(),
-                    'formContrainte'=>$formContraintes->createView(),
-                    'id' => $id,
-                    'criterelist' => $criterelist,
-                    'contraintelist' => $contraintelist,
-                ));
-            }
-
-            if($formCriteres->isValid()){
-                $critere->setSujet($sujet);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($critere);
-                $em->flush();
-
-                $em = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Criteres');
-                $criterelist = $em->findBy(array(
-                    'sujet' => $sujet,
-                ));
-
-                $formContraintes = $this->createForm(ContraintesType::class, $contrainte);
-                $formCriteres = $this->createForm(CriteresType::class, $critere);
-
-
-                return $this->render('@GDSSPlatform/Sujets_Basic_View/addContrainteCritere.html.twig', array(
-                    'formCritere'=>$formCriteres->createView(),
-                    'formContrainte'=>$formContraintes->createView(),
-                    'id'=>$id,
-                    'criterelist' => $criterelist,
-                    'contraintelist' => $contraintelist,
-                ));
-
-
-            }
-
-
-        }
-
-        //Sinon la vue est simplement renvoyé
-        return $this->render('@GDSSPlatform/Sujets_Basic_View/addContrainteCritere.html.twig', array(
-            'formCritere'=>$formCriteres->createView(),
-            'formContrainte'=>$formContraintes->createView(),
+        return $this->render('@GDSSPlatform/CreateProblem/add_criteria.html.twig', array(
+            'formCriteria'=>$formCriteria->createView(),
             'id'=>$id,
-            'criterelist' => $criterelist,
-            'contraintelist' => $contraintelist,
+            'criterialist' => $criterialist,
+            'action' => $action,
         ));
 
     }
 
-    public function addcrtitereAction($id, Request $request){
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
+    public function addCriteriascrpitAction($id, Request $request){
 
         $repository = $this->getDoctrine()->getManager();
 
-        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+        $problem = $repository->getRepository('GDSSPlatformBundle:Problem')->find($id);
 
         if($request->isXmlHttpRequest()){
             $description = $_POST['description'];
 
-            $critere = new Criteres();
+            $critere = new Criteria();
             $critere->setDescription($description);
-            $critere->setSujet($sujet);
+            $critere->setProblem($problem);
 
             $repository->persist($critere);
             $repository->flush();
         }
 
-        die();
+        return new Response();
     }
 
-    public function criterelistAction($id){
+
+    /**
+     * @param $id
+     * @return Response
+     */
+    public function criterialistAction($id){
         $repository = $this->getDoctrine()->getManager();
 
-        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+        $problem = $repository->getRepository('GDSSPlatformBundle:Problem')->find($id);
 
-        $criterelist =$repository->getRepository('GDSSPlatformBundle:Criteres')->findBy(array(
-            'sujet' => $sujet,
+        $criterialist =$repository->getRepository('GDSSPlatformBundle:Criteria')->findBy(array(
+            'problem' => $problem,
         ));
 
-        return $this->render('@GDSSPlatform/Sujets_Basic_View/critere_list.html.twig', array(
-            'criterelist' => $criterelist,
+        return $this->render('@GDSSPlatform/CreateProblem/criteria_list.html.twig', array(
+            'criterialist' => $criterialist,
         ));
 
     }
 
-    public function addcontrainteAction($id, Request $request){
+    /**
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
+    public function addconstraintAction($id, Request $request){
 
         $repository = $this->getDoctrine()->getManager();
 
-        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
+        $problem = $repository->getRepository('GDSSPlatformBundle:Problem')->find($id);
 
-        if($request->isXmlHttpRequest()){
-            $description = $_POST['description'];
+        //$form = $this->createForm(ConstraintsType::class, $constraint);
+        $constraints = new Constraints();
 
-            $contraite = new Contraintes();
-            $contraite->setDescription($description);
-            $contraite->setSujet($sujet);
-
-            $repository->persist($contraite);
-            $repository->flush();
-        }
-
-        die();
-    }
-
-    public function contraintelistAction($id){
-        $repository = $this->getDoctrine()->getManager();
-
-        $sujet = $repository->getRepository('GDSSPlatformBundle:Sujet')->find($id);
-
-        $contraintelist =$repository->getRepository('GDSSPlatformBundle:Contraintes')->findBy(array(
-            'sujet' => $sujet,
-        ));
-
-        return $this->render('@GDSSPlatform/Sujets_Basic_View/contrainte_list.html.twig', array(
-            'contraintelist' => $contraintelist,
-        ));
-
-    }
-
-    public function addprocessusAction(Request $request, $id)
-    {
-        $defaultdata = array('name' => 'description');
-        $form = $this->createFormBuilder($defaultdata)
-            ->add('Nom', TextType::class)
-            ->add('Description', TextareaType::class)
-            ->add('anonyme', ChoiceType::class, array(
-                'choices' => array(
-                    'Anonyme' => 'Oui',
-                    'Non anonyme' => 'Non'
-                )
+        $data = array();
+        $form = $this->createFormBuilder($data)
+            ->add('nbre', IntegerType::class, array(
+                'label' => 'Nombre maximum de participant'
             ))
-            ->add('Suivant', SubmitType::class)
+            ->add('Valider', SubmitType::class)
             ->getForm();
 
-
-        $process = new Processus();
-        $repository = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Sujet');
-        $sujet = $repository->find($id);
-
-        if($sujet->getUser() == $this->getUser()){
-            //Creation du formulaire
-
-            if ($request->isMethod('POST')) {
-                $form->handleRequest($request);
-
-                //On verifie si les donneées entrée sont bonnes
-                if ($form->isValid()) {
-
-                        $process->setNom($form['Nom']->getData());
-                        $process->setDescription($form['Description']->getData());
-                        $process->setAnonyme($form['anonyme']->getData());
-                        $em = $this->getDoctrine()->getManager();
-                        $em->persist($process);
-                        $em->flush();
-                        $sujet->setProcessus($process);
-                        $em->persist($sujet);
-                        $em->flush();
-                        return $this->redirectToRoute('gdss_platform_add_phase', array(
-                            'id'=>$id
-                        ));
-                }
-            }
-        }
-        else{
-            return $this->redirectToRoute('gdss_platform_sujets', array(
-                'erreur' => "Acces refuser. Vous n'avez pas créer ce sujet !"
-            ));
-        }
-
-
-
-        return $this->render('GDSSPlatformBundle:Sujets_Basic_View:addprocessus.html.twig', array('form'=>$form->createView()));
-    }
-
-    public function addphasesAction(Request $request, $id){
-
-        /*
-         * Recuperation du processus concernée
-         */
-        $em = $this->getDoctrine()->getManager();
-        $sujet = $em->getRepository('GDSSPlatformBundle:Sujet')->find($id);
-        $process = $sujet->getProcessus();
-
-
-        /*
-         * Verification creator
-         */
-        if($sujet->getUser() != $this->getUser()){
-            return $this->redirectToRoute('gdss_platform_sujets');
-        }
-
-
-        $defaultdata = array('name' => 'description');
-
-        //Creation du formulaire
-        $form = $this->createFormBuilder($defaultdata)
-            ->add('DateDebut1', DateTimeType::class, array(
-                'format' => 'dd-MM-yyyy H:m',
-                //FOMATE LA DATE DIRECTEMENT EN TIMESTAMP POUR EFFECTUER DES OPERATIONS AVEC
-                'input' => 'timestamp',
-                'widget' => 'single_text',
-                'html5' => false,
-            ))
-            ->add('Duree1min', NumberType::class)
-            ->add('Periode1min', ChoiceType::class, array(
-                'choices' => array(
-                    'Minutes' => 60,
-                    'Heures' => 3600,
-                    'Jours' => 86400
-                )
-            ))
-            ->add('Duree1max', NumberType::class)
-            ->add('Periode1max', ChoiceType::class, array(
-                'choices' => array(
-                    'Minutes' => 60,
-                    'Heures' => 3600,
-                    'Jours' => 86400
-                )
-            ))
-            ->add('DateDebut2', DateTimeType::class, array(
-                'format' => 'dd-MM-yyyy H:m',
-                'input' => 'timestamp',
-                'widget' => 'single_text',
-                'html5' => false,
-            ))
-            ->add('Duree2min', NumberType::class)
-            ->add('Periode2min', ChoiceType::class, array(
-                'choices' => array(
-                    'Minutes' => 60,
-                    'Heures' => 3600,
-                    'Jours' => 86400
-                )
-            ))
-            ->add('Duree2max', NumberType::class)
-            ->add('Periode2max', ChoiceType::class, array(
-                'choices' => array(
-                    'Minutes' => 60,
-                    'Heures' => 3600,
-                    'Jours' => 86400
-                )
-            ))
-            ->add('DateDebut3', DateTimeType::class, array(
-                'format' => 'dd-MM-yyyy H:m',
-                'input' => 'timestamp',
-                'widget' => 'single_text',
-                'html5' => false,
-            ))
-            ->add('Duree3min', NumberType::class)
-            ->add('Periode3min', ChoiceType::class, array(
-                'choices' => array(
-                    'Minutes' => 60,
-                    'Heures' => 3600,
-                    'Jours' => 86400
-                )
-            ))
-            ->add('Duree3max', NumberType::class)
-            ->add('Periode3max', ChoiceType::class, array(
-                'choices' => array(
-                    'Minutes' => 60,
-                    'Heures' => 3600,
-                    'Jours' => 86400
-                )
-            ))
-            ->add('DateDecision', DateTimeType::class, array(
-                'format' => 'dd-MM-yyyy H:m',
-                'widget' => 'single_text',
-                'html5' => false,
-            ))
-            ->add('Terminer', SubmitType::class)
-            ->getForm();
-
-        if ($request->isMethod('POST')) {
+        if($request->isMethod('Post')){
             $form->handleRequest($request);
 
-            //On verifie si les donneées entrée sont bonnes
-            if ($form->isValid()) {
-
-
-                /*
-                 *Phase de comprehension collective du problème
-                 */
-
-                $startComp = $form["DateDebut1"]->getData();
-
-                $add = $startComp;
-                $startComp = date('Y-m-d H:i:s', $startComp);
-                $startComp = new \DateTime(trim($startComp));
-                $dureecomp = $form["Duree1max"]->getData()*$form["Periode1max"]->getData();
-                $endComp = $add + $dureecomp;
-                $endComp = date('Y-m-d H:i:s', $endComp);
-                $endComp = new \DateTime(trim($endComp));
-                $Comp = new Phases();
-                $Comp->setDureemin($form["Duree1min"]->getData());
-                $Comp->setPeriodemin($form["Periode1min"]->getData());
-                $Comp->setDureemax($form["Duree1max"]->getData());
-                $Comp->setPeriodemax($form["Periode1max"]->getData());
-                $Comp->setNom('Phase de Comprehension Collective du problème');
-                $Comp->setDateStart($startComp);
-                $Comp->setProcessus($process);
-                $Comp->setDateEnd($endComp);
-
-                /*
-                 *Phase de generations
-                 */
-                $startGene = $form["DateDebut2"]->getData();
-
-                $add = $startGene;
-                $startGene = date('Y-m-d H:i:s', $startGene);
-                $startGene = new \DateTime(trim($startGene));
-                $dureeGene = $form["Duree2max"]->getData()*$form["Periode2max"]->getData();
-                $endGene = $add + $dureeGene;
-                $endGene = date('Y-m-d H:i:s', $endGene);
-                $endGene = new \DateTime(trim($endGene));
-                $Gene = new Phases();
-                $Gene->setDureemin($form["Duree2min"]->getData());
-                $Gene->setPeriodemin($form["Periode2min"]->getData());
-                $Gene->setDureemax($form["Duree2max"]->getData());
-                $Gene->setPeriodemax($form["Periode2max"]->getData());
-                $Gene->setNom('Phase de Generations des solutions');
-                $Gene->setDateStart($startGene);
-                $Gene->setProcessus($process);
-                $Gene->setDateEnd($endGene);
-
-                /*
-                 * Phase de Negociations
-                 */
-                $startNego = $form["DateDebut3"]->getData();
-                $add = $startNego;
-                $startNego = date('Y-m-d H:i:s', $startNego);
-                $startNego = new \DateTime(trim($startNego));
-                $dureeNego = $form["Duree3max"]->getData()*$form["Periode3max"]->getData();
-                $endNego = $add + $dureeNego;
-                $endNego = date('Y-m-d H:i:s', $endNego);
-                $endNego = new \DateTime(trim($endNego));
-                $Nego = new Phases();
-                $Nego->setDureemin($form["Duree3min"]->getData());
-                $Nego->setPeriodemin($form["Periode3min"]->getData());
-                $Nego->setDureemax($form["Duree3max"]->getData());
-                $Nego->setPeriodemax($form["Periode3max"]->getData());
-                $Nego->setNom('Phase de Negociations de confrontations des points de vue');
-                $Nego->setDateStart($startNego);
-                $Nego->setProcessus($process);
-                $Nego->setDateEnd($endNego);
-
-                //prise de decision
-                $startDecis = $form["DateDecision"]->getData();
-                $Decision = new Phases();
-                $Decision->setNom('Prise de Decision');
-                $Decision->setDateStart($startDecis);
-                $Decision->setProcessus($process);
-
-
-                if($startComp<$sujet->getDateDebut()){
-                    $erreur = "Erreur sur la date de debut de la phase de Comprehension collective du probème. Elle dois pas etre ulterieure à la date de debut du sujet";
-                    return $this->render('@GDSSPlatform/Phases/definitions_phases.html.twig', array(
-                        'form' => $form->createView(),
-                        'id' => $id,
-                        'erreur' => $erreur,
-                        'sujet' => $sujet
-                    ));
+            if($form->isValid()){
+                $number = $form['nbre']->getData();
+                if($number <= 5){
+                    $constraints->setThinklet('OnePage');
+                    $constraints->setDescription('0');
+                    $constraints->setProblem($problem);
+                    $repository->persist($constraints);
+                    $repository->flush();
+                    return $this->redirectToRoute('add_process', array('id' => $problem->getId()));
                 }
-                else if($startComp>$sujet->getDateFin()){
-                    $erreur = "Erreur sur la date de debut de la phase de Comprehension collective du probème. Elle dois pas être anterieure à la date de debut du sujet";
-                    return $this->render('@GDSSPlatform/Phases/definitions_phases.html.twig', array(
-                        'form' => $form->createView(),
-                        'id' => $id,
-                        'erreur' => $erreur,
-                    ));
-                }
-                else if($endComp>$startGene){
-                    $erreur = "Erreur sur la date de debut de la phase de Génération. Elle dois commencer après la fin de la phase de comprehension collective du problème";
-                    return $this->render('@GDSSPlatform/Phases/definitions_phases.html.twig', array(
-                        'form' => $form->createView(),
-                        'id' => $id,
-                        'erreur' => $erreur,
-                        'sujet' => $sujet
-                    ));
-                }
-                else if($endGene > $startNego){
-                    $erreur = "Erreur sur la date de debut de la phase de Negociation. Elle dois commencer après la fin de la phase de génération des solutions";
-                    return $this->render('@GDSSPlatform/Phases/definitions_phases.html.twig', array(
-                        'form' => $form->createView(),
-                        'id' => $id,
-                        'erreur' => $erreur,
-                        'sujet' => $sujet
-                    ));
-                }
-                else if($endNego>$startDecis){
-                    $erreur = "Erreur sur la date de prise de décision. Elle doit se faire après la phase de Negociation";
-                    return $this->render('@GDSSPlatform/Phases/definitions_phases.html.twig', array(
-                        'form' => $form->createView(),
-                        'id' => $id,
-                        'erreur' => $erreur,
-                        'sujet' => $sujet
-                    ));
-                }
-                else if($startDecis>$sujet->getDateFin()){
-                    $erreur = "Erreur sur la date de prise de decision, celle-ci être ulterieure à la date de fin du sujet";
-                    return $this->render('@GDSSPlatform/Phases/definitions_phases.html.twig', array(
-                        'form' => $form->createView(),
-                        'id' => $id,
-                        'erreur' => $erreur,
-                        'sujet' => $sujet
-                    ));
-                }
-
-
                 else{
-                    $em->persist($Comp);
-                    $em->flush();
-
-                    $em->persist($Gene);
-                    $em->flush();
-
-                    $em->persist($Nego);
-                    $em->flush();
-
-                    $em->persist($Decision);
-                    $em->flush();
-
-                    return $this->redirectToRoute('gdss_platform_sujet_vue', array(
-                        'id' => $id,
-                    ));
+                    return $this->redirectToRoute('add_constaint2', array('action' => '6', 'id' => $problem->getId()));
                 }
-
             }
-
         }
-        return $this->render('@GDSSPlatform/Phases/definitions_phases.html.twig', array(
+
+        return $this->render('@GDSSPlatform/CreateProblem/add_constraints.html.twig', array(
             'form' => $form->createView(),
-            'sujet' => $sujet
+            'id' => $problem->getId(),
         ));
+    }
+
+
+    public function addconstraints2Action($id, $action, Request $request){
+        $repository = $this->getDoctrine()->getManager();
+
+        $problem = $repository->getRepository('GDSSPlatformBundle:Problem')->find($id);
+
+        $constraint = new Constraints();
+        $data = array();
+        $form = null;
+        if($action == '6'){
+            $form = $this->createFormBuilder($data)
+                ->add('description', ChoiceType::class, array(
+                    'label' => 'Option',
+                    'choices' => array(
+                        "Décision prise à partir de zéro" => '1',
+                        "Durée de chaque étape inférieur ou égale à 10" => '2',
+                    )
+                ))
+                ->add('Suivant', SubmitType::class)->getForm();
+        }
+        elseif ($action == 'not definied'){
+            $form = $this->createFormBuilder($data)
+                ->add('description', ChoiceType::class, array(
+                    'label' => 'Option',
+                    'choices' => array(
+                        'Contrainte sur le nombre de contribution' => array("-Nombre de contribution supérieure à 80" => "3"),
+                        'Contrainte sur la base de décision :' => array('-Pas de contrainte sur un ordre à suivre' => '4', '-Contrainte sur un ordre spécifique à suivre ET Pas de contrainte sur le nombre maximum de partcipants' => '5'),
+                        'Pas de contraintes sur le nombre de participants :' => array('-Il y a au moins deux sous problème' => '7', "-Contrainte sur la base de décision qui soit bien élaborée ET Contrainte sur l'état d'évaluation de la base" => '6' )
+
+                    )
+                ))
+                ->add('Suivant', SubmitType::class)->getForm();
+        }
+        if($request->isMethod('POST')){
+            $form->handleRequest($request);
+
+            if ($form->isValid()){
+                $number = $form["description"]->getData();
+                if($number == '1'){
+                    $constraint->setThinklet("FreeBrainstorming");
+                }
+                else if($number == '2'){
+                    $constraint->setThinklet('OnePage');
+                }
+                else if ($number == '3'){
+                    $constraint->setThinklet('ComparativeBraintorming');
+                }
+                else if ($number == '4'){
+                    $constraint->setThinklet('LeafHopper');
+                }
+                else if($number == '5'){
+                    $constraint->setThinklet('DealersChoice');
+                }
+                else if($number == '6'){
+                    $constraint->setThinklet('Plus-Minus-Interesting');
+                }
+                else if ($number == '7'){
+                    $constraint->setThinklet('BranchBuilder');
+                }
+                $constraint->setDescription($form['description']->getData());
+                $constraint->setProblem($problem);
+                $repository->persist($constraint);
+                $repository->flush();
+                return $this->redirectToRoute('add_process', array('id' => $problem->getId()));
+            }
+        }
+
+        return $this->render('@GDSSPlatform/CreateProblem/add_constraints2.html.twig', array(
+            'form' => $form->createView(),
+            'id' => $problem->getId(),
+        ));
+
+    }
+
+
+    public function addphasesAction($id, $action, $phasename){
+
+
+        $data = $this->container->get('problemdata')->problemdata($id);
+        $allmakers = $data["allmakers"];
+        $problem = $data["problem"];
+        $process = $data["process"];
+        $fiveminutes = false;
+        if($problem->getUser() != $this->getUser()){
+            return $this->redirectToRoute('problem');
+        }
+
+        if(count($allmakers) < 3){
+            return $this->redirectToRoute('problem', array('id' => $id, 'error' => "Il faut au moins trois décideurs pour la réunion de prise de décision !"));
+        }
+
+
+        $repository = $this->getDoctrine()->getManager();
+        $constraint = $repository->getRepository('GDSSPlatformBundle:Constraints')->findOneBy(array(
+            'problem' => $problem
+        ));
+        $processduration = $process->getdurationmax();
+
+        if ($action ==  "create"){
+
+            $phase = new Phase();
+            if($phasename == "Gene"){
+                $phase->setThinklet($constraint->getThinklet());
+            }
+            else if($phasename == "PreNego1"){
+                $Gene = $data["Gene"];
+                $nbrecontrib = $repository->getRepository('GDSSPhasesBundle:GenerationContribution')->findBy(array(
+                    'phases' => $Gene
+                ));
+                $nbrecomment = $repository->getRepository('GDSSPhasesBundle:GenerationComment')->findBy(array(
+                    'phase' => $Gene,
+                ));
+
+                $tot = count($nbrecomment) + count($nbrecontrib);
+                if($Gene->getThinklet() == "LeafHopper" OR $Gene->getThinklet() == "DealersChoice"){
+                    $phase->setThinklet("BucketBriefing");
+                    $nego = true;
+                }
+                else if ($tot >= 100 AND $tot <= 300 ){
+                    $phase->setThinklet("BroomWagon");
+                    $nego = true;
+                }
+                else if ($tot > 300){
+                    $phase->setThinklet("Pin-The-Tail-On-The-Donkey");
+                    $nego = true;
+                }
+                else{
+                    $fiveminutes = true;
+                }
+            }
+            else if($phasename == "PreNego2"){
+                $fiveminutes = true;
+                foreach ($allmakers as $maker) {
+                    $maker->setSelection(0);
+                    $repository->persist($maker);
+                }
+            }
+            else if($phasename == "Nego1"){
+                $data0 = $this->container->get('percentage')->choosethinkletnego1($problem);
+                $phase->setThinklet($data0["thinklet"]);
+                foreach ($allmakers as $maker) {
+                    $maker->setSelection(0);
+                    $repository->persist($maker);
+                }
+            }
+            else if($phasename == "Nego2"){
+                $data0 = $this->container->get('percentage')->choosethinkletnego2($problem);
+                $phase->setThinklet($data0["thinklet"]);
+                foreach ($allmakers as $maker) {
+                    $maker->setSelection(0);
+                    $repository->persist($maker);
+                }
+            }
+            else{
+                $phase->setThinklet("Not definied");
+            }
+            $phase->setProcess($process);
+            if($constraint->getDescription() == "2"){
+                $phase->setDurationMax(5);
+                $phase->setDurationMin(10);
+                $dureemax = 10;
+            }
+            else if ($fiveminutes == true){
+                $phase->setDurationMax(3);
+                $phase->setDurationMin(5);
+                $dureemax = 5;
+            }
+            else{
+                $phase->setDurationMax(30);
+                $phase->setDurationMin(20);
+                $dureemax = 30;
+            }
+            if($processduration == null){
+                $process->setdurationmax($dureemax);
+            }
+            else{
+                $process->setdurationmax($dureemax+$processduration);
+            }
+            $now = new \DateTime();
+            $now2 = new \DateTime();
+            $end = $now2->modify("+".$dureemax." minutes");
+            $phase->setDatestart($now);
+            $phase->setDateend($end);
+
+
+            $phase->setName($phasename);
+
+            $repository->persist($process);
+            $repository->persist($phase);
+            $repository->flush();
+
+            return $this->redirectToRoute('problem', array('id' => $id));
+        }
+        else if ($action=="edit"){
+            $phase = $repository->getRepository('GDSSPhasesBundle:Phase')->findOneBy(array(
+                'process' => $process,
+                'name' =>$phasename
+            ));
+
+            if($constraint->getDescription() == "2"){
+                $dureemax = 10;
+            }
+            else{
+                $dureemax = 30;
+            }
+            if($processduration == null){
+                $process->setdurationmax($dureemax);
+            }
+            else{
+                $process->setdurationmax($dureemax+$processduration);
+            }
+            $now = new \DateTime();
+            $now2 = new \DateTime();
+            $end = $now2->modify("+".$dureemax." minutes");
+            $phase->setDatestart($now);
+            $phase->setDateend($end);
+            $repository->persist($phase);
+            $repository->persist($process);
+            $repository->flush();
+
+            return $this->redirectToRoute('problem', array('id' => $id));
+        }
+        else{
+            return new Response();
+        }
     }
 
 }

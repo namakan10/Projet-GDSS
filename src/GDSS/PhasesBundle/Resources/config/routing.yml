@@ -1,239 +1,481 @@
 phase_comprehension_vue:
-    path: /platform/subject/comprehension_collective/{id}
+    path: /platform/problem/comprehension_collective/dhzandazfeanfefeaofanekezZMppeafnepfea{id}48epMPSWAkrend78033MlpzibMALIChinacoppermationgermanicoMpaoefekPOrtedcmp
     defaults:
       _controller: GDSSPhasesBundle:View:comprehension
+    options:
+      expose: true
 
 add_comp_chat:
   path: /add_comp/{id}
   defaults:
     _controller: GDSSPhasesBundle:View:addComprehensionChat
   methods: POST
-
-phase_edit:
-    path: /platform/sujet_vue/edit_phase/{id}
-    defaults:
-      _controller: GDSSPhasesBundle:GloabalControl:modifPhase
+  options:
+    expose: true
 
 generation:
-    path: /platform/subject/Generation/{id}
+    path: /platform/problem/Generation/zampPJFJmpakdwefkefpkMLkirrjozpdbfzezBnnekza470{id}444fef58ekzehekzbzpMOFHELNkfzpamsdns4520mpPKKMdfnazertyipp
     defaults:
       _controller: GDSSPhasesBundle:GenerationThinklet:generation
+    options:
+      expose: true
+
+definied_subproblem:
+    path: /platform/problem/subproblem/dhzandazfeanfefeaofanekezZMppeafnepfea{id}48epMPSWAkrend78033MlpzibMALIChinacop{thinklet}permationgermanicoMpaoefekPOrtedcmp
+    defaults:
+      _controller: GDSSPhasesBundle:GenerationThinklet:definiedsubproblem
+    options:
+      expose: true
 
 add_propo_gene:
   path: /add_propo/{id}
   defaults:
     _controller: GDSSPhasesBundle:GenerationScript:addpropo
   methods: POST
+  options:
+    expose: true
 
 freebrainstorming:
-    path:  platform/subject/Freebrainstorming/{id}
+    path:  platform/problem/Freebrainstorming/ehekzbzpMOFHGhstGOW440{id}eefef4jkJEDAIZPKactongel4800efklamhttprequestmailtotheridrectetorouteroadmap
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstorming
+    options:
+      expose: true
 
 freebrainstorming_contribution:
-    path: /platform/subject/Freebrainstorming/Contribuer/{id}
+    path: /platform/problem/Freebrainstorming/Contribuer/Thisredirectformthepage740id{id}ontnknowhowatl114ekPorzpmqprjceapmqpOkrzplqMpakfefze74makve0zfezkj
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingContribution
+    options:
+      expose: true
 
-freebrainstorming_contribution_list:
+brainstorming_contribution_list:
   path: /brainstroming_contrib/{id}
   defaults:
     _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingcontrib
+  options:
+    expose: true
 
 freebrainstorming_comment:
-    path: /platform/subject/Freebrainstorming/Comment/{id}
+    path: /platform/problem/Freebrainstorming/Comment/Brairnsptrmzpmyherosacamedomiapazdi10410MPP{id}LO820zdmmpzjPMZHDCjzlzprmqccvrejbrlepmmqp720658396538zoflev
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:freebrainstormingComment
+    options:
+      expose: true
 
-freebrainstorming_comment_list:
+brainstorming_comment_list:
     path: /commentlist/{id}
     defaults:
       _controller:  GDSSPhasesBundle:GenerationScript:commentlist
+    options:
+      expose: true
 
 scipts_comp:
-    path : /platform/sujet_vue/sujet/comp/{id}
+    path : /platform/problem/comp/{id}
     defaults:
       _controller:  GDSSPhasesBundle:View:scriptCCP
+    options:
+      expose: true
 
 one_page:
-    path : /platform/subject/OnePage/{id}
+    path : /platform/problem/OnePage/OnepmahzfhzfkzfzioprirmqpkqigpemdcdpegozpMokfjpsdzfejcbdzhdmpMmepffejhfe5252{id}Mpauennciefeezgvifatodmprodjiproddev704zlzpz
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:onePage
+    options:
+      expose: true
 
 one_page_script:
     path : /sujet_vue/OnePage/script/{id}
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:onePageScript
+    options:
+      expose: true
 
 leafhopper:
-    path : /platform/subject/LeafHopper/{id}
+    path : /platform/subject/LeafHopper/UizkzmvezveaPEMDVJEVJHB4750fozafkazfokazf{id}47410aPknemPEROPQFKLEFJEN850Pmzdzjfzhf
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:leafhopper
+    options:
+      expose: true
 
 leafhopper_subject:
-    path : /sujet_vue/LeafHopper/Subject/{id}
+    path : /problem/subproblem/prirmqpkqveaPEMDVJEVJHB4750Preg_magfozafkazf{id}feezgvifatodmp{thinklet}rodjiproddev704zlzpz
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:leafhoppersubject
+    options:
+      expose: true
 
-leafhopper_subject_script:
-    path : /sujet_vue/LeafHopper/script/{id}
+leafhopper_script:
+    path : /platform/LeafHopper/script/{id}
     defaults:
       _controller:  GDSSPhasesBundle:GenerationThinklet:leafhopperScript
+    options:
+      expose: true
+
+dealerschoice:
+    path : /platform/subject/DealersChoice/OnepmahzfhzfkzfzioprirmqpkqveaPEMDVJEVJHB4750Preg_magfozafkazfokazf{id}47410aPknemPEROPQFKLEFJEN850Pmzdzjfzhf
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:dealerschoice
+    options:
+      expose: true
+
+Dealers_Choice_Assignment:
+    path : /platform/subject/DealersChoice/Assignment/OnepmahzfhzfkzfzioprirmqpkqveaPEMDVJEVJHB4750Preg_magfozafkazfokazf{id}47410aPknemPEROPQFKLEFJEN850Pmzdzjfzhf
+    defaults:
+      _controller:  GDSSPhasesBundle:GenerationThinklet:dealerschoiceassignment
+    options:
+      expose: true
+
+End_Delete_Subproblem:
+    path: /platform/problem/generation/end_delete/negocith{action}inkletproceess75{id}40mpIdv6lan{thinklet}wmanProcedure780MplejkBLpu{backid}resoundmaxi
+    defaults:
+      _controller: GDSSPhasesBundle:GenerationScript:end_delete_sub_problem
+    options:
+      expose: true
 
 plusminus:
-  path : /sujet_vue/PlusMunisInteresting/{id}
+  path : /platform/problem/PlusMunisInteresting/fmzpMP75mpakrjbcvebrezzmpGokusssj410{id}452MpmpPrepllmPMkjrMp780ZErboProcessMappind5401
   defaults:
     _controller:  GDSSPhasesBundle:GenerationThinklet:plusminusinteresting
+  options:
+    expose: true
+
 
 plusminus_scrpit:
   path : /sujet_vue/plusminus/script/{id}
   defaults:
     _controller:  GDSSPhasesBundle:GenerationThinklet:plusminusScript
+  options:
+    expose: true
 
 reaction:
   path: /reaction/{id}
   defaults:
     _controller: GDSSPhasesBundle:GenerationScript:reaction
   methods: POST
+  options:
+    expose: true
 
 generationcommentreply:
   path: /commentreply/{id}
   defaults:
     _controller: GDSSPhasesBundle:GenerationScript:commentreply
   methods: POST
-
+  options:
+    expose: true
 
 list_contrib:
   path : /listcontrib/{id}
   defaults:
     _controller: GDSSPhasesBundle:GenerationThinklet:contriblist
   methods: [post]
+  options:
+    expose: true
 
 branchbuilder:
-  path : /sujet_vue/Branchbuilder/{id}
+  path : /platform/problem/Branchbuilder/Prog440{id}4GSKlajedemproodmediumlevel75200thisismainframe25contribghoststudioAzertyqmpocess10
   defaults:
     _controller:  GDSSPhasesBundle:GenerationThinklet:branchbuilter
+  options:
+    expose: true
+
 
 branchbuilder_scrpit:
   path : /sujet_vue/branchbuilder/script/{id}
   defaults:
     _controller:  GDSSPhasesBundle:GenerationScript:branchbuilderscrpit
+  options:
+    expose: true
 
 
 thelobbyist:
-  path : /sujet_vue/TheLobbyist/{id}
+  path : /platform/problem/TheLobbyist/Klajedemproodmediumlevel75200thisismainfra4z04{id}014ze50jzafkJovaJBLpuresoundmaximumproductghoststudio580
   defaults:
     _controller:  GDSSPhasesBundle:GenerationThinklet:thelobbyist
+  options:
+    expose: true
+
+ComparativeBrainstorming:
+  path : /platform/problem/ComparativeBrainstorming/Think00thisismainfra4z04{id}014ze50jzafkJovaJBLpuresoundmaximumproductghoststudio580
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationThinklet:comparativebrainstorming
+  options:
+    expose: true
+
+ComparativeBrainstormingComment:
+  path : /platform/problem/ComparativeBrainstorming/Comment/00thisismainfra4z04{id}014ze50jzafkJovaJBLpuresoundmaximumproductghoststudio580
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationThinklet:comparativebraincomment
+  options:
+    expose: true
+
+ComparativeBrainstormingContrib:
+  path : /platform/problem/ComparativeBrainstorming/Contribution/Klajedemproodmediumlevel75200thisismainfra4z04{id}014ze50jzafkJovaJBLpuresoundmaximumproductghoststudio580
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationThinklet:comparativebraincontrib
+  options:
+    expose: true
+
 
 thelobbyist_scrpit:
   path : /sujet_vue/thelobbyist/script/{id}
   defaults:
     _controller:  GDSSPhasesBundle:GenerationScript:thelobbyistscprit
+  options:
+    expose: true
+
+
+check_thelobbyist:
+  path : /check_thelobbyist/{id}
+  defaults:
+    _controller:  GDSSPhasesBundle:GenerationScript:checkthelobbyist
+    options:
+      expose: true
 
 negociation:
-    path: /platform/subject/negociation/{id}
+    path: /platform/problem/negociation/negocithinkletproceess75{id}40mpIdv6lanwmanProcedure780MplejkBL{phase}puresoundmaxi
     defaults:
       _controller: GDSSPhasesBundle:NegociationThinklet:negociation
+    options:
+      expose: true
+
+End_Delete_Categorie:
+    path: /platform/problem/negociation/end_delete/negocith{action}inkletproceess75{id}40mpIdv6lan{thinklet}wmanProcedure780MplejkBLpu{backid}resoundmaxi
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationScrpit:end_delete_categorie
+    options:
+      expose: true
+
+negociation_vote_form:
+    path: /platform/problem/negociation/voteform/negocithinkletproceess75{id}40mpIdv6lanwmanProcedure780{phase}MplejkBLpuresoundmaxi
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:negociationvoteform
+    options:
+      expose: true
 
 FastFocus:
-    path: /platform/subject/FastFocus/{id}
+    path: /platform/problem/FastFocus/proieplaystation4isthemos410{id}tpo7410Mxboxonenumberundo40{thinklet}Mpkfkcfserver=7410mp:free
     defaults:
       _controller: GDSSPhasesBundle:NegociationThinklet:fastfocus
+    options:
+      expose: true
+
+FastFocus_Public_list_Fort_Knox:
+    path: /platform/problem/FastFocus/publiclist/proieplays4isthemos410{id}tpo7410MxboxonenumberundoMpkfkcfserver=7410mp:free
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationScrpit:fortknoxlist
+    options:
+      expose: true
+
+BucketBriefing:
+    path: /platform/problem/BucketBriefing/proiexboxOneplaystation4isthemos410XZ{id}tpo7410Mxboxonenumberundo40Mpkfkcfserver=7410mp:free
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:bucketbriefing
+    options:
+      expose: true
+
+
+BucketBriefing_Categorizer:
+    path: /platform/problem/BucketBriefing/Categorizer/negocithinkletproceessproiexboxOneplaystation4isthemos410XZ{id}tpo7410Mxboxonenumberundo40Mpkfkcfserver=741
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:bucketbriefingcategirizer
+    options:
+      expose: true
+
 
 FastFocusCategorie:
     path: /platform/subject/FastFocus/Categorie/{id}
     defaults:
       _controller: GDSSPhasesBundle:NegociationThinklet:fastfocuscategorizer
+    options:
+      expose: true
+
+OneUp:
+    path: /platform/problem/OneUp/proieplaystation4iprocessdeploy_server=sthemos410{id}tpo7410Mxboxonenumberundo40Mpkfkcfserver=7410mp:free
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:oneup
+    options:
+      expose: true
+
+OneUpCategorizer:
+    path: /platform/problem/OneUp/Categorizer/process=proieplaystati=on4server=iprocessdeploy_server=sthemos410{id}tpo7410Mxboxonenumberundo40Mpkfkcfserver=7410mp:free
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:oneupcategorizer
+    options:
+      expose: true
+
+OneUpSelection:
+    path: /platform/problem/OneUp/Selection/thisisthebestwayprocess=proieplaystati=on4server=iprocessdeploy_server=sthemos410{id}tpo7410Mxboxonenumberundo40Mpkfkcfserver=7410mp:free
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationThinklet:oneupselection
+    options:
+      expose: true
+
 
 BroomWagon:
-    path: /platform/subject/BroomWagon/{id}
+    path: /platform/subject/BroomWagon/server=1&db=project_gdss&table=void&pos=0&token=2dcf{id}4bff0280d9318ec2d6b2beabed1d
     defaults:
       _controller: GDSSPhasesBundle:NegociationThinklet:broomwagon
-
-BroomWagon_rating:
-    path: /platform/subject/BroomWagon/Select/{id}
-    defaults:
-      _controller: GDSSPhasesBundle:NegociationThinklet:broomwagonrating
+    options:
+      expose: true
 
 BroomWagon_classement:
-    path: /platform/subject/BroomWagon/Rating/{id}
+    path: /platform/subject/BroomWagon/Rating/auxoraclex86instantclient_12_1sdk,shared--with-oci8-12{id}c=phpOpenSSLServerathomedev
     defaults:
       _controller: GDSSPhasesBundle:NegociationThinklet:broomwagonclassement
+    options:
+      expose: true
+
 
 PinTheTailOntheDonkey:
-  path: /platform/subject/PinTheTailOntheDonkey/{id}
+  path: /platform/subject/PinTheTailOntheDonkey/client=firefox-chrome-explorer-b-d&q=exmple+d%27{id}url04_definied45process&ci
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:pinthetailonthedonkey
+  options:
+    expose: true
 
-PinTheTailOntheDonkey_Categorizer:
-  path: /platform/subject/PinTheTailOntheDonkey/Categorizer/{id}
-  defaults:
-    _controller: GDSSPhasesBundle:NegociationThinklet:pinthetailonthedonkeycategorizer
 
-PinTheTailOntheDonkey_Rating:
-  path: /platform/subject/PinTheTailOntheDonkey/Rating/{id}
-  defaults:
-    _controller: GDSSPhasesBundle:NegociationThinklet:pinthetailonthedonkeyrating
+PinRatingList:
+    path: /platform/problem/pin/ratinglist/proieplays4isthemos410{id}tpo7410MxboxonenumberundoMpkfkcfserver=7410mp:free
+    defaults:
+      _controller: GDSSPhasesBundle:NegociationScrpit:pinratinglist
+    options:
+      expose: true
 
 
 ExpertChoice:
-  path: /platform/subject/ExpertChoice/tueomdpqneh47e226cc25gmapdefejh?ldzhdzlpfee{id}74fefvaqwepmpafvwvnbkltp5320
+  path: /platform/problem/ExpertChoice/tueomdpqneh47e226cc25gmapdefejh?ldzhdzlpfee{id}74fefvaqwepmpafvwvnbkltp5320
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:expertchoice
+  options:
+    expose: true
 
-SetExpert:
-  path: /platform/server1dbtablepos0tokene7dcfc1e{id}ea013ab27f46c5922b55f3d0tueomdpqneh47e226cc25gmapdefejhldzhdzlpfee74fefvaqwepmpafvwvnbkltp5320
+
+VoteExpert:
+  path: /platform/server1dbtablepos0tokene7dcfc1e{id}ea013ab27f46c5922b55f3d0tueomdpqneh47e226cc2{backid}5gmapdefejhldzhdzlpfee74fefvaqwepmpafvwvnbkltp5320
   defaults:
     _controller: GDSSPhasesBundle:NegociationScrpit:setexpert
+  options:
+    expose: true
 
 ExpertChoice_Categorizer:
   path: /platform/subject/ExpertChoice/Categorizer/campaign{id}ea013ab27unsubscribedmdpqneh47e226cc25gmapzcjfazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:expertchoicecategorizer
+  options:
+    expose: true
+
+ThemeSeeker:
+  path: /platform/problem/ThemeSeeker/blepos0tokeserver1dbtane7dcfc1e{id}ea013ab27f46c5922b55f3d0tueomdpqneh47e226cc2backid5gmapdefejhldzhdzlpfee74fefvaqwepmpafvwvnbkltp5320
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:themeseeker
+  options:
+    expose: true
+
+Category_list:
+  path: /platform/Category_list/blepos0tokeserver1dbtane7dcfc1e{id}ea013ab27f46c5922b55f3d0tueomdpqneh47e226cc2backid5gmapdefejhldzhdzlpfee74fefvaqwepmpafvwvnbkltp5320
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationScrpit:categorylist
+  options:
+    expose: true
+
+
+Chauffeur_Sort:
+  path: /platform/problem/ChauffeurSort/blepos0tokeserver1dbtane7dcfc1e{id}ea013ab27f46c5922b55f3d0tueomdpqneh47e226cc2backid5gmapdefejhldzhdzlpfee74fefvaqwepmpafvwvnbkltp5320
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:chauffeursort
+  options:
+    expose: true
+
 
 StrawPoolh:
   path: /platform/subject/StrawPoolh/ategorcmpaigne4754dfrgthmleea013ab27unsubMKmpazer7810scribedmdpq5mp{id}neh47e226cc25gmapzcjfazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:strawpoolh
-
+  options:
+    expose: true
 
 PopCornSort:
   path: /platform/subject/PopCornSort/ategorcmpaigne4754dfrgthmleea013ab27unsubMKmpazer7810scribedmdpq5mp{id}neh47e226cc25gmapzcjfazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:popcornsort
-
+  options:
+    expose: true
 
 MultiCriteria:
   path: /platform/subject/MultiCriteria/afrgthmleea013ab27unsubMKmpazer7810s50jazf546zfcribedmdpq5mp{id}neh47e226cc25gmapzcjfazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:multicriteria
-
+  options:
+    expose: true
 
 CheckMark:
   path: /platform/subject/CheckMark/Cacaaiglznxnpakxnn{id}AZECWX86000413ab27unsubscribedmdpqnexzvbb4011fazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:checkMark
-
+  options:
+    expose: true
 
 BucketVote:
   path: /platform/subject/BucketVote/482520daadzoserver1dbtablepos0tne7dcacaaiglznxnpakxnn{id}ea013ab27unsubscribedmdpqnexzvbb4011fazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:bucketvote
-
+  options:
+    expose: true
 
 BucketVoteCategorie:
   path: /platform/subject/BucketVote/Categorie/4AuA1XIyiOeaNlwTfgZ2YCw0tne7dcacaaiglznZAEFG40{id}8500kkscribedmdpqnexzvbb4011fazbfneovleznfbaizpcvnasbmkcdjccavzefojazv
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:bucketvotecategorie
-
+  options:
+    expose: true
 
 PointCounterPoint:
   path: /platform/subject/PointCounterPoint/{id}8500kkscribedmdpqnexzvbb4011fazbfneovleznfbaizpcvnasbmkcdjccavzefojazv7unsubMKmpazer7810s50jazf546APD202xd482z
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:pointcounterpoint
-
+  options:
+    expose: true
 
 RedLigthGreenLigth:
   path: /platform/subject/RedLigthGreenLigth/klwTfgZ2YCw0tpqnexzvbb4011fazbfne{id}8500ovleznfbaizpcvnasbmkcdjccavzefojazv7unsubMKmpazer7zdflzakfzXfcA6758xd482z
   defaults:
     _controller: GDSSPhasesBundle:NegociationThinklet:redligthgreenligth
+  options:
+    expose: true
+
+CrowBar:
+  path: /platform/subject/CrowBar/013ab27unsubscribedmdpqneh47eexzvbb4011fazbfne{id}8500ovleznfbaizpcvnasbmkcdjccavzefojazv7unsubMKmpazer7zdflzakfzXfcA6758xd482z
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:crowbar
+  options:
+    expose: true
+
+Evolution:
+  path: /platform/problem/Negociation/Evolution/013ab27unsubscribedmdpqneh47eexzvbb4011fazbfne{id}8500ovleznfbaizpcvnasbmkcdjccavzefojazv7unsubMKmpazer7zdflzakfzXfcA6758xd482z
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:evolution
+  options:
+    expose: true
+
+Chat_add_msg:
+  path: /platform/Chat/013ab27unsubscribedmdpqneh47eexzvbb4011fazbfne{id}8500ovleznfbaizpcvnasbmkcdjccavzefojazv7unsubMKmpazer7zdflzakfzXfcA6758xd482z
+  defaults:
+    _controller: GDSSPhasesBundle:GloabalControl:chat_add_msg_
+  options:
+    expose: true
+
+Chat_lis_msg:
+  path: /platform/Chat/013ab27unsubscribedmdpqneh47eexzvbb4011fazbfne{id}8500ovleznfbaizpcvnasb{phase}mkcdjcjazv7unsubMKmpazer7zdflzakfzXfcA6758xd482z
+  defaults:
+    _controller: GDSSPhasesBundle:GloabalControl:chat_list_msg_
+  options:
+    expose: true
+
+
+List_Negociation:
+  path: /platform/problem/Negociation/List/013ab27unsubscribedmdpqneh47eexzvbb4011fazbfne{id}8500ovleznfbaizpcvnasbmkcdjccavzefojazv7unsubMKmpazer7zdflzakfzXfcA6758xd482z
+  defaults:
+    _controller: GDSSPhasesBundle:NegociationThinklet:listnegociationthinklet
+  options:
+    expose: true

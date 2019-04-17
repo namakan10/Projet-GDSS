@@ -1,70 +1,52 @@
-{% extends  '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig'%}
+{% for ct in contribution %}
+    <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+        <li>
+            <div class="comment-main-level">
+                <div class="comment-box">
+                    <div class="comment-head">
+                        <h6 class="comment-name by-author">{{ ct.pseudo }}</h6>
+                    </div>
+                    <div class="comment-content">
+                        <p>{{ ct.contribution }}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    {% set coll = false %}
+    {% for cmt in comment %}
+        {% if cmt.contribution == ct %}
+            {% set coll = true %}
+        {% endif %}
+    {% endfor %}
+    {% if coll == true %}
+        <a class="fas" style="margin-left: 20px" data-toggle="collapse" href="#contrib{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
+    {% endif %}
 
-{% block title %}BroomWagon - Classement{% endblock %}
-
-
-
-{% block content %}
-    <div style="margin-right: 25%; margin-left: 5%">
-        <h1 style="text-decoration-style: double; text-align: center"><a href="{{ path('BroomWagon', {'id' : id}) }}"><i class="fas fa-arrow-left"></i></a> BROOMWAGON - {% if Nego.selection == -1 %}Contributions retenues{% else %}Classement{% endif %}</h1>
-        {% for ct in contribution %}
-            <i class="outgoing_msg">
-                <i class="sent_msg" style="float: none">
-                    <p><span>{{ ct.pseudo }}<br/></span> {{ ct.contribution }} </p>
-                </i>
-            </i>
-            {% set coll = false %}
+    <div class="collapse" id="contrib{{ ct.id }}">
+        <ul class="timeline">
             {% for cmt in comment %}
                 {% if cmt.contribution == ct %}
-                    {% set coll = true %}
+                    <li>
+                        <ul class="comments-list reply-list">
+                            <li>
+                                <!-- Contenedor del Comentario -->
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author">{{ cmt.pseudo }}</h6>
+                                    </div>
+                                    <div class="comment-content">
+                                        {{ cmt.comment }}
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
                 {% endif %}
             {% endfor %}
-            {% if coll == true %}
-                <a class="fas fa-plus-circle" data-toggle="collapse" href="#contrib{{ ct.id }}" role="button" aria-expanded="false" aria-controls="like{{ ct.id }}"></a>
-            {% endif %}
-
-            <div class="collapse" id="contrib{{ ct.id }}">
-                {% for cmt in comment %}
-                    {% if cmt.contribution == ct %}
-                        <i class="incoming_msg" style="margin-left: 50px">
-                            <i class="received_msg">
-                                <i class="received_withd_msg">
-                                    <p><span>{{ cmt.pseudo }}</span><br/>{{ cmt.comment }}</p>
-                                </i>
-                            </i>
-                        </i>
-                    {% endif %}
-                {% endfor %}
-            </div>
-            <p style="color: orangered">Votes ({{ ct.liked }})</p>
-            <br/><br/>
-
-        {% endfor %}
-
-        <div class="form-inline">
-            <div class="col-sm-11">
-                {% if admin %}
-                    {% if Nego.selection != -1 %}
-                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                            Faire la sélection
-                        </a>
-                    {% endif %}
-                {% endif %}
-            </div>
-            <br/>
-        </div>
-        <div class="collapse" id="collapseExample">
-            <br/>
-            <div class="card card-body">
-                <form id="form_pourcent" method="post">
-                    <div class="form-group">
-                        <label for="pourcent">Contribution à retenir</label>
-                        <input type="number" class="form-control" id="pourcent" aria-describedby="pourcenthelp" placeholder="X%" min="1" max="100" name="pourcent">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Valider</button>
-                </form>
-            </div>
-        </div>
-        <br/>
+        </ul>
     </div>
-{% endblock %}
+    <p style="color: orangered">Votes ({{ ct.liked }})</p>
+    <br/><br/>
+
+{% endfor %}

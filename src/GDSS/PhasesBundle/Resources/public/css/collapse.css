@@ -1,0 +1,15 @@
+[data-toggle="collapse"]:after {
+    display: inline-block;
+    font-family: "Font Awesome 5 Free";
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f054";
+    transform: rotate(90deg) ;
+    transition: all linear 0.25s;
+    float: left;
+}
+[data-toggle="collapse"].collapsed:after {
+    transform: rotate(0deg) ;
+}

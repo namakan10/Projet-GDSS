@@ -1,0 +1,61 @@
+{% extends '@GDSSPlatform/CreateProblem/addproblem.html.twig' %}
+{% block title %}Contraintes{% endblock %}
+{% block curentProblem %}active{% endblock %}
+
+
+{% block active0 %}disabled{% endblock %}
+{% block active1 %}active{% endblock %}
+
+{% block modiftext %} Défintion des contraintes{% endblock %}
+
+{% block help %}
+    <p class="text-center">Définissez le nombre maximal de participant à votre réunion de prise de décision. C'est optionnel cliquer sur ignoner pour passer à l'étape suivante</p>
+{% endblock %}
+
+{% block contenu %}
+
+    <div style="text-align: center">
+        <h2>Définition des contraintes</h2>
+    </div>
+    <br/>
+
+    <div class="container">
+        <div class="" style="margin-left: 45px">
+
+            <div class="card border-secondary" style="width: 100%;">
+                <div class="card-header">Contraintes</div>
+                <div class="card-body">
+
+
+                    <div>
+                        {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id':'form_criteria'}}) }}
+
+                            <div class="form-group">
+                                {# Génération du label. #}
+                                {{ form_label(form.nbre, 'Nombre maximum de participant', {'label_attr': {'class': 'control-label'}}) }}
+
+                                {{ form_errors(form.nbre) }}
+                                <div class="">
+                                    {{ form_widget(form.nbre, {'attr' : {'min' : 3, 'max' : 20} }) }}
+                                </div>
+                            </div>
+                            {{ form_widget(form.Valider) }}
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <a href="{{ path('add_constaint2', {'action': "not definied", 'id': id}) }}"><button class="btn btn-warning">Ignoner</button></a>
+        </div>
+        <br/>
+
+
+    </div>
+
+
+
+    <br/>
+    <br/>
+{% endblock %}
+

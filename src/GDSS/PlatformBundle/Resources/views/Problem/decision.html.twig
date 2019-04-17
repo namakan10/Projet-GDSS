@@ -1,0 +1,66 @@
+<tr>
+    <td><strong>Prise de décision</strong></td>
+    {% if Decision %}
+
+        <td>{{ Decision.durationmin }} min - {{ Decision.dureemax }} min</td>
+        <td>{{ Decision.datestart|date('d/m/y H:i') }}</td>
+        <td><span
+                    {% if now > Decision.dateend%}
+                    class="badge badge-danger">Terminer
+                {% elseif now > Decision.datestart%}
+                    class="badge badge-success">En cours
+                {% else %}
+                    class="badge badge-warning">En attente
+                {% endif %}
+                                         </span></td>
+        <td><div class="progress"><div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{ progressNego }}%" aria-valuenow="{{ progressDecision }}" aria-valuemin="0" aria-valuemax="100"></div></div></td>
+
+        {% if now > Decision.dateend %}
+            <td>
+                <a href="{{ path('negociation', {'id':id}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% elseif now > Decision.datestart %}
+            <td>
+                <a href="{{ path('negociation', {'id':id}) }}">
+                    <i class="far fa-eye"></i>
+                </a>
+            </td>
+        {% endif %}
+
+        {% if admin %}
+            {% if now >= Decision.dateend %}
+                {% if end == false %}
+                    <td>
+                        <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Decision", 'action' : 'edit'}) }}">
+                            <i class="fas fa-sync"></i>
+                        </a>
+                    </td>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+    {% else%}
+        <td></td>
+        <td></td>
+        <td><span class="badge badge-warning">En attente</span></td>
+        <td></td>
+        {% if Nego3 %}
+            {% if now > Nego3.dateend%}
+                {% if admin %}
+                    {% if end == false %}
+                        <td>
+                            <a href="{{ path('add_edit_phase', {'id':id, 'phasename' : "Decision", 'action' : 'create' }) }}">
+                                <span class="badge badge-primary">Démarer</span>
+                            </a>
+                        </td>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <td></td>
+        {% endif %}
+
+    {% endif %}
+</tr>

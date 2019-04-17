@@ -3,15 +3,16 @@
 
 {% block title %}FastFocus{% endblock %}
 
-{% block customstyle %}
+{% block customstylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block subtitle %}
+    <h1 style="text-decoration-style: double; margin-left: -250px"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> FASTFOCUS</h1>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-
-        <h1 style="text-decoration-style: double; margin-left: -170px"><a class="fas fa-arrow-left" href="{{ path('negociation', {'id' : id}) }}"> </a> FASTFOCUS</h1>
-
 
         {% if admin %}
             <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une catégorie</a></p>
@@ -88,9 +89,6 @@
 {% endblock %}
 
 {% block customscrpits %}
-    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
-
     <script type="text/javascript">
         $(document).ready(function(){
             $('[data-toggle="offcanvas"]').click(function(){

@@ -1,148 +1,304 @@
 {% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
 
+{#
+    experdefinied pour savoir si l'expert en definie
+    delay est true si le delay de 5 minutes pour la decision est pas encore écouler, sinon false
+#}
 
 {% block title %}ExpertChoice{% endblock %}
 
-{% block customstyle %}
+{% block customstylesheets %}
     <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block help %}
+
+    {% set expert = false %}
+    {% if admin == false %}
+        {% if expertdefinied == "definied" %}
+            {% if maker.expert == 1 %}
+                {% set expert = true %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% if finish == false %}
+        {% if expertdefinied != false %}
+            {% if expert %}
+                <p>
+                    Vous avez été choisi comme expert.
+                    Vous pouvez créer des catégories dans lesquels vous déplacerez les contribution
+                </p>
+            {% else %}
+                <p>
+                    <strong>{{ makerexpert.pseudoMaker }}</strong> a été choisi comme expert.
+                    Il pourra crééer des catégories et y déplacer des contributions.
+                </p>
+            {% endif %}
+        {% else %}
+            {% if delaychoice %}
+                {% if admin == false %}
+                    {% if maker.selection == 0 %}
+                        <p>Choisissez un expert parmis les décideurs.
+                            Vous pouvez votez pour vous même. Le vote prend fin à 25 minutes du temps restants !
+                        </p>
+                    {% else %}
+                        <p>Vous avez déjà voté ! Veuillez patienter.</p>
+                    {% endif %}
+                {% else %}
+                    <p>Veuillez patienter les décideurs votent pour un choisir un expert</p>
+                {% endif %}
+            {% else %}
+                {% if admin %}
+                    <p>
+                        Il y a eu une ou plusieurs égalité après le vote des décideurs pour choisir l'expert.
+                        Veuillez choisir un décideur pour trancher.
+                    </p>
+                {% else %}
+                    <p>
+                        Veuillez patienter ! Le vote c'est terminé avec une ou plusieurs égalités.
+                        Le choix de l'expert reviens au facilitateur.
+                    </p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <p>
+            La phase une de l'étape de négociation et confrontation des points de vue est terminée.
+            Revenez à la page de présentation pour sujet pour commencer la phase deux.
+        </p>
+    {% endif %}
+
+
+{% endblock %}
+
+{% block subtitle %}
+
+    {% set expert = false %}
+    {% if admin == false %}
+        {% if expertdefinied == "definied" %}
+            {% if maker.expert == 1 %}
+                {% set expert = true %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+
+    <h1 class="text-center">
+        <a href="{{ path('problem', {'id' : id}) }}">
+            <i class="fas fa-arrow-left"></i>
+        </a> Négociation : Expert Choice{% if expert == true %} - MODE EXPERT{% endif %}
+    </h1>
 {% endblock %}
 
 {% block content %}
     <div class="container">
+        <div class="alert0"></div>
 
-            <h1 style="text-decoration-style: double; margin-left: -170px"><a href="{{ path('negociation', {'id' : id}) }}"><i class="fas fa-arrow-left"></i></a> ExpertChoice{% if expertdefinied in ['facilitateur', 'decideur'] %} - MODE EXPERT{% endif %}</h1>
-
-        {% if expertdefinied in ['facilitateur', 'decideur'] %}
-            <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une catégorie</a></p>
+        {% set expert = false %}
+        {% if admin == false %}
+            {% if expertdefinied == "definied" %}
+                {% if maker.expert == 1 %}
+                    {% set expert = true %}
+                {% endif %}
+            {% endif %}
         {% endif %}
 
-        <ul class="nav nav-tabs" style="margin-right: 190px">
+        {% if expert == true %}
+            {% if finish == false %}
+                <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une catégorie</a></p>
+            {% endif %}
+        {% endif %}
+
+        <ul class="nav nav-tabs">
             {% if expertdefinied != false %}
                 <li class="nav-item">
                     <a class="nav-link active show" data-toggle="tab" href="#subsubject">CATEGORIES</a>
                 </li>
             {% else %}
-                {% if admin %}
-                    <li class="nav-item">
-                        <a class="nav-link active show" data-toggle="tab" href="#decideurs">DECIDEURS</a>
-                    </li>
+                {% if delaychoice %}
+                    {% if admin %}
+                        <p>Veuillez patienter ! Le choix de l'expert est en cours.</p>
+                    {% else %}
+
+                    {% endif %}
                 {% else %}
-                    <p>Le facilitateur n'a pas choisi d'expert pour la catégorisation. Veuiilez patienter !</p>
+                    {% if admin %}
+
+                    {% else %}
+                        <p>Veuillez patienter ! Le vote c'est terminé avec une ou plusieurs égalités. Le choix de l'expert reviens au facilitateur.</p>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         </ul>
-        <div id="myTabContent" class="tab-content" style="margin-right: 190px; margin-top: -35px">
-            {% if expertdefinied != false %}
-                <div class="tab-pane fade show active" id="subsubject">
-                    <div>
-                        <table class="table table-hover">
-                            <thead>
-                            <tr class="">
-                                <th>Titre</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            {% block categorielist %}
-                                {% for cat in categorielist %}
-                                    <tr>
-                                        <td>{{ cat.name }}</td>
-                                        <td><a href="{{ path('ExpertChoice_Categorizer', {'id' : cat.id}) }}"
-                                               class="badge badge-warning">{% if expertdefinied in ['facilitateur', 'decideur'] %}Categoriser{% else %}Voir{% endif %}
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            {% endblock %}
-
-
-                            </tbody>
-
-                        </table>
-                    </div>
-                </div>
-            {% endif %}
-            {% if expertdefinied == false %}
-                {% if admin %}
-                    <div class="tab-pane fade show active" id="decideurs">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr class="">
-                                <th>Decideurs</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for decid in decideurslist %}
+        {% if expertdefinied != false %}
+            <div id="myTabContent" class="">
+                <div class="show active" id="subsubject">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Titre</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% block categorielist %}
+                            {% for cat in categorielist %}
                                 <tr>
-                                    <td><i class="fas fa-user-alt"></i> {{ decid.pseudodecideurs }}</td>
-                                    <td><a href="#" onclick="definiedexpert({{ decid.id }}, {{ id }}); return false"> <span class="badge badge-warning">Définir Expert</span></a> </td>
+                                    <td>{{ cat.name }}</td>
+                                    <td><a href="{{ path('ExpertChoice_Categorizer', {'id' : cat.id}) }}"
+                                           class="badge badge-warning">{% if expert == true %}{% if finish == false %}Categoriser{% else %}voir{% endif %}{% else %}Voir{% endif %}
+                                        </a>
+                                    </td>
                                 </tr>
                             {% endfor %}
-                            </tbody>
+                        {% endblock %}
+                        </tbody>
+                    </table>
 
-                        </table>
+                </div>
+            </div>
+        {% endif %}
+        {% if expertdefinied == false %}
+            {% if delaychoice %}
+                {% if admin == false %}
+                    {% if maker.selection == 0 %}
+                        <br/>
+                        <h3>Votez un expert</h3>
+                                <form method="post" href="#">
+                                    <div class="form-group">
+                                        {% for mak in makerlist %}
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" id="customRadio{{ mak.id }}" name="customRadio" value="{{ mak.id }}">
+                                                <label class="custom-control-label" for="customRadio{{ mak.id }}">
+                                                    {{ mak.pseudoMaker }} {% if mak.User == user %}<strong>(Vous)</strong>{% endif %}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                        <br/><br/>
+                                        <div class="form-inline">
+                                            <div class="col-sm-11">
+                                                <input type="submit" value="Valider" class="btn btn-outline-primary" id="checkBtn">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            <br/>
+                            <br/>
 
-                        <br/>
-                        <br/>
-                    </div>
+                        {% else %}
+                            <p>Veuillez patienter !</p>
+                        {% endif %}
+                    {% endif %}
+
+                {% else %}
+                    {% if admin %}
+                        {% if adminchoice %}
+                            <div class="tab-pane fade show active" id="decideurs">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr class="">
+                                        <th>Decideurs</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for mak in makerequalvote %}
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-user-alt"></i> {{ mak.pseudoMaker }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ path('VoteExpert', {'id' : mak.id, 'backid' : problem.id}) }}">
+                                                    <span class="badge badge-warning">Définir Expert</span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+
+                                </table>
+
+                                <br/>
+                                <br/>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
             {% endif %}
-        </div>
 
-        <div id="add_project" class="modal fade" role="dialog">
-            <div class="modal-dialog">
 
-                <div class="modal-content">
-                    <div class="modal-header login-header">
-                        <button type="button" class="close" data-dismiss="modal">X</button>
-                        <h4 class="modal-title">Créer une catégorie</h4>
-                    </div>
-                    {{ form_start(form) }}
-
-                    <div style="margin-top: 5px; font-size: large">
-                        {{ form_label(form.Nom) }}
-                    </div>
-
-                    <div style="margin-left: 5px; margin-right: 5px">
-                        {{ form_widget(form.Nom, {'attr': {'class': 'modal-body'}}) }}
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
-                        {{ form_widget(form.Creer, {'attr': {'class': 'add-project'}}) }}
-                    </div>
-                    {{ form_end(form) }}
-                </div>
-
-            </div>
-        </div>
     </div>
 
+    <div id="add_project" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+                <div class="modal-header login-header">
+                    <button type="button" class="close" data-dismiss="modal">X</button>
+                    <h4 class="modal-title">Créer une catégorie</h4>
+                </div>
+                {{ form_start(form) }}
+
+                <div style="margin-top: 5px; font-size: large">
+                    {{ form_label(form.Nom) }}
+                </div>
+
+                <div style="margin-left: 5px; margin-right: 5px">
+                    {{ form_widget(form.Nom, {'attr': {'class': 'modal-body'}}) }}
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
+                    {{ form_widget(form.Creer, {'attr': {'class': 'add-project'}}) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+
+        </div>
+    </div>
 {% endblock %}
 
 {% block customscrpits %}
-    <script src="{{ asset('bundles/gdssplatform/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('bundles/gdssplatform/js/bootstrap.min.js') }}"></script>
+    {% set expert = false %}
+    {% if admin == false %}
+        {% if expertdefinied == "definied" %}
+            {% if maker.expert == 1 %}
+                {% set expert = true %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
 
     <script type="text/javascript">
+        {% if finish == false %}
+            {% if admin %}
+            setTimeout(function () {
+                window.location = window.location.pathname;
+            }, 60000);
+            {% elseif expert == false %}
+            setTimeout(function () {
+                window.location = window.location.pathname;
+            }, 60000);
+            {% endif %}
+        {% endif %}
+        let think = "ExpertChoice";
+        let id = {{ problem.id }}
         $(document).ready(function(){
             $('[data-toggle="offcanvas"]').click(function(){
                 $("#navigation").toggleClass("hidden-xs");
             });
-        });
-    </script>
 
-    <script>
-        function definiedexpert(expertid, returnid) {
-            $.ajax({
-                url:"http://www.projetgdss.com/app_dev.php/platform/server1dbtablepos0tokene7dcfc1e"+expertid+"ea013ab27f46c5922b55f3d0tueomdpqneh47e226cc25gmapdefejhldzhdzlpfee74fefvaqwepmpafvwvnbkltp5320",
-                type:"POST",
-                data: {returnid : returnid},
-                dataType: 'JSON',
+
+            $('#checkBtn').click(function() {
+                checked = $("input[type=radio]:checked").length;
+
+                if(!checked) {
+                    $(function() {
+                        $(".alert0").notify("Aucun décideur séléctionner !");
+                    });
+                    return false;
+                }
+
             });
-
-            setTimeout(window.location.reload(), 5000);
-        }
+        });
     </script>
 {% endblock %}

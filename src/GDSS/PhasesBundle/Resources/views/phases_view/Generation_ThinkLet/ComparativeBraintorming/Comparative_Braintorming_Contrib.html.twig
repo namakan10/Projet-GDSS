@@ -1,0 +1,98 @@
+{% extends '@GDSSPhases/phases_view/Generation_ThinkLet/generation.html.twig' %}
+
+{% block title %}ComparativeBrainstorming Contribution{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Génération : ComparativeBrainstorming - Contribution </h1>
+{% endblock %}
+
+{% block help %}
+    <p>Vous pouvez donnez de propositions concernant le problème. Vous avez 15 minutes !</p>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+
+        <div id="display">
+            <div class="noti"></div>
+            {% if finish == false %}
+
+                {{ form_start(form, {'attr': {'class': 'form-horizontal', 'id':'form_propo'}}) }}
+
+                <div class="form-group">
+                    {{ form_label(form.Proposition, "Proposition", {'label_attr': {'class': 'col-sm-8 control-label'}}) }}
+                    {{ form_errors(form.Proposition) }}
+                    {{ form_widget(form.Proposition, {'attr': {'class': 'col-sm-9'}}) }}
+                </div>
+                <div class="form-inline">
+                    <div class="col-sm-11">
+                        {{ form_widget(form.Envoyer, {'attr': {'class': 'btn linkstyle'}}) }}
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            {% endif %}
+        </div>
+
+        <div class="propo_list">
+            {% if proposition %}
+                {% for propo in proposition %}
+                    <ul id="comments-list" class="comments-list" style="margin-left: 20px">
+                        <li>
+                            <div class="comment-main-level">
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author">Proposition {{ propo.numero }}</h6>
+                                    </div>
+                                    <div class="comment-content">
+                                        <p>{{ propo.contribution }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+
+        <br/>
+
+
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block customscrpits %}
+    <script>
+        let think = "ComparativeBrainstorming";
+        {% if alert %}
+        $(function() {
+            $(".noti").notify("La page à été soumise avec succès !", "success", {position: "top"});
+        });
+        {% endif %}
+        var id = {{ id }}
+            $('#form_propo').on('submit', function (event) {
+                event.preventDefault();
+                var form_data = document.getElementById('form_Proposition').value;
+                $.ajax({
+                    url: Routing.generate('add_propo_gene', {'id' : id}),
+                    type:"POST",
+                    data: {proposition : form_data},
+                    dataType: 'JSON',
+                    success:function (data) {
+
+                    }
+                });
+                setTimeout(function(){
+                    $(".propo_list").load(Routing.generate('brainstorming_contribution_list', {'id' : id}));
+                }, 2000);
+
+                document.getElementById('form_Proposition').value = "";
+            });
+
+    </script>
+{% endblock %}

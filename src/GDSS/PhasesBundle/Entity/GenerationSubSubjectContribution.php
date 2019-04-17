@@ -22,7 +22,7 @@ class GenerationSubSubjectContribution
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\GenerationSubSubject", inversedBy="contrib", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\GenerationSubSubject", inversedBy="contrib")
      */
     private $subsubject;
 

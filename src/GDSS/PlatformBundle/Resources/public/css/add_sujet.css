@@ -135,3 +135,7 @@ span.round-tab:hover {
         left: 35%;
     }
 }
+
+a:hover{
+    text-decoration: none;
+}

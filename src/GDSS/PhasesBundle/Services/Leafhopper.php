@@ -26,26 +26,39 @@ class Leafhopper
             'subsubject' => $id
         ));
 
-        $subject = $this->em->getRepository('GDSSPhasesBundle:GenerationSubSubject')->find($subjectcontrib[0]->getSubsubject());
+        $subproblem = $this->em->getRepository('GDSSPhasesBundle:GenerationSubSubject')->find($subjectcontrib[0]->getSubsubject());
 
-        $phase = $this->em->getRepository('GDSSPlatformBundle:Phases')->find($subject->getPhases());
+        $phase = $this->em->getRepository('GDSSPhasesBundle:Phase')->find($subproblem->getPhases());
 
-        $process = $this->em->getRepository('GDSSPlatformBundle:Processus')->find($phase->getProcessus());
+        $process = $this->em->getRepository('GDSSPlatformBundle:Process')->find($phase->getProcess());
 
-        $sujet = $this->em->getRepository('GDSSPlatformBundle:Sujet')->find($process->getSujet());
+        $problem = $this->em->getRepository('GDSSPlatformBundle:Problem')->find($process->getProblem());
 
-        $decideurs = $this->em->getRepository('GDSSPlatformBundle:Decideurs')->findOneBy(array(
-            'sujet' => $sujet,
+        $maker = $this->em->getRepository('GDSSPlatformBundle:DecisionMakers')->findOneBy(array(
+            'process' => $process,
             'user' => $user
         ));
 
-        if($user == $sujet->getUser()){
+        $allmakers = $this->em->getRepository('GDSSPlatformBundle:DecisionMakers')->findBy(array(
+            'process' => $process
+        ));
+
+        if($user == $problem->getUser()){
             $pseudo = 'Facilitateur';
         }
         else{
-            $pseudo = $decideurs->getPseudodecideurs();
+            $pseudo = $maker->getPseudoMaker();
         }
 
-        return array('subjectcontrib' => $subjectcontrib, 'subject' => $subject, 'pseudo' => $pseudo, 'decideurs' => $decideurs, 'sujet' => $sujet, 'phase' => $phase);
+        return array(
+            'subjectcontrib' => $subjectcontrib,
+            'subproblem' => $subproblem,
+            'pseudo' => $pseudo,
+            'maker' => $maker,
+            'problem' => $problem,
+            'phase' => $phase,
+            'process' => $process,
+            'allmakers' => $allmakers,
+            );
     }
 }

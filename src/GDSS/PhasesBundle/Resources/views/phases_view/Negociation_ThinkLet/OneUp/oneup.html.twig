@@ -1,0 +1,137 @@
+{% extends '@GDSSPhases/phases_view/Negociation_ThinkLet/negocitation.html.twig' %}
+
+
+{% block title %}OneUp{% endblock %}
+
+{% block customstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/gdssplatform/css/Repertoire.css') }}" type="text/css">
+{% endblock %}
+
+{% block help %}
+    {% if admin %}
+        <p class="text-center">Veuillez créer des catégories dans lesquelles vous déplacerez les contributions. Une fois la catégorisation finie cliquer sur terminer, pour permettre aux décideurs d'acceder à la categorie.</p>
+    {% else %}
+        <p>Vous pouvez vous déplacez librement dans les différentes catégories crées et soumises par le facilitateur. Dans chaque catégorie vous devez séléctionner la seule contribution que vous jugez la plus pertinente</p>
+    {% endif %}
+{% endblock %}
+
+{% block subtitle %}
+    <h1 class="text-center"><a class="fas fa-arrow-left" href="{{ path('problem', {'id' : id}) }}"> </a> Négociation : OneUp</h1>
+{% endblock %}
+
+{% block confirmmodal %}Etes-vous sûr de vouloir supprimer cette categorie ?{% endblock %}
+
+{% block content %}
+
+
+        {% if admin %}
+            <p class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Créer une catégorie</a></p>
+        {% endif %}
+
+
+        <ul class="nav nav-tabs" style="margin-right: 190px">
+            <li class="nav-item">
+                <a class="nav-link active show" data-toggle="tab" href="#subsubject">CATEGORIES</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content" style="margin-right: 190px; margin-top: -35px">
+            <div class="error"></div>
+            {% block categoriestab %}
+                <div class="tab-pane fade show active" id="subsubject">
+                    <div>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr class="">
+                                <th>Titre</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% block categorielist %}
+                                {% for cat in categorielist %}
+                                    <tr>
+                                        <td>{{ cat.name }}</td>
+                                        {% if admin %}
+                                            {% if cat.allow == 0 %}
+                                                    <td><a href="{{ path('OneUpCategorizer', {'id' : cat.id}) }}" class="badge badge-info">Categoriser</a></td>
+                                                    <td>
+                                                        <a href="{{ path('End_Delete_Categorie', {'action': 'end', 'id': cat.id, 'thinklet' : 'OneUp', 'backid' : problem.id}) }}"><span class="badge badge-warning">Terminer</span></a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="confirmModalLink" href="{{ path('End_Delete_Categorie', {'action' : 'delete', 'id' : cat.id, 'thinklet' : 'OneUp', 'backid' : problem.id }) }}" style="color: red;">
+                                                            <i class="far fa-trash-alt"></i>
+                                                        </a>
+                                                    </td>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if cat.allow == 1 %}
+                                                <td><a href="{{ path('OneUpSelection', {'id' : cat.id}) }}"><i class="fas fa-eye" style="color: #3d5afe"></i></a></td>
+                                            {% else %}
+                                                <td><span class="badge badge-warning">Non soumie par le faciliateur</span></td>
+                                            {% endif %}
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            {% endblock %}
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            {% endblock %}
+            {% block othertab %}{% endblock %}
+        </div>
+
+        <div id="add_project" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header login-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">Créer une catégorie</h4>
+                    </div>
+                    {{ form_start(form) }}
+
+                    <div style="margin-top: 5px; font-size: large">
+                        {{ form_label(form.Nom) }}
+                    </div>
+
+                    <div style="margin-left: 5px; margin-right: 5px">
+                        {{ form_widget(form.Nom, {'attr': {'class': 'modal-body'}}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="cancel" data-dismiss="modal">Fermer</button>
+                        {{ form_widget(form.Creer, {'attr': {'class': 'add-project'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+
+
+{% endblock %}
+
+{% block customscrpits %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="offcanvas"]').click(function(){
+                $("#navigation").toggleClass("hidden-xs");
+            });
+            {% if admin == false %}
+                setTimeout(function () {
+                    location.reload();
+                }, 60000);
+            {% endif %}
+        });
+        if('{{ error }}' !== '')
+        {
+            $(function() {
+                $(".error").notify("{{ error }}");
+            });
+        }
+    </script>
+{% endblock %}

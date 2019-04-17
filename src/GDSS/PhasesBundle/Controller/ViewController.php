@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ViewController extends Controller
 {
@@ -17,35 +18,35 @@ class ViewController extends Controller
 
         $user = $this->getUser();
         $repository = $this->getDoctrine()->getManager();
-        $data = $this->container->get('platform.sujectdata')->sujetdata($id);
+        $data = $this->container->get('problemdata')->problemdata($id);
 
-        $sujet = $data["subject"];
-        $phase = $data["phase"];
+        $problem = $data["problem"];
+        $phase = $data["Comp"];
 
         $chat = $repository->getRepository('GDSSPhasesBundle:CompIdea')->findBy(array(
             'phases' => $phase,
         ));
 
-        $decideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findOneBy(array(
-            'sujet' => $sujet,
+        $makers = $repository->getRepository('GDSSPlatformBundle:DecisionMakers')->findOneBy(array(
+            'process' => $data["process"],
             'user' => $user
         ));
 
-        if($decideurs == null AND $sujet->getUser() != $user ){
-            return $this->redirectToRoute('gdss_platform_sujets');
+        if($makers == null AND $problem->getUser() != $user ){
+            return $this->redirectToRoute('problem_list');
         }
 
-        if($user == $sujet->getUser()){
+        if($user == $problem->getUser()){
             $pseudo = 'Facilitateur';
         }
         else{
-            $pseudo = $decideurs->getPseudodecideurs();
+            $pseudo = $makers->getPseudoMaker();
         }
 
         $now = new \DateTime();
 
         $finish = false;
-        if($phase->getDateFin() < $now){
+        if($phase->getDateend() < $now){
             $finish = true;
         }
 
@@ -69,7 +70,7 @@ class ViewController extends Controller
                 $now = new \DateTime();
 
                 $finish = false;
-                if($phase->getDateFin() < $now){
+                if($phase->getDateend() < $now){
                     $finish = true;
                 }
                 $Comp = new CompIdea();
@@ -117,25 +118,25 @@ class ViewController extends Controller
         $repository = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $data = $this->container->get('platform.sujectdata')->sujetdata($id);
-        $sujet = $data["subject"];
+        $data = $this->container->get('problemdata')->problemdata($id);
+        $problem = $data["problem"];
 
         $phase = $data["Comp"];
 
-        $decideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findOneBy(array(
-            'sujet' => $sujet,
+        $makers = $repository->getRepository('GDSSPlatformBundle:DecisionMakers')->findOneBy(array(
+            'process' => $data["process"],
             'user' => $user
         ));
 
-        if($decideurs == null AND $sujet->getUser() != $user ){
-            return $this->redirectToRoute('gdss_platform_sujets');
+        if($makers == null AND $problem->getUser() != $user ){
+            return $this->redirectToRoute('problem_list');
         }
 
-        if($user == $sujet->getUser()){
+        if($user == $problem->getUser()){
             $pseudo = 'Facilitateur';
         }
         else{
-            $pseudo = $decideurs->getPseudodecideurs();
+            $pseudo = $makers->getPseudoMaker();
         }
 
         if($request->isXmlHttpRequest()){
@@ -150,13 +151,13 @@ class ViewController extends Controller
 
 
         }
-        die();
+        return new Response();
     }
 
     public function scriptCCPAction($id){
         $user = $this->getUser();
         $repository = $this->getDoctrine()->getManager();
-        $data = $this->container->get('platform.sujectdata')->sujetdata($id);
+        $data = $this->container->get('problemdata')->problemdata($id);
         $phase = $data["Comp"];
 
         $chat = $repository->getRepository('GDSSPhasesBundle:CompIdea')->findBy(array(

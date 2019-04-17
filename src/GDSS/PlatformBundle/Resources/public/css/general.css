@@ -7,3 +7,16 @@ body{
     color: white;
 }
 
+.fixed-action-btn{position:fixed;right:23px;bottom:23px;padding-top:15px;margin-bottom:0;z-index:997}
+
+.help-toggle{
+    border: 2px black groove ; border-radius: 50px; box-shadow: 6px 6px 0px black; overflow:auto;width: 800px;
+}
+
+a:hover{
+    text-decoration: none;
+}
+a:active{
+    text-decoration: none;
+}
+

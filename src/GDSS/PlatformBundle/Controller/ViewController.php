@@ -17,11 +17,17 @@ use Symfony\Component\HttpFoundation\Request;
 class ViewController extends Controller
 {
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function loginAction(){
         return $this->render('@FOSUser/Security/login.html.twig');
     }
 
-    public function sujet_panelAction(){
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function problemlistAction(){
 
         //Recuperation de l'utilisateur courant c'est facultatif
         $user = $this->getUser();
@@ -32,41 +38,49 @@ class ViewController extends Controller
         /*
          * Recuperation des sujets crées par le users courant
          */
-        $em = $repository->getRepository('GDSSPlatformBundle:Sujet');
-        $subjectlist = $em->findBy(array(
+        $em = $repository->getRepository('GDSSPlatformBundle:Problem');
+        $problemlist = $em->findBy(array(
             'user'=> $user,
         ));
 
         /*
          * Recuperation des sujets auxqeuls le user courant est decideur
          */
-        $sujetid = $user->getDecideurs();
-        $tableau = array();
-        $cmp = 0;
-        foreach ($sujetid as $id){
-            $sujetdecideurs = $em->findOneBy(array(
-                'id' => $id->getSujet(),
-            ));
-            $tableau['id'.$cmp] = $sujetdecideurs;
-            $cmp++;
-        }
-        $sujetdecideurs = $em->findBy(array(
-            'id' => $tableau,
+        $makerslist = $repository->getRepository('GDSSPlatformBundle:DecisionMakers')->findBy(array(
+            'user' => $this->getUser(),
         ));
 
+        $comp = 0;
+        $tab = array();
+        foreach ($makerslist as $makers){
+            $problemmakers = $repository->getRepository('GDSSPlatformBundle:Problem')->findOneBy(array(
+                'id' => $makers->getProcess()->getProblem(),
+            ));
+            $tab[$comp] = $problemmakers->getId();
+            $comp++;
+        }
+        $problemmakers = $repository->getRepository('GDSSPlatformBundle:Problem')->findBy(array(
+            'id' => $tab,
+        ));
 
 
         $now1 = new \DateTime('now');
 
-        return $this->render('@GDSSPlatform/Sujets_Basic_View/sujet_panel.html.twig', array(
-            'subjectlist' => $subjectlist,
-            'decideurslist' => $sujetdecideurs,
+        return $this->render('@GDSSPlatform/Problem/list_of_problem.html.twig', array(
+            'problemlist' => $problemlist,
+            'problemmakers' => $problemmakers,
             'now1' => $now1
         ));
 
     }
 
-    public function sujet_vueAction($id, Request $request){
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function problemAction($id, Request $request){
 
         $users = $this->getUser();
 
@@ -75,63 +89,92 @@ class ViewController extends Controller
         /*
          * Recuperation des informations complètes sur le sujet
          */
-        $data = $this->container->get('platform.sujectdata')->sujetdata($id);
-        $subjectView = $data["subject"];
+        $data = $this->container->get('problemdata')->problemdata($id);
+        $problem = $data["problem"];
         $process = $data["process"];
-        $critere = $data["critere"];
-        $contrainte = $data["contrainte"];
+
+
+        $criteria = $data["criteria"];
+        $constraints = $this->container->get('getconstraintsthinklets')->constraintslist($id);
+        $constraintsdescription = $repository->getRepository('GDSSPlatformBundle:Constraints')->findOneBy(array(
+            'problem' => $problem
+        ));
         $phase = $data["phase"];
 
         /*
          * CHECK ACCESS
          */
-        $decideurs=$this->container->get('platform.checkaccess')->decideursAccess($subjectView, $users);
-        $admin = $this->container->get('platform.checkaccess')->adminAccess($subjectView, $users);
-        if($admin == false AND $decideurs == null){
-            return $this->redirectToRoute('gdss_platform_sujets');
+        $maker=$this->container->get('platform.checkaccess')->decideursAccess($problem, $users);
+        $admin = $this->container->get('platform.checkaccess')->adminAccess($problem, $users);
+        if($admin == false AND $maker == null){
+            return $this->redirectToRoute('problem');
+        }
+
+        $error = '';
+        if(isset($_GET['error'])){
+           $error = $_GET['error'];
         }
 
         $definedprocess = true;
-        $defined = true;
-        $Comp = array();
-        $Nego=array();
-        $Gene=array();
-
-
         if($process == null){
             $definedprocess = null;
         }
 
-        if($phase == null){
-            $defined=null;
-        }
-
-
-        /*
-         *  Recuperations des phases s'ils sont definies
-         */
-        if($defined == true){
-
-            $Comp = $data["Comp"];
-            $Gene = $data["Gene"];
-            $Nego = $data["Nego"];
-        }
+        $Comp = $data["Comp"];
+        $Gene = $data["Gene"];
+        $Nego1 = $data["Nego1"];
+        $PreNego1 = $data["PreNego1"];
+        $Nego2 = $data["Nego2"];
+        $PreNego2 = $data["PreNego2"];
+        $Nego3 = $data["Nego3"];
+        $PreNego3 = $data["PreNego3"];
+        $Decison = $data["Decision"];
 
         /*
          * Calcul de progression
          */
-        $progress = $this->container->get('platform.progress')->progression($subjectView);
+        $progress = $this->container->get('platform.progress')->progression($problem);
 
         $progressComp = null;
         $progressGene = null;
-        $progressNego = null;
+        $progressPreNego1 = null;
+        $progressNego1 = null;
+        $progressPreNego2 = null;
+        $progressNego2 = null;
+        $progressPreNego3 = null;
+        $progressNego3 = null;
+        $progressDecision = null;
 
-        if ($defined == true){
+        if ($Comp != null){
             $progressComp = $this->container->get('platform.progress')->progression($Comp);
+        }
+        if($Gene != null){
             $progressGene = $this->container->get('platform.progress')->progression($Gene);
-            $progressNego = $this->container->get('platform.progress')->progression($Nego);
         }
 
+        if($PreNego1 != null){
+            $progressNego1 = $this->container->get('platform.progress')->progression($PreNego1);
+        }
+        if($Nego1 != null){
+            $progressNego1 = $this->container->get('platform.progress')->progression($Nego1);
+        }
+
+        if($PreNego2 != null){
+            $progressPreNego2 = $this->container->get('platform.progress')->progression($PreNego2);
+        }
+        if($Nego2 != null){
+            $progressNego2 = $this->container->get('platform.progress')->progression($Nego2);
+        }
+
+        if($PreNego3 != null){
+            $progressPreNego3 = $this->container->get('platform.progress')->progression($PreNego3);
+        }
+        if($Nego3 != null){
+            $progressPreNego2 = $this->container->get('platform.progress')->progression($Nego3);
+        }
+        if($Decison != null){
+            $progressDecision = $this->container->get('platform.progress')->progression($Decison);
+        }
 
 
         /*
@@ -141,10 +184,6 @@ class ViewController extends Controller
         $listrepertoire = $em->findBy(array(
             'userproprietaire' => $this->getUser()->getId(),
         ));
-
-        //Recuperation des information sur le sujet
-        $em = $this->getDoctrine()->getManager()->getRepository('GDSSPlatformBundle:Sujet');
-        $subjectView = $em->find($id);
 
         //Recuperation des id des contacts
         $compteur = 0;
@@ -168,64 +207,219 @@ class ViewController extends Controller
             ->getForm();
         $form->handleRequest($request);
 
-
-
-        /*
-         * Formulaire pour mise à jour du sujet
-         */
-        $defaultdata = array('name' => 'description');
-        $formSubject = $this->createFormBuilder($defaultdata)
-                    ->add('Start', DateTimeType::class, array(
-                        'label' => 'Date de début',
-                    ))
-                    ->add('End', DateTimeType::class, array(
-                        'label' => 'Date de fin',
-                    ))
-                    ->add('uodate', SubmitType::class, array(
-                        'label' => 'Mettre à jour'
-                    ))->getForm();
-
-
-
         $result = null;
         if ($form->isSubmitted() && $form->isValid()){
-            $result = $this->container->get('platform.sendmsg')->sendInvitation($form, $subjectView, $users);
+            $result = $this->container->get('platform.sendmsg')->sendInvitation($form, $problem, $users);
         }
 
-        /*
-         * FIN
-         */
-
-        $decideurs = $repository->getRepository('GDSSPlatformBundle:Decideurs')->findBy(array(
-            'sujet' => $subjectView,
+        $makers = $repository->getRepository('GDSSPlatformBundle:DecisionMakers')->findBy(array(
+            'process' => $process,
         ));
 
 
         $now = new \DateTime("now");
 
-        return $this->render('GDSSPlatformBundle:Sujets_Basic_View:sujet_vue.html.twig', array(
+        return $this->render('@GDSSPlatform/Problem/problem.html.twig', array(
             'id' => $id,
-            'subjectView' => $subjectView,
+            'problem' => $problem,
+            'process' => $process,
             'admin' => $admin,
             'definedprocess' => $definedprocess,
-            'defined' => $defined,
-            'critere' => $critere,
-            'contrainte' => $contrainte,
+            'criteria' => $criteria,
+            'constraints' => $constraints,
+            'constraintsdescript' => $constraintsdescription,
             'Comp' => $Comp,
             'Gene' => $Gene,
-            'Nego' => $Nego,
+            'PreNego1' => $PreNego1,
+            'Nego1' => $Nego1,
+            'PreNego2' => $PreNego2,
+            'Nego2' => $Nego2,
+            'PreNego3' => $PreNego3,
+            'Nego3' => $Nego3,
+            'Decision' => $Decison,
             'now' => $now,
             'progress' => $progress,
             'progressComp' => $progressComp,
             'progressGene' => $progressGene,
-            'progressNego' => $progressNego,
+            'progressPreNego1' => $progressPreNego1,
+            'progressNego1' => $progressNego1,
+            'progressPreNego2' => $progressPreNego2,
+            'progressNego2' => $progressNego2,
+            'progressPreNego3' => $progressPreNego3,
+            'progressNego3' => $progressNego3,
+            'progressDecision' => $progressDecision,
             'form' => $form->createView(),
-            'formSubject' => $formSubject->createView(),
             'result' => $result,
-            'decideurs' => $decideurs,
+            'makers' => $makers,
+            'maker' => $maker,
+            'error' => $error,
         ));
     }
 
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function scriptproblemAction($id){
+
+        $users = $this->getUser();
+
+        $repository = $this->getDoctrine()->getManager();
+
+        /*
+         * Recuperation des informations complètes sur le sujet
+         */
+        $data = $this->container->get('problemdata')->problemdata($id);
+        $problem = $data["problem"];
+        $process = $data["process"];
+
+
+        $criteria = $data["criteria"];
+        $constraints = $this->container->get('getconstraintsthinklets')->constraintslist($id);
+        $constraintsdescription = $repository->getRepository('GDSSPlatformBundle:Constraints')->findOneBy(array(
+            'problem' => $problem
+        ));
+        $phase = $data["phase"];
+
+        /*
+         * CHECK ACCESS
+         */
+        $maker=$this->container->get('platform.checkaccess')->decideursAccess($problem, $users);
+        $admin = $this->container->get('platform.checkaccess')->adminAccess($problem, $users);
+        if($admin == false AND $maker == null){
+            return $this->redirectToRoute('problem');
+        }
+
+        $error = '';
+        if(isset($_GET['error'])){
+            $error = $_GET['error'];
+        }
+
+        $definedprocess = true;
+        if($process == null){
+            $definedprocess = null;
+        }
+
+        $Comp = $data["Comp"];
+        $Gene = $data["Gene"];
+        $Nego1 = $data["Nego1"];
+        $PreNego1 = $data["PreNego1"];
+        $Nego2 = $data["Nego2"];
+        $PreNego2 = $data["PreNego2"];
+        $Nego3 = $data["Nego3"];
+        $PreNego3 = $data["PreNego3"];
+        $Decison = $data["Decision"];
+
+        /*
+         * Calcul de progression
+         */
+        $progress = $this->container->get('platform.progress')->progression($problem);
+
+        $progressComp = null;
+        $progressGene = null;
+        $progressPreNego1 = null;
+        $progressNego1 = null;
+        $progressPreNego2 = null;
+        $progressNego2 = null;
+        $progressPreNego3 = null;
+        $progressNego3 = null;
+        $progressDecision = null;
+
+        if ($Comp != null){
+            $progressComp = $this->container->get('platform.progress')->progression($Comp);
+        }
+        if($Gene != null){
+            $progressGene = $this->container->get('platform.progress')->progression($Gene);
+        }
+
+        if($PreNego1 != null){
+            $progressNego1 = $this->container->get('platform.progress')->progression($PreNego1);
+        }
+        if($Nego1 != null){
+            $progressNego1 = $this->container->get('platform.progress')->progression($Nego1);
+        }
+
+        if($PreNego2 != null){
+            $progressPreNego2 = $this->container->get('platform.progress')->progression($PreNego2);
+        }
+        if($Nego2 != null){
+            $progressNego2 = $this->container->get('platform.progress')->progression($Nego2);
+        }
+
+        if($PreNego3 != null){
+            $progressPreNego3 = $this->container->get('platform.progress')->progression($PreNego3);
+        }
+        if($Nego3 != null){
+            $progressPreNego2 = $this->container->get('platform.progress')->progression($Nego3);
+        }
+        if($Decison != null){
+            $progressDecision = $this->container->get('platform.progress')->progression($Decison);
+        }
+
+
+        /*
+         * Envoie d'invitation
+         */
+        $em = $repository->getRepository('GDSSPlatformBundle:Repertoire');
+        $listrepertoire = $em->findBy(array(
+            'userproprietaire' => $this->getUser()->getId(),
+        ));
+
+        //Recuperation des id des contacts
+        $compteur = 0;
+        $listid = array();
+        foreach ($listrepertoire as $nbre){
+            $listid['id'. $compteur] = $nbre->getUser();
+            $compteur++;
+        }
+
+        $makers = $repository->getRepository('GDSSPlatformBundle:DecisionMakers')->findBy(array(
+            'process' => $process,
+        ));
+
+
+        $now = new \DateTime("now");
+
+        return $this->render('@GDSSPlatform/Problem/script_page_problem.html.twig', array(
+            'id' => $id,
+            'problem' => $problem,
+            'process' => $process,
+            'admin' => $admin,
+            'definedprocess' => $definedprocess,
+            'criteria' => $criteria,
+            'constraints' => $constraints,
+            'constraintsdescript' => $constraintsdescription,
+            'Comp' => $Comp,
+            'Gene' => $Gene,
+            'PreNego1' => $PreNego1,
+            'Nego1' => $Nego1,
+            'PreNego2' => $PreNego2,
+            'Nego2' => $Nego2,
+            'PreNego3' => $PreNego3,
+            'Nego3' => $Nego3,
+            'Decision' => $Decison,
+            'now' => $now,
+            'progress' => $progress,
+            'progressComp' => $progressComp,
+            'progressGene' => $progressGene,
+            'progressPreNego1' => $progressPreNego1,
+            'progressNego1' => $progressNego1,
+            'progressPreNego2' => $progressPreNego2,
+            'progressNego2' => $progressNego2,
+            'progressPreNego3' => $progressPreNego3,
+            'progressNego3' => $progressNego3,
+            'progressDecision' => $progressDecision,
+            'makers' => $makers,
+            'maker' => $maker,
+            'error' => $error,
+        ));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function repertoireAction(Request $request){
 
         //Declaration des differentes variables
@@ -303,68 +497,12 @@ class ViewController extends Controller
             ->getForm();
         $form->handleRequest($request);
 
-        return $this->render('GDSSPlatformBundle:Carnet Contact:repertoire.html.twig', array(
+        return $this->render('@GDSSPlatform/contact.html.twig', array(
             'listcontact' => $listid,
             'form'=>$form->createView(),
             'error' => $error,
             'success' => $success,
         ));
-    }
-
-    public function processusdetailsAction($id){
-
-        $repository = $this->getDoctrine()->getManager();
-        $em = $repository->getRepository('GDSSPlatformBundle:Sujet');
-        $sujet = $em->find($id);
-
-        /*
-         * CHECK ALLOW ACCESS
-         */
-        if ($sujet->getUser() != $this->getUser()){
-            return $this->redirectToRoute('gdss_platform_sujets');
-        }
-        $em= $repository->getRepository('GDSSPlatformBundle:Processus');
-        $process = $em->findOneBy(array(
-            'sujet' => $sujet,
-        ));
-
-        $secondemax = $process->getDureeMax();
-        $heuresmax = null;
-        $joursmax = null;
-
-        $secondemin = $process->getDureeMin();
-        $heuresmin = null;
-        $joursmin  = null;
-
-        $minutesmax = $secondemax/60;
-        if($minutesmax>60){
-            $heuresmax = $minutesmax/60;
-        }
-
-        if($heuresmax >24){
-            $joursmax = $heuresmax/24;
-        }
-
-        $minutesmin = $secondemin/60;
-        if($minutesmin>60){
-            $heuresmin = $minutesmin/60;
-        }
-
-        if($heuresmin >24){
-            $joursmin = $heuresmin/24;
-        }
-
-
-        return $this->render('@GDSSPlatform/details/processus_details.html.twig', array(
-            'process'=> $process,
-            'id'=>$id,
-            'heuremax' => $heuresmax,
-            'joursmax' => $joursmax,
-            'minutesmax' => $minutesmax,
-            'joursmin' => $joursmin,
-            'heuremin' => $heuresmin,
-            'minutemin' => $minutesmin
-            ));
     }
 
 

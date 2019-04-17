@@ -1,0 +1,28 @@
+<table class="">
+    <thead>
+    <tr>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    {% for list1 in contraintelist %}
+        <tr>
+            <td>
+                <img style="width: 24px" src="{{ asset('bundles/gdssplatform/icons/ic_my_location_24px.svg') }}">{{  list1.description }}
+            </td>
+            <td>
+                <a href="#" onclick="deletecontrainte( {{ list1.id }} )">
+                    <i class="fas fa-trash-alt" style="color: red"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<br/>

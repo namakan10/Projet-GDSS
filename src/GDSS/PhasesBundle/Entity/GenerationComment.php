@@ -41,6 +41,12 @@ class GenerationComment
     private $contribution;
 
     /**
+     * @ORM\ManyToOne(targetEntity="GDSS\PhasesBundle\Entity\Phase")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $phase;
+
+    /**
      * @ORM\OneToMany(targetEntity="GDSS\PhasesBundle\Entity\GenerationCommentReply", mappedBy="comment", cascade={"remove"})
      */
     private $reply;
@@ -230,5 +236,29 @@ class GenerationComment
     public function getReply()
     {
         return $this->reply;
+    }
+
+    /**
+     * Set phase
+     *
+     * @param \GDSS\PhasesBundle\Entity\Phase $phase
+     *
+     * @return GenerationComment
+     */
+    public function setPhase(\GDSS\PhasesBundle\Entity\Phase $phase)
+    {
+        $this->phase = $phase;
+
+        return $this;
+    }
+
+    /**
+     * Get phase
+     *
+     * @return \GDSS\PhasesBundle\Entity\Phase
+     */
+    public function getPhase()
+    {
+        return $this->phase;
     }
 }
